@@ -3,9 +3,7 @@ package guru.qa.niffler.service;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,7 +32,7 @@ public class SpendDbClient implements SpendClient {
 
       final KeyHolder kh = new GeneratedKeyHolder();
       final CategoryJson existingCategory = findCategoryByNameAndUsername(spend.category().name(), spend.username())
-          .orElseGet(() -> createCategory(spend.category()));
+          .orElseGet(() -> addCategory(spend.category()));
 
       jdbcTemplate.update(conn -> {
         PreparedStatement ps = conn.prepareStatement(
@@ -66,7 +64,7 @@ public class SpendDbClient implements SpendClient {
   }
 
   @Override
-  public CategoryJson createCategory(CategoryJson category) {
+  public CategoryJson addCategory(CategoryJson category) {
     try {
       final JdbcTemplate jdbcTemplate = new JdbcTemplate(
           new SingleConnectionDataSource(
