@@ -35,9 +35,10 @@ public class RegisterPage {
         return new LoginPage();
     }
 
-    public void checkErrorMessage(String message){
+    public RegisterPage checkErrorMessage(String message){
         formError.shouldBe(visible);
         formError.shouldHave(text(message));
+        return this;
     }
 
     public RegisterPage signUp(){
