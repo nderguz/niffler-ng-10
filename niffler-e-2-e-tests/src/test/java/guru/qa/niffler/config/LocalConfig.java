@@ -18,8 +18,8 @@ package guru.qa.niffler.config;
    return "jdbc:postgresql://localhost:5432/niffler-spend";
   }
 
-  @Override
-  public String githubUrl() {
-   return "https://api.github.com/";
-  }
+     @Override
+     public String ghUrl() {
+         return "https://api.github.com/";
+     }
  }

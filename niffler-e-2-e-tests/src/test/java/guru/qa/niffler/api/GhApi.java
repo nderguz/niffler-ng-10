@@ -8,12 +8,11 @@ import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 public interface GhApi {
-
-  @GET("repos/qa-guru/niffler/issues/{issue_number}")
-  @Headers({
-      "Accept: application/vnd.github+json",
-      "X-GitHub-Api-Version: 2022-11-28"
-  })
-  Call<JsonNode> issue(@Header("Authorization") String bearerToken,
-                       @Path("issue_number") String issueNumber);
+    @GET("repos/nderguz/niffler-ng-10/issues/{issue_number}")
+    @Headers({
+            "Accept: application/vnd.github+json",
+            "X-GitHub-Api-Version: 2022-11-28"
+    })
+    Call<JsonNode> issue(@Header("Authorization") String bearerToken,
+                         @Path("issue_number") String issueNumber);
 }

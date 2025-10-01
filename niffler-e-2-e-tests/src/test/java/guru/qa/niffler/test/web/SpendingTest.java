@@ -27,6 +27,7 @@ public class SpendingTest {
     void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
         final String newDescription = "Обучение Niffler Next Generation";
 
+
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin("test", "test")
                 .editSpending(spending.description())
