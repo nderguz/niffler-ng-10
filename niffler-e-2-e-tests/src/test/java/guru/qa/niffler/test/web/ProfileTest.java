@@ -1,12 +1,5 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.jupiter.extension.UsersQueueExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import guru.qa.niffler.jupiter.extension.UsersQueueExtension.*;
-
-
-
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.model.CategoryJson;
@@ -35,7 +28,7 @@ public class ProfileTest {
     @Test
     @Category(username = "test", archived = true)
     @DisplayName("Архивная категория должна отображаться в списке категорий")
-    public void archivedCategoryShouldPresentInCategoriesList(CategoryJson category) {
+    public void checkArchivedCategoryExists(CategoryJson category) {
         page.checkArchivedCategoryIsNotExists(category.name());
     }
 

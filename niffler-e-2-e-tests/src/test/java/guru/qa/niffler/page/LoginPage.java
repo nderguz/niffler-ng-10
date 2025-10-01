@@ -6,28 +6,33 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
 
 public class LoginPage {
-  private final SelenideElement usernameInput = $("#username");
-  private final SelenideElement passwordInput = $("#password");
-  private final SelenideElement submitBtn = $("#login-button");
-  private final SelenideElement createAccountBtn = $("#register-button");
-  private final SelenideElement formError = $(".form__error");
+    private final SelenideElement usernameInput = $("#username");
+    private final SelenideElement passwordInput = $("#password");
+    private final SelenideElement submitBtn = $("#login-button");
+    private final SelenideElement createAccountBtn = $("#register-button");
+    private final SelenideElement formError = $(".form__error");
 
-  public MainPage successLogin(String username, String password) {
-    usernameInput.val(username);
-    passwordInput.val(password);
-    submitBtn.click();
-    return new MainPage();
-  }
+    public MainPage successLogin(String username, String password) {
+        usernameInput.val(username);
+        passwordInput.val(password);
+        submitBtn.click();
+        return new MainPage();
+    }
 
-  public void badLogin(String username, String password){
-      usernameInput.val(username);
-      passwordInput.val(password);
-      submitBtn.click();
-      formError.shouldHave(text("Bad credentials"));
-  }
+    public LoginPage badLogin(String username, String password) {
+        usernameInput.val(username);
+        passwordInput.val(password);
+        submitBtn.click();
+        checkErrorMessage("Bad credentials");
+        return this;
+    }
 
-  public RegisterPage registerPage(){
-      createAccountBtn.click();
-      return new RegisterPage();
-  }
+    public RegisterPage registerPage() {
+        createAccountBtn.click();
+        return new RegisterPage();
+    }
+
+    public void checkErrorMessage(String message){
+        formError.shouldHave(text(message));
+    }
 }

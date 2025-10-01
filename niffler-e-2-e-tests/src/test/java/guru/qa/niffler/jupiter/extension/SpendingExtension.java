@@ -16,7 +16,6 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
   private final SpendClient spendClient = new SpendApiClient();
 
-  private final SpendClient spendClient = new SpendApiClient();
 
   @Override
   public void beforeEach(ExtensionContext context) {

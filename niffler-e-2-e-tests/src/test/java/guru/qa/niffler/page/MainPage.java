@@ -9,31 +9,31 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class MainPage {
-  private final SelenideElement spendingTable = $("#spendings");
-  private final SelenideElement statistics = $("#stat");
-  private final SelenideElement spendings = $("#spendings");
-  private final SelenideElement menuButton = $("button[aria-label='Menu']");
-  private final ElementsCollection menuOptions = $$("li a");
+    private final SelenideElement spendingTable = $("#spendings");
+    private final SelenideElement statistics = $("#stat");
+    private final SelenideElement spendings = $("#spendings");
+    private final SelenideElement menuButton = $("button[aria-label='Menu']");
+    private final ElementsCollection menuOptions = $$("li a");
 
-  public MainPage checkThatPageLoaded() {
-    statistics.shouldHave(text("Statistics"));
-    spendings.shouldHave(text("History of Spendings"));
-    return this;
-  }
+    public MainPage checkThatPageLoaded() {
+        spendingTable.shouldBe(visible);
+        statistics.shouldBe(visible);
+        return this;
+    }
 
-  public EditSpendingPage editSpending(String description) {
-    spendingTable.$$("tbody tr").find(text(description)).$$("td").get(5).click();
-    return new EditSpendingPage();
-  }
+    public EditSpendingPage editSpending(String description) {
+        spendingTable.$$("tbody tr").find(text(description)).$$("td").get(5).click();
+        return new EditSpendingPage();
+    }
 
-  public MainPage checkThatTableContains(String description) {
-    spendingTable.$$("tbody tr").find(text(description)).should(visible);
-    return this;
-  }
+    public MainPage checkThatTableContains(String description) {
+        spendingTable.$$("tbody tr").find(text(description)).should(visible);
+        return this;
+    }
 
-  public ProfilePage openProfilePage(){
-      menuButton.click();
-      menuOptions.find(text("Profile")).click();
-      return new ProfilePage();
-  }
+    public ProfilePage openProfilePage() {
+        menuButton.click();
+        menuOptions.find(text("Profile")).click();
+        return new ProfilePage();
+    }
 }

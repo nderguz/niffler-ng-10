@@ -63,7 +63,7 @@ public class RegisterTest {
     }
 
     @Test
-    @DisplayName("Главная страница корректно отображена после успешного логина")
+    @DisplayName("Главная страница корректно отображена после успешной регистрации и логина")
     public void mainPageShouldBeDisplayedAfterSuccessLogin() {
         String username = faker.name().username();
         String password = faker.name().lastName();
