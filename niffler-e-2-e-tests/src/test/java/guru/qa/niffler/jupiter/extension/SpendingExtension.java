@@ -13,10 +13,13 @@ import java.util.Date;
 public class SpendingExtension implements BeforeEachCallback, ParameterResolver {
 
   public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(SpendingExtension.class);
+
+  private final SpendClient spendClient = new SpendApiClient();
+
   private final SpendClient spendClient = new SpendApiClient();
 
   @Override
-  public void beforeEach(ExtensionContext context) throws Exception {
+  public void beforeEach(ExtensionContext context) {
     AnnotationSupport.findAnnotation(
         context.getRequiredTestMethod(),
         Spending.class
@@ -55,4 +58,5 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
     public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), SpendJson.class);
     }
+
 }

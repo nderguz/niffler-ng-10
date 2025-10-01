@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+
 import java.util.Objects;
 
 public class GhApiClient {
@@ -29,5 +30,4 @@ public class GhApiClient {
                 .body();
         return Objects.requireNonNull(response).get("state").asText();
     }
-
 }
