@@ -12,13 +12,19 @@ public class MainPage {
     private final SelenideElement spendingTable = $("#spendings");
     private final SelenideElement statistics = $("#stat");
     private final SelenideElement spendings = $("#spendings");
-    private final SelenideElement menuButton = $("button[aria-label='Menu']");
+    private final SelenideElement menuBtn = $("button[aria-label='Menu']");
     private final ElementsCollection menuOptions = $$("li a");
 
     public MainPage checkThatPageLoaded() {
         spendingTable.shouldBe(visible);
         statistics.shouldBe(visible);
         return this;
+    }
+
+    public FriendsPage openFriendsPage(){
+        menuBtn.click();
+        menuOptions.find(text("Friends")).click();
+        return new FriendsPage();
     }
 
     public EditSpendingPage editSpending(String description) {
@@ -32,7 +38,7 @@ public class MainPage {
     }
 
     public ProfilePage openProfilePage() {
-        menuButton.click();
+        menuBtn.click();
         menuOptions.find(text("Profile")).click();
         return new ProfilePage();
     }
