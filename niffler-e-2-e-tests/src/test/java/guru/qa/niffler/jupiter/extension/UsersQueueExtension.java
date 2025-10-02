@@ -36,6 +36,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
         WITH_FRIEND_USERS.add(new StaticUser("test2", "test2", "test5", null, null));
         WITH_INCOME_REQUEST_USERS.add(new StaticUser("test3", "test3", null, "test4", null));
         WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("test4", "test4", null, null, "test3"));
+        WITH_OUTCOME_REQUEST_USERS.add(new StaticUser("test5", "test5", null, null, "test6"));
     }
 
 
@@ -49,7 +50,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
             return;
         }
 
-        Map<Type, StaticUser> users = new HashMap<>();
+        Map<Type, List<StaticUser>> users = new HashMap<>();
         for (Type userType : userTypes) {
             Optional<StaticUser> user = Optional.empty();
             StopWatch sw = StopWatch.createStarted();
@@ -62,7 +63,7 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
                 }
             }
             user.ifPresentOrElse(u -> {
-                users.put(userType, u);
+                users.computeIfAbsent(userType, k -> new ArrayList<>()).add(u);
             }, () -> new IllegalStateException("Cant find user after 30 sec"));
         }
         context.getStore(NAMESPACE).put(context.getUniqueId(), users);
@@ -71,13 +72,13 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     @Override
     public void afterEach(ExtensionContext context) throws Exception {
-        Map<Type, StaticUser> users = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-        for (Map.Entry<Type, StaticUser> entry : users.entrySet()) {
+        Map<Type, List<StaticUser>> users = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
+        for (Map.Entry<Type, List<StaticUser>> entry : users.entrySet()) {
             switch (entry.getKey()) {
-                case EMPTY -> EMPTY_USERS.add(entry.getValue());
-                case WITH_FRIEND -> WITH_FRIEND_USERS.add(entry.getValue());
-                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(entry.getValue());
-                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(entry.getValue());
+                case EMPTY -> EMPTY_USERS.addAll(entry.getValue());
+                case WITH_FRIEND -> WITH_FRIEND_USERS.addAll(entry.getValue());
+                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.addAll(entry.getValue());
+                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.addAll(entry.getValue());
             }
         }
     }
@@ -90,8 +91,9 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (StaticUser) extensionContext.getStore(NAMESPACE)
+        List<StaticUser> test = (List<StaticUser>) extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class)
                 .get(parameterContext.getParameter().getAnnotation(UserType.class).value());
+        return test.stream().findFirst().get();
     }
 }
