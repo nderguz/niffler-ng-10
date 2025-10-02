@@ -20,17 +20,17 @@ public class FriendsPage {
     private final ElementsCollection friendRequestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
 
-    public FriendsPage checkFriendsListIsEmpty(){
+    public FriendsPage checkFriendsListIsEmpty() {
         myFriendsRows.first().shouldNotBe(visible);
         return this;
     }
 
-    public FriendsPage checkFriendsListIsNotEmpty(){
+    public FriendsPage checkFriendsListIsNotEmpty() {
         myFriendsRows.first().shouldBe(visible);
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible(){
+    public FriendsPage checkIncomeInvitationShouldBeVisible() {
         friendRequestsRow.first()
                 .shouldBe(visible)
                 .$("button[type='button']")
@@ -38,7 +38,7 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkOutcomeInvitationShouldBeVisible(String friendName){
+    public FriendsPage checkOutcomeInvitationShouldBeVisible(String friendName) {
         allPeopleTab.click();
         searchInput.setValue(friendName).pressEnter();
         allPeopleRows.findBy(text(friendName))
