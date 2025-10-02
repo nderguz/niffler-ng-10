@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import static guru.qa.niffler.jupiter.annotation.UserType.Type;
 
 
-public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
 
@@ -42,43 +42,42 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        List<Type> userTypes = Arrays.stream(context.getRequiredTestMethod().getParameters())
+        Arrays.stream(context.getRequiredTestMethod().getParameters())
                 .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
                 .map(p -> p.getAnnotation(UserType.class).value())
-                .toList();
-        if (userTypes.isEmpty()) {
-            return;
-        }
+                .forEach(ut -> {
+                    Optional<StaticUser> user = Optional.empty();
+                    StopWatch sw = StopWatch.createStarted();
+                    while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
+                        switch (ut) {
+                            case EMPTY -> user = Optional.ofNullable(EMPTY_USERS.poll());
+                            case WITH_FRIEND -> user = Optional.ofNullable(WITH_FRIEND_USERS.poll());
+                            case WITH_INCOME_REQUEST -> user = Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
+                            case WITH_OUTCOME_REQUEST -> user = Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
+                        }
+                    }
+                    Allure.getLifecycle()
+                            .updateTestCase(testCase -> testCase.setStart(new Date().getTime()));
+                    user.ifPresentOrElse(u -> ((Map<Type, StaticUser>) context.getStore(NAMESPACE).getOrComputeIfAbsent(
+                                    context.getUniqueId(),
+                                    key -> new HashMap<>()
+                            )).put(ut, u),
+                            () -> {
+                                throw new IllegalStateException("Can`t obtain user after 30s.");
+                            });
 
-        Map<Type, List<StaticUser>> users = new HashMap<>();
-        for (Type userType : userTypes) {
-            Optional<StaticUser> user = Optional.empty();
-            StopWatch sw = StopWatch.createStarted();
-            while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                switch (userType) {
-                    case EMPTY -> user = Optional.ofNullable(EMPTY_USERS.poll());
-                    case WITH_FRIEND -> user = Optional.ofNullable(WITH_FRIEND_USERS.poll());
-                    case WITH_INCOME_REQUEST -> user = Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
-                    case WITH_OUTCOME_REQUEST -> user = Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
-                }
-            }
-            user.ifPresentOrElse(u -> {
-                users.computeIfAbsent(userType, k -> new ArrayList<>()).add(u);
-            }, () -> new IllegalStateException("Cant find user after 30 sec"));
-        }
-        context.getStore(NAMESPACE).put(context.getUniqueId(), users);
-        Allure.getLifecycle().updateTestCase(testCase -> testCase.setStart(new Date().getTime()));
+                });
     }
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
-        Map<Type, List<StaticUser>> users = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-        for (Map.Entry<Type, List<StaticUser>> entry : users.entrySet()) {
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        Map<Type, StaticUser> users = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
+        for(Map.Entry<Type, StaticUser> entry : users.entrySet()){
             switch (entry.getKey()) {
-                case EMPTY -> EMPTY_USERS.addAll(entry.getValue());
-                case WITH_FRIEND -> WITH_FRIEND_USERS.addAll(entry.getValue());
-                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.addAll(entry.getValue());
-                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.addAll(entry.getValue());
+                case EMPTY -> EMPTY_USERS.add(entry.getValue());
+                case WITH_FRIEND -> WITH_FRIEND_USERS.add(entry.getValue());
+                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(entry.getValue());
+                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(entry.getValue());
             }
         }
     }
@@ -91,9 +90,8 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterEachCallbac
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        List<StaticUser> test = (List<StaticUser>) extensionContext.getStore(NAMESPACE)
+        return (StaticUser) extensionContext.getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), Map.class)
                 .get(parameterContext.getParameter().getAnnotation(UserType.class).value());
-        return test.stream().findFirst().get();
     }
 }
