@@ -1,6 +1,7 @@
 package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.UserType;
+import guru.qa.niffler.model.StaticUser;
 import io.qameta.allure.Allure;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.extension.*;
@@ -16,15 +17,6 @@ import static guru.qa.niffler.jupiter.annotation.UserType.Type;
 public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(UsersQueueExtension.class);
-
-    public record StaticUser(
-            String username,
-            String password,
-            String friend,
-            String income,
-            String outcome
-    ) {
-    }
 
     private static final Queue<StaticUser> EMPTY_USERS = new ConcurrentLinkedQueue<>();
     private static final Queue<StaticUser> WITH_FRIEND_USERS = new ConcurrentLinkedQueue<>();
@@ -43,18 +35,14 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecuti
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         Arrays.stream(context.getRequiredTestMethod().getParameters())
-                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class))
+                .filter(p -> AnnotationSupport.isAnnotated(p, UserType.class) && p.getType().isAssignableFrom(StaticUser.class))
                 .map(p -> p.getAnnotation(UserType.class).value())
                 .forEach(ut -> {
                     Optional<StaticUser> user = Optional.empty();
                     StopWatch sw = StopWatch.createStarted();
                     while (user.isEmpty() && sw.getTime(TimeUnit.SECONDS) < 30) {
-                        switch (ut) {
-                            case EMPTY -> user = Optional.ofNullable(EMPTY_USERS.poll());
-                            case WITH_FRIEND -> user = Optional.ofNullable(WITH_FRIEND_USERS.poll());
-                            case WITH_INCOME_REQUEST -> user = Optional.ofNullable(WITH_INCOME_REQUEST_USERS.poll());
-                            case WITH_OUTCOME_REQUEST -> user = Optional.ofNullable(WITH_OUTCOME_REQUEST_USERS.poll());
-                        }
+                        Queue<StaticUser> queue = getQueueByUserType(ut);
+                        user = Optional.ofNullable(queue.poll());
                     }
                     Allure.getLifecycle()
                             .updateTestCase(testCase -> testCase.setStart(new Date().getTime()));
@@ -69,15 +57,33 @@ public class UsersQueueExtension implements BeforeEachCallback, AfterTestExecuti
                 });
     }
 
+    private Queue<StaticUser> getQueueByUserType(Type userType){
+        switch (userType) {
+            case EMPTY -> {
+                return EMPTY_USERS;
+            }
+            case WITH_FRIEND -> {
+                return WITH_FRIEND_USERS;
+            }
+            case WITH_INCOME_REQUEST -> {
+                return WITH_INCOME_REQUEST_USERS;
+            }
+            case WITH_OUTCOME_REQUEST -> {
+                return WITH_OUTCOME_REQUEST_USERS;
+            }
+            default -> {
+                throw new IllegalArgumentException("Unknown user type was provided");
+            }
+        }
+    }
+
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         Map<Type, StaticUser> users = context.getStore(NAMESPACE).get(context.getUniqueId(), Map.class);
-        for(Map.Entry<Type, StaticUser> entry : users.entrySet()){
-            switch (entry.getKey()) {
-                case EMPTY -> EMPTY_USERS.add(entry.getValue());
-                case WITH_FRIEND -> WITH_FRIEND_USERS.add(entry.getValue());
-                case WITH_INCOME_REQUEST -> WITH_INCOME_REQUEST_USERS.add(entry.getValue());
-                case WITH_OUTCOME_REQUEST -> WITH_OUTCOME_REQUEST_USERS.add(entry.getValue());
+        if (users != null){
+            for(Map.Entry<Type, StaticUser> entry : users.entrySet()){
+                Queue<StaticUser> userQueue = getQueueByUserType(entry.getKey());
+                userQueue.add(entry.getValue());
             }
         }
     }

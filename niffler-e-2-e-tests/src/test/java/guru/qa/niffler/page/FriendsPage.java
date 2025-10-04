@@ -30,8 +30,8 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible() {
-        friendRequestsRow.first()
+    public FriendsPage checkIncomeInvitationShouldBeVisible(String friendName) {
+        friendRequestsRow.findBy(text(friendName))
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));

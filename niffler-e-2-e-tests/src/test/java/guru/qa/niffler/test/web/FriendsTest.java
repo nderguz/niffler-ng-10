@@ -4,6 +4,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.UserType;
 import guru.qa.niffler.jupiter.annotation.UsersQueue;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.StaticUser;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.codeborne.selenide.Selenide.open;
 import static guru.qa.niffler.jupiter.annotation.UserType.Type.*;
-import static guru.qa.niffler.jupiter.extension.UsersQueueExtension.StaticUser;
 
 @ExtendWith(BrowserExtension.class)
 public class FriendsTest {
@@ -45,7 +45,7 @@ public class FriendsTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.username(), user.password())
                 .openFriendsPage()
-                .checkIncomeInvitationShouldBeVisible();
+                .checkIncomeInvitationShouldBeVisible(user.income());
     }
 
     @Test
@@ -55,6 +55,6 @@ public class FriendsTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.username(), user.password())
                 .openFriendsPage()
-                .checkOutcomeInvitationShouldBeVisible("test3");
+                .checkOutcomeInvitationShouldBeVisible(user.outcome());
     }
 }
