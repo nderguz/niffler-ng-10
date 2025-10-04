@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -26,21 +27,30 @@ public class ProfileTest {
     }
 
     @Test
-    @Category(username = "test", archived = true)
+    @User(
+            username = "test",
+            categories = @Category(archived = true)
+    )
     @DisplayName("Архивная категория должна отображаться в списке категорий")
     public void checkArchivedCategoryExists(CategoryJson category) {
         page.checkArchivedCategoryIsNotExists(category.name());
     }
 
     @Test
-    @Category(username = "test")
+    @User(
+            username = "test",
+            categories = @Category
+    )
     @DisplayName("Активная категория должна отображаться в списке категорий")
     public void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
         page.checkCategoryExists(category.name());
     }
 
     @Test
-    @Category(username = "test", archived = true)
+    @User(
+            username = "test",
+            categories = @Category(archived = true)
+    )
     @DisplayName("Архивная категория не должна отображаться в списке категорий")
     public void archivedCategoryShouldNotPresentInCategoriesList(CategoryJson category) {
         page.checkArchivedCategoryIsNotExists(category.name());
