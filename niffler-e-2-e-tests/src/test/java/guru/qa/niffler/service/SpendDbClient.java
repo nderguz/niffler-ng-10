@@ -13,8 +13,8 @@ public class SpendDbClient {
 
     private static final Config CFG = Config.getInstance();
 
-    private final SpendDao spendDao = new SpendDaoJdbc();
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
+    private final SpendDao spendDao = new SpendDaoJdbc(categoryDao);
 
     public SpendJson createSpend(SpendJson spend) {
         SpendEntity spendEntity = SpendEntity.fromJson(spend);
