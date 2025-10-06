@@ -19,7 +19,7 @@ public class SpendingTest {
 
     @User(
             username = "test",
-            spendings =     @Spending(
+            spendings = @Spending(
                     category = "Учеба",
                     amount = 89900,
                     currency = CurrencyValues.RUB,

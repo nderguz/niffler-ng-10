@@ -3,8 +3,7 @@ package guru.qa.niffler.jupiter.extension;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.service.SpendApiClient;
-import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.SpendDbClient;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.extension.*;
@@ -13,7 +12,8 @@ import org.junit.platform.commons.support.AnnotationSupport;
 public class CategoryExtension implements BeforeEachCallback, AfterTestExecutionCallback, ParameterResolver {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(CategoryExtension.class);
-    private final SpendClient spendClient = new SpendApiClient();
+
+    private final SpendDbClient spendDbClient = new SpendDbClient();
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -27,7 +27,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 anno.username(),
                                 categoryAnno.archived()
                         );
-                        CategoryJson createdCategory = spendClient.addCategory(category);
+                        CategoryJson createdCategory = spendDbClient.addCategory(category);
                         if (categoryAnno.archived()) {
                             CategoryJson archivedCategory = new CategoryJson(
                                     createdCategory.id(),
@@ -35,7 +35,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                     createdCategory.username(),
                                     true
                             );
-                            createdCategory = spendClient.updateCategory(archivedCategory);
+                            createdCategory = spendDbClient.updateCategory(archivedCategory);
                         }
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
@@ -66,7 +66,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                     category.username(),
                     true
             );
-            spendClient.updateCategory(archivedCategory);
+            spendDbClient.updateCategory(archivedCategory);
         }
     }
 }

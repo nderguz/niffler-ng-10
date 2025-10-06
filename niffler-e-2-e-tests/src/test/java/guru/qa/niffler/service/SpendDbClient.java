@@ -7,7 +7,9 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
+import jakarta.persistence.EntityNotFoundException;
 
 public class SpendDbClient {
 
@@ -23,5 +25,20 @@ public class SpendDbClient {
             spendEntity.setCategory(categoryEntity);
         }
         return SpendJson.fromEntity(spendDao.create(spendEntity));
+    }
+
+    public CategoryJson addCategory(CategoryJson category) {
+        var createdCategory = categoryDao.create(CategoryEntity.fromJson(category));
+        return CategoryJson.fromEntity(createdCategory);
+    }
+
+    public CategoryJson updateCategory(CategoryJson archivedCategory) {
+        var category = categoryDao.findCategoryById(archivedCategory.id());
+        if(category.isPresent()){
+            category.get().setArchived(archivedCategory.archived());
+            var updatedCategory = categoryDao.updateCategory(category.get());
+            return CategoryJson.fromEntity(updatedCategory.get());
+        }
+        throw new EntityNotFoundException("Category not found");
     }
 }
