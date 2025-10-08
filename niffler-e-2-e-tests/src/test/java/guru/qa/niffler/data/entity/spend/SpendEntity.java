@@ -11,7 +11,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-
 public class SpendEntity implements Serializable {
 
     private UUID id;
