@@ -14,6 +14,7 @@ buildscript {
         hibernateVersion = '7.1.1.Final'
         kafkaClientsVersion = '4.1.0'
         saajVersion = '3.0.4'
+        atomikOsVersion = '6.0.0'
         springDataCommonsVersion = '3.5.4'
         wiremockVersion = '3.13.1'
         ashotVersion = '1.5.4'
@@ -82,6 +83,9 @@ dependencies {
     }
     testImplementation "org.springframework.data:spring-data-commons:${springDataCommonsVersion}"
     // DB
+    testImplementation "com.atomikos:transactions-jta:${atomikOsVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-hibernate4:${atomikOsVersion}:jakarta"
+    testImplementation "com.atomikos:transactions-jdbc:${atomikOsVersion}"
     testImplementation "org.springframework:spring-jdbc:${springJdbcVersion}"
     testImplementation "org.postgresql:postgresql:${project.ext.postgresDriverVersion}"
     testImplementation "p6spy:p6spy:${p6spyVersion}"

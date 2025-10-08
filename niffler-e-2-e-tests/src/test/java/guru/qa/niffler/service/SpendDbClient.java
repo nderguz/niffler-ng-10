@@ -11,34 +11,42 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 import jakarta.persistence.EntityNotFoundException;
 
+import static guru.qa.niffler.data.Databases.transaction;
+
 public class SpendDbClient {
 
     private static final Config CFG = Config.getInstance();
 
-    private final CategoryDao categoryDao = new CategoryDaoJdbc();
-    private final SpendDao spendDao = new SpendDaoJdbc(categoryDao);
-
     public SpendJson createSpend(SpendJson spend) {
-        SpendEntity spendEntity = SpendEntity.fromJson(spend);
-        if (spendEntity.getCategory().getId() == null) {
-            CategoryEntity categoryEntity = categoryDao.create(spendEntity.getCategory());
-            spendEntity.setCategory(categoryEntity);
-        }
-        return SpendJson.fromEntity(spendDao.create(spendEntity));
+        return transaction(connection -> {
+            SpendEntity spendEntity = SpendEntity.fromJson(spend);
+            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc(connection);
+            if (spendEntity.getCategory().getId() == null) {
+                CategoryEntity categoryEntity = categoryDaoJdbc.create(spendEntity.getCategory());
+                spendEntity.setCategory(categoryEntity);
+            }
+            return SpendJson.fromEntity(new SpendDaoJdbc(categoryDaoJdbc, connection).create(spendEntity));
+        }, CFG.spendJdbcUrl());
     }
 
     public CategoryJson addCategory(CategoryJson category) {
-        var createdCategory = categoryDao.create(CategoryEntity.fromJson(category));
-        return CategoryJson.fromEntity(createdCategory);
+        return transaction(connection -> {
+            var createdCategory = new CategoryDaoJdbc(connection).create(CategoryEntity.fromJson(category));
+            return CategoryJson.fromEntity(createdCategory);
+        }, CFG.spendJdbcUrl());
     }
 
     public CategoryJson updateCategory(CategoryJson archivedCategory) {
-        var category = categoryDao.findCategoryById(archivedCategory.id());
-        if(category.isPresent()){
-            category.get().setArchived(archivedCategory.archived());
-            var updatedCategory = categoryDao.updateCategory(category.get());
-            return CategoryJson.fromEntity(updatedCategory.get());
-        }
-        throw new EntityNotFoundException("Category not found");
+        return transaction(connection -> {
+            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc(connection);
+            var category = categoryDaoJdbc.findCategoryById(archivedCategory.id());
+            if (category.isPresent()) {
+                category.get().setArchived(archivedCategory.archived());
+                var updatedCategory = categoryDaoJdbc.updateCategory(category.get());
+                return CategoryJson.fromEntity(updatedCategory.get());
+            }
+            throw new EntityNotFoundException("Category not found");
+        }, CFG.spendJdbcUrl());
+
     }
 }
