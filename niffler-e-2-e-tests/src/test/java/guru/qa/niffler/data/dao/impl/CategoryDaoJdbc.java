@@ -1,6 +1,5 @@
 package guru.qa.niffler.data.dao.impl;
 
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
@@ -13,7 +12,6 @@ import java.util.UUID;
 public class CategoryDaoJdbc implements CategoryDao {
 
     private final Connection connection;
-    private static final Config CFG = Config.getInstance();
 
     public CategoryDaoJdbc(Connection connection) {
         this.connection = connection;
@@ -83,12 +81,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    CategoryEntity ce = new CategoryEntity();
-                    ce.setId(rs.getObject("id", UUID.class));
-                    ce.setUsername(rs.getString("username"));
-                    ce.setName(rs.getString("name"));
-                    ce.setArchived(rs.getBoolean("archived"));
-                    return Optional.of(ce);
+                    return Optional.of(createCategoryEntity(rs));
                 } else {
                     return Optional.empty();
                 }
@@ -120,7 +113,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public void deleteCategory(CategoryEntity category) {
+    public void delete(CategoryEntity category) {
 
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE from category WHERE id = ?"
@@ -134,7 +127,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public Optional<CategoryEntity> updateCategory(CategoryEntity category) {
+    public CategoryEntity update(CategoryEntity category) {
 
         try (PreparedStatement ps = connection.prepareStatement(
                 "UPDATE category " +
@@ -146,12 +139,9 @@ public class CategoryDaoJdbc implements CategoryDao {
             ps.setObject(3, category.isArchived());
             ps.setObject(4, category.getId());
 
-            int updatedRow = ps.executeUpdate();
-            if (updatedRow > 0) {
-                return findCategoryById(category.getId());
-            } else {
-                return Optional.empty();
-            }
+            ps.executeUpdate();
+
+            return category;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

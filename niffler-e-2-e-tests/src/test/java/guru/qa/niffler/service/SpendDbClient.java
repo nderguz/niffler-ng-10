@@ -2,21 +2,35 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.SpendDao;
 import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
-import jakarta.persistence.EntityNotFoundException;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static guru.qa.niffler.data.Databases.transaction;
 
-public class SpendDbClient {
+public class SpendDbClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
 
+    @Override
+    public SpendJson getSpend(String id, String username) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public SpendJson getSpends(String username, CurrencyValues filterCurrency, Date from, Date to) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
     public SpendJson createSpend(SpendJson spend) {
         return transaction(connection -> {
             SpendEntity spendEntity = SpendEntity.fromJson(spend);
@@ -25,10 +39,26 @@ public class SpendDbClient {
                 CategoryEntity categoryEntity = categoryDaoJdbc.create(spendEntity.getCategory());
                 spendEntity.setCategory(categoryEntity);
             }
-            return SpendJson.fromEntity(new SpendDaoJdbc(categoryDaoJdbc, connection).create(spendEntity));
+            return SpendJson.fromEntity(new SpendDaoJdbc(connection).create(spendEntity));
         }, CFG.spendJdbcUrl());
     }
 
+    @Override
+    public SpendJson editSpend(SpendJson spend) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public void deleteSpend(String username, List<String> ids) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
+        return List.of();
+    }
+
+    @Override
     public CategoryJson addCategory(CategoryJson category) {
         return transaction(connection -> {
             var createdCategory = new CategoryDaoJdbc(connection).create(CategoryEntity.fromJson(category));
@@ -36,17 +66,19 @@ public class SpendDbClient {
         }, CFG.spendJdbcUrl());
     }
 
-    public CategoryJson updateCategory(CategoryJson archivedCategory) {
+    @Override
+    public CategoryJson updateCategory(CategoryJson category) {
         return transaction(connection -> {
-            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc(connection);
-            var category = categoryDaoJdbc.findCategoryById(archivedCategory.id());
-            if (category.isPresent()) {
-                category.get().setArchived(archivedCategory.archived());
-                var updatedCategory = categoryDaoJdbc.updateCategory(category.get());
-                return CategoryJson.fromEntity(updatedCategory.get());
-            }
-            throw new EntityNotFoundException("Category not found");
+            CategoryDao categoryDaoJdbc = new CategoryDaoJdbc(connection);
+            CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+            categoryDaoJdbc.update(categoryEntity);
+            return category;
         }, CFG.spendJdbcUrl());
 
+    }
+
+    @Override
+    public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
