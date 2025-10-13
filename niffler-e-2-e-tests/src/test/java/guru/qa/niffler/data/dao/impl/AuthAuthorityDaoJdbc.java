@@ -47,6 +47,34 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
+    public List<AuthorityEntity> createWithError(AuthorityEntity... authorities) {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "INSERT INTO authority (user_id, authority)" +
+                        "VALUES (?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        )) {
+            for (AuthorityEntity authority : authorities) {
+                ps.setObject(1, authority.getUserId());
+                ps.setString(2, authority.getAuthority().name());
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                List<AuthorityEntity> createdAuthorities = new ArrayList<>();
+                while (rs.next()) {
+                    createdAuthorities.add(createAuthorityEntity(rs));
+                    throw new SQLException("OOPS!");
+                }
+                return createdAuthorities;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
     public List<AuthorityEntity> findAllByUserId(UUID userId) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "SELECT * FROM authority WHERE user_id = ?"
@@ -68,13 +96,16 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     }
 
     @Override
-    public void delete(AuthorityEntity authority) {
+    public void delete(AuthorityEntity... authority) {
         try (PreparedStatement ps = connection.prepareStatement(
                 "DELETE FROM authority WHERE id = ?"
         )) {
-
-            ps.setObject(1, authority.getId());
-            ps.execute();
+            for (AuthorityEntity auth : authority) {
+                ps.setObject(1, auth.getId());
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

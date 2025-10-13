@@ -5,8 +5,6 @@ import com.atomikos.jdbc.AtomikosDataSourceBean;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import org.apache.commons.lang3.StringUtils;
-import org.postgresql.ds.PGSimpleDataSource;
-import org.postgresql.xa.PGXADataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -33,9 +31,14 @@ public class Databases {
 
 
     public static <T> T transaction(Function<Connection, T> function, String jdbcUrl) {
+        return transaction(function, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
+    }
+
+    private static <T> T transaction(Function<Connection, T> function, String jdbcUrl, int isolationLvl) {
         Connection connection = null;
         try {
             connection = connection(jdbcUrl);
+            connection.setTransactionIsolation(isolationLvl);
             connection.setAutoCommit(false);
             T result = function.apply(connection);
             connection.commit();
@@ -55,9 +58,14 @@ public class Databases {
     }
 
     public static void transaction(Consumer<Connection> consumer, String jdbcUrl) {
+        transaction(consumer, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
+    }
+
+    private static void transaction(Consumer<Connection> consumer, String jdbcUrl, int isolationLvl) {
         Connection connection = null;
         try {
             connection = connection(jdbcUrl);
+            connection.setTransactionIsolation(isolationLvl);
             connection.setAutoCommit(false);
             consumer.accept(connection);
             connection.commit();
@@ -74,6 +82,11 @@ public class Databases {
             throw new RuntimeException(e);
         }
     }
+
+    /*
+        Тут честно не до конца понял, как в xaTransaction передать кастомный уровень изоляции, прошу подсказку, т.к.
+        в документации особо ничего нет
+     */
 
     public static <T> T xaTransaction(XaFunction<T>... actions) {
         UserTransaction ut = new UserTransactionImp();

@@ -21,7 +21,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO user  (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)" +
+                "INSERT INTO \"user\"  (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)" +
                         "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, user.getUsername());
@@ -74,27 +74,6 @@ public class AuthUserDaoJdbc implements AuthUserDao {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public AuthUserEntity update(AuthUserEntity user) {
-        try(PreparedStatement ps = connection.prepareStatement(
-                "UPDATE user SET username = ?, password = ?, enabled = ?, " +
-                        "account_non_expired = ?, account_non_locked = ?, credentials_non_expired = ? " +
-                        "WHERE id = ?"
-        )){
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPassword());
-            ps.setBoolean(3, user.getEnabled());
-            ps.setBoolean(4, user.getAccountNonExpired());
-            ps.setBoolean(5, user.getAccountNonLocked());
-            ps.setBoolean(6, user.getCredentialsNonExpired());
-            ps.setObject(7, user.getId());
-            ps.execute();
-            return user;
-        }catch (SQLException e){
             throw new RuntimeException(e);
         }
     }

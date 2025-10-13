@@ -10,7 +10,5 @@ public interface AuthUserDao {
 
     Optional<AuthUserEntity> findById(UUID id);
 
-    AuthUserEntity update(AuthUserEntity user);
-
     void deleteById(UUID id);
 }
