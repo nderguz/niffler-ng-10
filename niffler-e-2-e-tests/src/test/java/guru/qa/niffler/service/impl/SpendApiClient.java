@@ -13,6 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -129,6 +130,21 @@ public class SpendApiClient implements SpendClient {
         }
         assertEquals(200, response.code());
         return response.body();
+    }
+
+    @Override
+    public Optional<CategoryJson> findCategoryById(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<CategoryJson> findAllByUsername(String username) {
+        return List.of();
+    }
+
+    @Override
+    public void deleteCategory(CategoryJson category) {
+
     }
 
     @Override
