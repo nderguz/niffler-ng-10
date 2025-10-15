@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +54,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user WHERE id = ?"
+                "SELECT * FROM \"user\" WHERE id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
@@ -80,12 +82,39 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
     @Override
     public void deleteById(UUID id) {
-        try(PreparedStatement ps = connection.prepareStatement(
-                "DELETE from user WHERE id = ?"
-        )){
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE from \"user\" WHERE id = ?"
+        )) {
             ps.setObject(1, UUID.class);
             ps.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<AuthUserEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"user\" "
+        )) {
+            ps.execute();
+
+            try (ResultSet rs = ps.getResultSet()) {
+                List<AuthUserEntity> entities = new ArrayList<>();
+                while (rs.next()) {
+                    AuthUserEntity au = new AuthUserEntity();
+                    au.setId(rs.getObject("id", UUID.class));
+                    au.setUsername(rs.getString("username"));
+                    au.setPassword(rs.getString("password"));
+                    au.setEnabled(rs.getBoolean("enabled"));
+                    au.setAccountNonExpired(rs.getBoolean("account_non_expired"));
+                    au.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
+                    au.setAccountNonLocked(rs.getBoolean("account_non_locked"));
+                    entities.add(au);
+                }
+                return entities;
+            }
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

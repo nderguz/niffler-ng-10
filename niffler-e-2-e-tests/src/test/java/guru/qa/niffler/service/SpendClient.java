@@ -27,11 +27,4 @@ public interface SpendClient {
 
     CategoryJson updateCategory(CategoryJson category);
 
-    Optional<CategoryJson> findCategoryById(UUID id);
-
-    List<CategoryJson> findAllByUsername(String username);
-
-    void deleteCategory(CategoryJson category);
-
-    Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username);
 }

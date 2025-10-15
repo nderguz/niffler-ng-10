@@ -29,8 +29,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO category (name, username, archived) VALUES (?, ?, ?) " +
-                            "VALUES (?, ?, ?)",
+                    "INSERT INTO category (name, username, archived) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, category.getName());
             ps.setString(2, category.getUsername());
@@ -71,10 +70,19 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     @Override
     public List<CategoryEntity> findAllByUsername(String username) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        return jdbcTemplate.queryForList(
+        return jdbcTemplate.query(
                 "SELECT * FROM category WHERE username = ?",
-                CategoryEntity.class,
+                CategoryEntityRowMapper.INSTANCE,
                 username
+        );
+    }
+
+    @Override
+    public List<CategoryEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM category",
+                CategoryEntityRowMapper.INSTANCE
         );
     }
 
@@ -95,7 +103,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(
-                            "UPDATE category SET (name = ?, username = ?, archived = ?) where id = ?");
+                            "UPDATE category SET name = ?, username = ?, archived = ? where id = ?");
                     ps.setString(1, category.getName());
                     ps.setString(2, category.getUsername());
                     ps.setBoolean(3, category.isArchived());

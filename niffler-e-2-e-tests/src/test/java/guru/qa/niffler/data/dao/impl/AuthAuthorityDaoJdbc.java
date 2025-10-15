@@ -79,6 +79,26 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
         }
     }
 
+    @Override
+    public List<AuthorityEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM authority"
+        )) {
+
+            ps.execute();
+
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                List<AuthorityEntity> createdAuthorities = new ArrayList<>();
+                while (rs.next()) {
+                    createdAuthorities.add(createAuthorityEntity(rs));
+                }
+                return createdAuthorities;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private AuthorityEntity createAuthorityEntity(ResultSet rs) throws SQLException {
         AuthorityEntity ae = new AuthorityEntity();
         ae.setId(rs.getObject("id", UUID.class));

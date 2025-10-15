@@ -131,24 +131,4 @@ public class SpendApiClient implements SpendClient {
         assertEquals(200, response.code());
         return response.body();
     }
-
-    @Override
-    public Optional<CategoryJson> findCategoryById(UUID id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<CategoryJson> findAllByUsername(String username) {
-        return List.of();
-    }
-
-    @Override
-    public void deleteCategory(CategoryJson category) {
-
-    }
-
-    @Override
-    public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username) {
-        throw new UnsupportedOperationException("Not implemented :(");
-    }
 }

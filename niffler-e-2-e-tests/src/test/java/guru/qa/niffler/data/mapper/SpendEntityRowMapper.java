@@ -19,12 +19,16 @@ public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
     @Override
     public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
         SpendEntity result = new SpendEntity();
+        CategoryEntity category = new CategoryEntity();
+        category.setId(rs.getObject("category_id", UUID.class));
+
         result.setId(rs.getObject("id", UUID.class));
         result.setUsername(rs.getString("username"));
         result.setSpendDate(rs.getDate("spend_date"));
         result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
         result.setAmount(rs.getDouble("amount"));
         result.setDescription(rs.getString("description"));
+        result.setCategory(category);
         return result;
     }
 }
