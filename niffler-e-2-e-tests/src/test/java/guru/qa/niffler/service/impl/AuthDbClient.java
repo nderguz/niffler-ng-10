@@ -22,7 +22,6 @@ public class AuthDbClient implements AuthClient {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-
     @Override
     public AuthUserJson create(AuthUserJson user) {
         user.setPassword(pe.encode(user.getPassword()));
