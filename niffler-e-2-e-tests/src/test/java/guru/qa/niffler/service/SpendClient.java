@@ -1,8 +1,8 @@
 package guru.qa.niffler.service;
 
-import guru.qa.niffler.model.CategoryJson;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.spend.SpendJson;
 
 import java.util.Date;
 import java.util.List;
