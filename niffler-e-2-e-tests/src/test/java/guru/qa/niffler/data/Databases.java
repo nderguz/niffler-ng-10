@@ -34,7 +34,7 @@ public class Databases {
         return transaction(function, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
     }
 
-    private static <T> T transaction(Function<Connection, T> function, String jdbcUrl, int isolationLvl) {
+    public static <T> T transaction(Function<Connection, T> function, String jdbcUrl, int isolationLvl) {
         Connection connection = null;
         try {
             connection = connection(jdbcUrl);
@@ -61,7 +61,7 @@ public class Databases {
         transaction(consumer, jdbcUrl, Connection.TRANSACTION_REPEATABLE_READ);
     }
 
-    private static void transaction(Consumer<Connection> consumer, String jdbcUrl, int isolationLvl) {
+    public static void transaction(Consumer<Connection> consumer, String jdbcUrl, int isolationLvl) {
         Connection connection = null;
         try {
             connection = connection(jdbcUrl);
@@ -83,18 +83,20 @@ public class Databases {
         }
     }
 
-    /*
-        Тут честно не до конца понял, как в xaTransaction передать кастомный уровень изоляции, прошу подсказку, т.к.
-        в документации особо ничего нет
-     */
 
-    public static <T> T xaTransaction(XaFunction<T>... actions) {
+    public static <T> T xaTransaction(XaFunction<T>... actions){
+        return xaTransaction(Connection.TRANSACTION_REPEATABLE_READ, actions);
+    }
+
+    public static <T> T xaTransaction(int isolationLvl, XaFunction<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             T result = null;
             for (XaFunction<T> action : actions) {
-                result = action.function.apply(connection(action.jdbcUrl));
+                Connection conn = connection(action.jdbcUrl);
+                conn.setTransactionIsolation(isolationLvl);
+                result = action.function.apply(conn);
             }
 
             ut.commit();
@@ -109,12 +111,18 @@ public class Databases {
         }
     }
 
-    public static void xaTransaction(XaConsumer... actions) {
+    public static void xaTransaction(XaConsumer... actions){
+        xaTransaction(Connection.TRANSACTION_REPEATABLE_READ, actions);
+    }
+
+    public static void xaTransaction(int isolationLvl, XaConsumer... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
             for (XaConsumer action : actions) {
-                action.consumer.accept(connection(action.jdbcUrl));
+                Connection conn = connection(action.jdbcUrl);
+                conn.setTransactionIsolation(isolationLvl);
+                action.consumer.accept(conn);
             }
             ut.commit();
         } catch (Exception e) {

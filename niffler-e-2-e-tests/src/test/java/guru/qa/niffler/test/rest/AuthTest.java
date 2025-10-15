@@ -21,17 +21,4 @@ public class AuthTest {
         user.setEnabled(true);
         dbClient.create(user);
     }
-
-    @Test
-    public void correctTransactionRollback() {
-        AuthDbClient dbClient = new AuthDbClient();
-        AuthUserJson user = new AuthUserJson();
-        user.setUsername(randomUsername());
-        user.setPassword(randomPassword());
-        user.setCredentialsNonExpired(true);
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setEnabled(true);
-        dbClient.createWithError(user);
-    }
 }

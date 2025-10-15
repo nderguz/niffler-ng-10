@@ -11,7 +11,5 @@ public interface AuthAuthorityDao {
 
     List<AuthorityEntity> findAllByUserId(UUID userId);
 
-    List<AuthorityEntity> createWithError(AuthorityEntity... authorities);
-
     void delete(AuthorityEntity... authority);
 }
