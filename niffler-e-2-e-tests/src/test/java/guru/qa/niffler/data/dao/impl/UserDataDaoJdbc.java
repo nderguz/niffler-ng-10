@@ -5,6 +5,8 @@ import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.model.CurrencyValues;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +22,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     public UserEntity create(UserEntity user) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT INTO user (username, currency, firstname, surname, full_name, photo, photo_small)" +
+                "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)" +
                         "VALUES (?, ?, ?, ?, ?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS
         )) {
@@ -53,7 +55,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     public Optional<UserEntity> findById(UUID id) {
 
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user where id = ?"
+                "SELECT * FROM \"user\" where id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
@@ -72,7 +74,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "SELECT * FROM user where username = ?"
+                "SELECT * FROM \"user\" where username = ?"
         )) {
             ps.setString(1, username);
             ps.execute();
@@ -91,10 +93,31 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     @Override
     public void delete(UserEntity user) {
         try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM user where id = ?"
+                "DELETE FROM \"user\" where id = ?"
         )) {
             ps.setObject(1, user.getId());
             ps.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "SELECT * FROM \"user\" "
+        )) {
+            ps.execute();
+
+            try (ResultSet rs = ps.getResultSet()) {
+                List<UserEntity> entities = new ArrayList<>();
+
+                while (rs.next()) {
+                    entities.add(createUserEntity(rs));
+                }
+
+                return entities;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
