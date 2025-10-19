@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-            ps.setBoolean(3,user.getEnabled());
+            ps.setBoolean(3, user.getEnabled());
             ps.setBoolean(4, user.getAccountNonExpired());
             ps.setBoolean(5, user.getAccountNonLocked());
             ps.setBoolean(6, user.getCredentialsNonExpired());
@@ -60,5 +61,14 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
     @Override
     public void deleteById(UUID id) {
 
+    }
+
+    @Override
+    public List<AuthUserEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM \"user\" ",
+                AuthUserEntityRowMapper.INSTANCE
+        );
     }
 }

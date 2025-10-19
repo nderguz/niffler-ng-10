@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,11 +33,11 @@ public class UdUserDaoSpringJdbc implements UserdataUserDao {
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getCurrency().name());
-            ps.setString(3,user.getFirstname());
+            ps.setString(3, user.getFirstname());
             ps.setString(4, user.getSurname());
             ps.setString(5, user.getFullname());
             ps.setBytes(6, user.getPhoto());
-            ps.setBytes( 6, user.getPhotoSmall());
+            ps.setBytes(6, user.getPhotoSmall());
             return ps;
         }, kh);
 
@@ -66,5 +67,14 @@ public class UdUserDaoSpringJdbc implements UserdataUserDao {
     @Override
     public void delete(UserEntity user) {
 
+    }
+
+    @Override
+    public List<UserEntity> findAll() {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query(
+                "SELECT * FROM \"user\" ",
+                UdUserEntityRowMapper.INSTANCE
+        );
     }
 }

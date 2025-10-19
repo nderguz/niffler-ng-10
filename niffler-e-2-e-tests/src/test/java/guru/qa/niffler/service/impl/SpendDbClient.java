@@ -6,14 +6,13 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static guru.qa.niffler.data.Databases.transaction;
 
@@ -56,7 +55,7 @@ public class SpendDbClient implements SpendClient {
 
     @Override
     public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
-        return List.of();
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
@@ -75,11 +74,5 @@ public class SpendDbClient implements SpendClient {
             categoryDaoJdbc.update(categoryEntity);
             return category;
         }, CFG.spendJdbcUrl());
-
-    }
-
-    @Override
-    public Optional<CategoryJson> findCategoryByNameAndUsername(String categoryName, String username) {
-        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
