@@ -49,7 +49,7 @@ public class SpendDaoSpringJdbc implements SpendDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
-                        "SELECT * FROM category WHERE id = ?",
+                        "SELECT * FROM spend WHERE id = ?",
                         SpendEntityRowMapper.INSTANCE,
                         id
                 )

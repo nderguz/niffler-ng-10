@@ -91,7 +91,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(
-                            "DELETE from category where id = ?");
+                            "DELETE FROM category WHERE id = ?");
                     ps.setObject(1, category.getId());
                     return ps;
                 }
@@ -103,7 +103,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(
-                            "UPDATE category SET name = ?, username = ?, archived = ? where id = ?");
+                            "UPDATE category SET name = ?, username = ?, archived = ? WHERE id = ?");
                     ps.setString(1, category.getName());
                     ps.setString(2, category.getUsername());
                     ps.setBoolean(3, category.isArchived());
