@@ -1,10 +1,11 @@
 package guru.qa.niffler.service;
 
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.auth.AuthUserJson;
 
-public interface AuthClient {
+public interface UserClient {
 
-    AuthUserJson create(AuthUserJson user);
+    UserJson create(AuthUserJson user);
 
     void delete(AuthUserJson user);
 }

@@ -1,7 +1,7 @@
 package guru.qa.niffler.test.rest;
 
 import guru.qa.niffler.model.auth.AuthUserJson;
-import guru.qa.niffler.service.impl.AuthDbClient;
+import guru.qa.niffler.service.impl.UserDbClient;
 import org.junit.jupiter.api.Test;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomPassword;
@@ -11,7 +11,7 @@ public class AuthTest {
 
     @Test
     public void successTransactionTest() {
-        AuthDbClient dbClient = new AuthDbClient();
+        UserDbClient dbClient = new UserDbClient();
         AuthUserJson user = new AuthUserJson();
         user.setUsername(randomUsername());
         user.setPassword(randomPassword());
