@@ -14,7 +14,6 @@ import guru.qa.niffler.service.SpendClient;
 import java.util.Date;
 import java.util.List;
 
-import static guru.qa.niffler.data.Databases.transaction;
 
 public class SpendDbClient implements SpendClient {
 
@@ -32,15 +31,16 @@ public class SpendDbClient implements SpendClient {
 
     @Override
     public SpendJson createSpend(SpendJson spend) {
-        return transaction(connection -> {
-            SpendEntity spendEntity = SpendEntity.fromJson(spend);
-            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc(connection);
-            if (spendEntity.getCategory().getId() == null) {
-                CategoryEntity categoryEntity = categoryDaoJdbc.create(spendEntity.getCategory());
-                spendEntity.setCategory(categoryEntity);
-            }
-            return SpendJson.fromEntity(new SpendDaoJdbc(connection).create(spendEntity));
-        }, CFG.spendJdbcUrl());
+        return null;
+//        return execute(connection -> {
+//            SpendEntity spendEntity = SpendEntity.fromJson(spend);
+//            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc(connection);
+//            if (spendEntity.getCategory().getId() == null) {
+//                CategoryEntity categoryEntity = categoryDaoJdbc.create(spendEntity.getCategory());
+//                spendEntity.setCategory(categoryEntity);
+//            }
+//            return SpendJson.fromEntity(new SpendDaoJdbc(connection).create(spendEntity));
+//        }, CFG.spendJdbcUrl());
     }
 
     @Override
@@ -60,19 +60,21 @@ public class SpendDbClient implements SpendClient {
 
     @Override
     public CategoryJson addCategory(CategoryJson category) {
-        return transaction(connection -> {
-            var createdCategory = new CategoryDaoJdbc(connection).create(CategoryEntity.fromJson(category));
-            return CategoryJson.fromEntity(createdCategory);
-        }, CFG.spendJdbcUrl());
+        return null;
+//        return transaction(connection -> {
+//            var createdCategory = new CategoryDaoJdbc(connection).create(CategoryEntity.fromJson(category));
+//            return CategoryJson.fromEntity(createdCategory);
+//        }, CFG.spendJdbcUrl());
     }
 
     @Override
     public CategoryJson updateCategory(CategoryJson category) {
-        return transaction(connection -> {
-            CategoryDao categoryDaoJdbc = new CategoryDaoJdbc(connection);
-            CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
-            categoryDaoJdbc.update(categoryEntity);
-            return category;
-        }, CFG.spendJdbcUrl());
+        return null;
+        //        return transaction(connection -> {
+//            CategoryDao categoryDaoJdbc = new CategoryDaoJdbc(connection);
+//            CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+//            categoryDaoJdbc.update(categoryEntity);
+//            return category;
+//        }, CFG.spendJdbcUrl());
     }
 }

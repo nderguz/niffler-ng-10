@@ -31,7 +31,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
             ps.setString(4, user.getSurname());
             ps.setString(5, user.getFullname());
             ps.setObject(6, user.getPhoto());
-            ps.setObject(6, user.getPhotoSmall());
+            ps.setObject(7, user.getPhotoSmall());
 
             ps.executeUpdate();
 
