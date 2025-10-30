@@ -7,7 +7,6 @@ import guru.qa.niffler.data.dao.impl.AuthUserDaoJdbc;
 import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.UdUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.UserDataDaoJdbc;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;

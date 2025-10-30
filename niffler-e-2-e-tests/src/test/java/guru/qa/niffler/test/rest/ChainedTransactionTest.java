@@ -2,7 +2,6 @@ package guru.qa.niffler.test.rest;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.impl.*;
-import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.user.UserEntity;
