@@ -23,11 +23,10 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     public void create(AuthorityEntity... authorities) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO authority (user_id, authority)" +
-                        "VALUES (?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS
+                        "VALUES (?, ?)"
         )) {
             for (AuthorityEntity authority : authorities) {
-                ps.setObject(1, authority.getUserId());
+                ps.setObject(1, authority.getUser().getId());
                 ps.setString(2, authority.getAuthority().name());
                 ps.addBatch();
                 ps.clearParameters();
@@ -101,7 +100,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private AuthorityEntity createAuthorityEntity(ResultSet rs) throws SQLException {
         AuthorityEntity ae = new AuthorityEntity();
         ae.setId(rs.getObject("id", UUID.class));
-        ae.setUserId(rs.getObject("user_id", UUID.class));
+//        ae.setUser(rs.getObject("user_id", UUID.class));
         ae.setAuthority(Authority.valueOf(rs.getString("authority")));
         return ae;
     }

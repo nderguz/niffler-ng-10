@@ -1,9 +1,11 @@
 package guru.qa.niffler.test.rest;
 
-import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.impl.SpendDbClient;
+import guru.qa.niffler.service.impl.UserDbClient;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -11,10 +13,10 @@ import java.util.Date;
 public class JdbcTest {
 
     @Test
-    public void daoTest(){
+    public void txTest() {
         SpendDbClient spendDbClient = new SpendDbClient();
 
-        SpendJson spend =  spendDbClient.createSpend(
+        SpendJson spend = spendDbClient.createSpend(
                 new SpendJson(
                         null,
                         new Date(),
@@ -32,5 +34,24 @@ public class JdbcTest {
         );
 
         System.out.println(spend);
+    }
+
+    @Test
+    public void springJdbcTest() {
+        UserDbClient usersDbClient = new UserDbClient();
+        UserJson user = usersDbClient.create(
+                new UserJson(
+                        null,
+                        "test-10",
+                        null,
+                        null,
+                        null,
+                        CurrencyValues.RUB,
+                        null,
+                        null,
+                        null
+                )
+        );
+        System.out.println(user);
     }
 }

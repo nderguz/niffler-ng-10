@@ -5,9 +5,9 @@ import guru.qa.niffler.data.dao.impl.*;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.tpl.DataSources;
-import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ public class ChainedTransactionTest {
             try (Connection authConnection = authManager.getDataSource().getConnection();
                  Connection userDataConnection = userDataManager.getDataSource().getConnection()) {
                 var savedUser = new AuthUserDaoJdbc().create(AuthUserEntity.fromJson(user));
-                authority.setUserId(savedUser.getId());
+                authority.setUser(savedUser);
                 new UserDataDaoJdbc().create(getEntityFromUser(savedUser));
                 new AuthAuthorityDaoJdbc().create(authority);
                 return null;
