@@ -15,6 +15,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.service.UserClient;
+import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,11 +33,6 @@ public class UserDbClient implements UserClient {
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
     private final UserdataUserDao userdataUserDao = new UdUserDaoSpringJdbc();
 
-    private final TransactionTemplate transactionTemplate = new TransactionTemplate(
-            new JdbcTransactionManager(
-                    DataSources.dataSource(CFG.authJdbcUrl())
-            )
-    );
 
     private final XaTransactionTemplate txTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
@@ -62,27 +58,5 @@ public class UserDbClient implements UserClient {
                     return new UserJson();
                 }
         );
-    }
-
-    @Override
-    public void delete(AuthUserJson user) {
-//        xaTransaction(
-//                new XaConsumer(
-//                        connection -> {
-//                            AuthAuthorityDaoJdbc authorityDaoJdbc = new AuthAuthorityDaoJdbc();
-//                            authorityDaoJdbc.delete(authorityDaoJdbc.findAllByUserId(user.getId())
-//                                    .toArray(AuthorityEntity[]::new));
-//
-//                        },
-//                        CFG.authJdbcUrl()
-//                ),
-//                new XaConsumer(
-//                        connection -> {
-//                            AuthUserDaoJdbc dao = new AuthUserDaoJdbc(connection);
-//                            dao.deleteById(user.getId());
-//                        },
-//                        CFG.authJdbcUrl()
-//                )
-//        );
     }
 }

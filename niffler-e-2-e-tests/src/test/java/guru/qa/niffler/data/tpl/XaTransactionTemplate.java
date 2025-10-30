@@ -6,6 +6,7 @@ import jakarta.transaction.UserTransaction;
 
 import java.sql.Connection;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class XaTransactionTemplate {
@@ -49,28 +50,4 @@ public class XaTransactionTemplate {
             }
         }
     }
-
-//    public void transaction(Databases.XaConsumer... actions){
-//        transaction(Connection.TRANSACTION_REPEATABLE_READ, actions);
-//    }
-//
-//    public void transaction(int isolationLvl, Databases.XaConsumer... actions) {
-//        UserTransaction ut = new UserTransactionImp();
-//        try {
-//            ut.begin();
-//            for (Databases.XaConsumer action : actions) {
-//                Connection conn = connection(action.jdbcUrl);
-//                conn.setTransactionIsolation(isolationLvl);
-//                action.consumer.accept(conn);
-//            }
-//            ut.commit();
-//        } catch (Exception e) {
-//            try {
-//                ut.rollback();
-//            } catch (SystemException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
