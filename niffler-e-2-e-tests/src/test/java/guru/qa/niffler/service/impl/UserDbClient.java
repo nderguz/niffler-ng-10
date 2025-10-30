@@ -1,11 +1,7 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.AuthAuthorityDao;
-import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.dao.UserdataUserDao;
-import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoSpringJdbc;
-import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.UdUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
@@ -15,7 +11,6 @@ import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.service.UserClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,11 +34,11 @@ public class UserDbClient implements UserClient {
     );
 
     @Override
-    public UserJson create(AuthUserJson user) {
+    public UserJson create(UserJson user) {
         return txTemplate.execute(() -> {
                     AuthUserEntity authUser = new AuthUserEntity();
-                    authUser.setUsername(user.getUsername());
-                    authUser.setPassword(pe.encode(user.getPassword()));
+                    authUser.setUsername(user.username());
+                    authUser.setPassword(pe.encode("123456"));
                     authUser.setEnabled(true);
                     authUser.setAccountNonExpired(true);
                     authUser.setAccountNonLocked(true);
@@ -58,10 +53,7 @@ public class UserDbClient implements UserClient {
                                     }).toList()
                     );
                     authUserRepository.create(authUser);
-                    return AuthUserJson.fromEntity(
-                            userdataUserDao.create(UserEntity.fromJson(user)),
-                            null
-                    );
+                    return UserJson.fromEntity(userdataUserDao.create(UserEntity.fromJson(user)));
                 }
         );
     }

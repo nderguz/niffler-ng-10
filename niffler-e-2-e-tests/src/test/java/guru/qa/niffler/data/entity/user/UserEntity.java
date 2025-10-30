@@ -1,6 +1,7 @@
 package guru.qa.niffler.data.entity.user;
 
 import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.auth.AuthUserJson;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -101,9 +102,14 @@ public class UserEntity implements Serializable {
         }
     }
 
-    public static UserEntity fromJson(UserJson) {
+    public static UserEntity fromJson(UserJson user) {
         UserEntity ue = new UserEntity();
-        ue.set
+        ue.setUsername(user.username());
+        ue.setSurname(ue.getSurname());
+        ue.setFirstname(user.firstName());
+        ue.setPhoto(user.photo());
+        ue.setPhotoSmall(user.photoSmall());
+        ue.setCurrency(CurrencyValues.RUB);
         return ue;
     }
 

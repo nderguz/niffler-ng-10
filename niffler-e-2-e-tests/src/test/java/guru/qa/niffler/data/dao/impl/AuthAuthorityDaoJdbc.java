@@ -100,7 +100,7 @@ public class AuthAuthorityDaoJdbc implements AuthAuthorityDao {
     private AuthorityEntity createAuthorityEntity(ResultSet rs) throws SQLException {
         AuthorityEntity ae = new AuthorityEntity();
         ae.setId(rs.getObject("id", UUID.class));
-        ae.setUserId(rs.getObject("user_id", UUID.class));
+//        ae.setUser(rs.getObject("user_id", UUID.class));
         ae.setAuthority(Authority.valueOf(rs.getString("authority")));
         return ae;
     }
