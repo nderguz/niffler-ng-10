@@ -33,16 +33,6 @@ public class UserDbClient implements UserClient {
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
     private final UserdataUserDao userdataUserDao = new UdUserDaoSpringJdbc();
 
-    private final TransactionTemplate transactionTemplate = new TransactionTemplate(
-            new ChainedTransactionManager(
-                    new JdbcTransactionManager(
-                            DataSources.dataSource(CFG.authJdbcUrl())
-                    ),
-                    new JdbcTransactionManager(
-                            DataSources.dataSource(CFG.userdataJdbcUrl())
-                    )
-            )
-    );
 
     private final XaTransactionTemplate txTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
