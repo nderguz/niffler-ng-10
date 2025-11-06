@@ -28,7 +28,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
                 "INSERT INTO \"user\"  (username, password, enabled, account_non_expired, account_non_locked, credentials_non_expired)" +
                         "VALUES (?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
              PreparedStatement authorityPs = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                     "INSERT INTO authority (user_id, authority)" +
+                     "INSERT INTO authority (user_id, authority) " +
                              "VALUES (?, ?)")) {
             userPs.setString(1, user.getUsername());
             userPs.setString(2, user.getPassword());
@@ -65,7 +65,7 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"user\" u join authority a on u.id = a.user_id WHERE u.id = ?"
+                "SELECT * FROM \"user\" u JOIN authority a ON u.id = a.user_id WHERE u.id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
