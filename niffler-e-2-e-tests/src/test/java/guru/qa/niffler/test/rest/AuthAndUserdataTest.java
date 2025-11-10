@@ -31,7 +31,7 @@ public class AuthAndUserdataTest {
     @Test
     public void addIncomeRequestTest() {
         UserDbClient userDbClient = new UserDbClient();
-        userDbClient.addIncomeInvitation(
+        userDbClient.addInvitation(
                 new UserJson(
                         UUID.fromString("13655eb2-b5a1-11f0-a7fa-5af73ba378f7"),
                         "test-11",

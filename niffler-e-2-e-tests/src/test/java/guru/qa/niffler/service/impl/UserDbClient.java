@@ -58,7 +58,7 @@ public class UserDbClient implements UserClient {
     }
 
     @Override
-    public void addIncomeInvitation(UserJson requester, UserJson addressee) {
+    public void addInvitation(UserJson requester, UserJson addressee) {
         if (Objects.equals(requester, addressee)) {
             throw new RuntimeException("Can`t create friendship request for self user");
         }
@@ -67,25 +67,10 @@ public class UserDbClient implements UserClient {
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
             var addresseeEntity = userRepository.findById(addressee.id())
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
-            userRepository.addIncomeInvitation(requesterEntity, addresseeEntity);
+            userRepository.addInvitation(requesterEntity, addresseeEntity);
             return null;
         });
 
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserJson requester, UserJson addressee) {
-        if (Objects.equals(requester, addressee)) {
-            throw new RuntimeException("Can`t create friendship request for self user");
-        }
-        txTemplate.execute(() -> {
-            var requesterEntity = userRepository.findById(requester.id())
-                    .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
-            var addresseeEntity = userRepository.findById(addressee.id())
-                    .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
-            userRepository.addIncomeInvitation(requesterEntity, addresseeEntity);
-            return null;
-        });
     }
 
     @Override

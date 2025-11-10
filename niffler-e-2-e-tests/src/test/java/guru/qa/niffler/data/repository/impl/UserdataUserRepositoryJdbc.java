@@ -69,32 +69,8 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
         }
     }
 
-
-    /*
-    Судя по UserService в niffler-userdata, эти методы можно было бы объединить в один,
-    ну либо я не так понял суть их разделения
-     */
     @Override
-    public void addIncomeInvitation(UserEntity requester, UserEntity addressee) {
-        try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "INSERT INTO friendship (requester_id, addressee_id, status, created_date) " +
-                        "VALUES (?, ?, ?, ?) " +
-                        "ON CONFLICT (requester_id, addressee_id) " +
-                        "DO UPDATE SET status = ? " )
-        ) {
-            ps.setObject(1, requester.getId());
-            ps.setObject(2, addressee.getId());
-            ps.setString(3, FriendshipStatus.PENDING.name());
-            ps.setDate(4, Date.valueOf(LocalDate.now()));
-
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void addOutcomeInvitation(UserEntity requester, UserEntity addressee) {
+    public void addInvitation(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO friendship (requester_id, addressee_id, status, created_date) " +
                         "VALUES (?, ?, ?, ?) " +
@@ -115,9 +91,10 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
     @Override
     public void addFriend(UserEntity requester, UserEntity addressee) {
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM friendship WHERE requester_id = ? AND addressee_id = ? and status = ?" );
-             PreparedStatement addFriendPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
-                     "UPDATE friendship SET status = ? WHERE requester_id = ? AND addressee_id = ?" );
+                "INSERT INTO friendship(requester_id, addressee_id, status, created_date) " +
+                        "VALUES(?, ?, ?, ?) " +
+                        "ON CONFLICT (requester_id, addressee_id) " +
+                        "DO UPDATE SET status = ? " );
         ) {
             ps.setObject(1, requester.getId());
             ps.setObject(2, addressee.getId());
@@ -125,14 +102,17 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 if (rs.next()) {
-                    addFriendPs.setString(1, FriendshipStatus.ACCEPTED.name());
-                    addFriendPs.setObject(2, requester.getId());
-                    addFriendPs.setObject(3, addressee.getId());
-                    addFriendPs.executeUpdate();
+                    ps.setString(1, FriendshipStatus.ACCEPTED.name());
+                    ps.setObject(2, requester.getId());
+                    ps.setObject(3, addressee.getId());
+                    ps.executeUpdate();
                 } else {
                     throw new EntityNotFoundException("Friendship request not found, requester=%s, addressee=%s".formatted(requester.getId(), addressee.getId()));
                 }
             }
+            ps.setObject(1, addressee.getId());
+            ps.setObject(2, requester.getId());
+            ps.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
