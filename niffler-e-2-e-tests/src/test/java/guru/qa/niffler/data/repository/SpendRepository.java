@@ -10,6 +10,7 @@ public interface SpendRepository {
     SpendEntity create(SpendEntity spend);
     SpendEntity update(SpendEntity spend);
     CategoryEntity createCategory(CategoryEntity category);
+    CategoryEntity updateCategory(CategoryEntity category);
     Optional<CategoryEntity> findCategoryById(UUID id);
     Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name);
     Optional<SpendEntity> findById(UUID id);
