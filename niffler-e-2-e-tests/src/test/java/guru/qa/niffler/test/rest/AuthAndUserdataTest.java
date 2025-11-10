@@ -13,18 +13,7 @@ public class AuthAndUserdataTest {
     public void createUserWithRepositoryTest() {
         UserDbClient usersDbClient = new UserDbClient();
         UserJson user = usersDbClient.create(
-                new UserJson(
-                        null,
-                        "test-11",
-                        null,
-                        null,
-                        null,
-                        CurrencyValues.RUB,
-                        null,
-                        null,
-                        null
-                )
-        );
+                "test5", "1234566");
         System.out.println(user);
     }
 
