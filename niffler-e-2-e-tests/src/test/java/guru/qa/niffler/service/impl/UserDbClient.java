@@ -8,8 +8,8 @@ import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.hibernate.AuthUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
@@ -59,6 +59,11 @@ public class UserDbClient implements UserClient {
     }
 
     @Override
+    public void createInvitation(UserJson targetUser, int count) {
+
+    }
+
+    @Override
     public void addInvitation(UserJson requester, UserJson addressee) {
         if (Objects.equals(requester, addressee)) {
             throw new RuntimeException("Can`t create friendship request for self user");
@@ -68,7 +73,7 @@ public class UserDbClient implements UserClient {
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
             var addresseeEntity = userRepository.findById(addressee.id())
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
-            userRepository.addInvitation(requesterEntity, addresseeEntity);
+            userRepository.sendInvitation(requesterEntity, addresseeEntity);
             return null;
         });
 

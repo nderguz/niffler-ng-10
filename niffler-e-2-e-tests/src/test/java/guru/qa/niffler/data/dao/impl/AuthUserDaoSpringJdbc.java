@@ -57,7 +57,12 @@ public class AuthUserDaoSpringJdbc implements AuthUserDao {
 
     @Override
     public void deleteById(UUID id) {
-
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        jdbcTemplate.query(
+                "DELETE FROM \"user\" WHERE id = ?",
+                AuthUserEntityRowMapper.INSTANCE,
+                id
+        );
     }
 
     @Override

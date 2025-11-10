@@ -3,6 +3,9 @@ package guru.qa.niffler.data.dao.impl;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.AuthUserDao;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
+import guru.qa.niffler.data.entity.auth.Authority;
+import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,13 +55,25 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM \"user\" WHERE id = ?"
+                "SELECT * FROM \"user\" u JOIN authority a ON u.id = a.user_id WHERE u.id = ?"
         )) {
             ps.setObject(1, id);
             ps.execute();
 
             try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
+                AuthUserEntity user = null;
+                List<AuthorityEntity> authorityEntities = new ArrayList<>();
+                while (rs.next()) {
+                    if (user == null) {
+                        user = AuthUserEntityRowMapper.INSTANCE.mapRow(rs, 1);
+                    }
+
+                    AuthorityEntity ae = new AuthorityEntity();
+                    ae.setUser(user);
+                    ae.setId(rs.getObject("a.id", UUID.class));
+                    ae.setAuthority(Authority.valueOf(rs.getString("authority")));
+                    authorityEntities.add(ae);
+
                     AuthUserEntity au = new AuthUserEntity();
                     au.setId(rs.getObject("id", UUID.class));
                     au.setUsername(rs.getString("username"));
@@ -67,9 +82,12 @@ public class AuthUserDaoJdbc implements AuthUserDao {
                     au.setAccountNonExpired(rs.getBoolean("account_non_expired"));
                     au.setCredentialsNonExpired(rs.getBoolean("credentials_non_expired"));
                     au.setAccountNonLocked(rs.getBoolean("account_non_locked"));
-                    return Optional.of(au);
-                } else {
+                }
+                if (user == null) {
                     return Optional.empty();
+                } else {
+                    user.setAuthorities(authorityEntities);
+                    return Optional.of(user);
                 }
             }
 
