@@ -4,11 +4,12 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
+import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.data.repository.impl.AuthUserRepositoryJdbc;
-import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
@@ -24,8 +25,8 @@ public class UserDbClient implements UserClient {
     private static final Config CFG = Config.getInstance();
     private static final PasswordEncoder pe = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-    private final AuthUserRepository authUserRepository = new AuthUserRepositoryJdbc();
-    private final UserdataUserRepository userRepository = new UserdataUserRepositoryJdbc();
+    private final AuthUserRepository authUserRepository = new AuthUserRepositoryHibernate();
+    private final UserdataUserRepository userRepository = new UserdataUserRepositoryHibernate();
 
     private final XaTransactionTemplate txTemplate = new XaTransactionTemplate(
             CFG.authJdbcUrl(),
@@ -33,11 +34,11 @@ public class UserDbClient implements UserClient {
     );
 
     @Override
-    public UserJson create(UserJson user) {
+    public UserJson create(String username, String password) {
         return txTemplate.execute(() -> {
                     AuthUserEntity authUser = new AuthUserEntity();
-                    authUser.setUsername(user.username());
-                    authUser.setPassword(pe.encode("123456"));
+                    authUser.setUsername(username);
+                    authUser.setPassword(pe.encode(password));
                     authUser.setEnabled(true);
                     authUser.setAccountNonExpired(true);
                     authUser.setAccountNonLocked(true);
@@ -52,7 +53,7 @@ public class UserDbClient implements UserClient {
                                     }).toList()
                     );
                     authUserRepository.create(authUser);
-                    return UserJson.fromEntity(userRepository.create(UserEntity.fromJson(user)));
+                    return UserJson.fromEntity(userRepository.create(userEntity(username)));
                 }
         );
     }
@@ -86,5 +87,12 @@ public class UserDbClient implements UserClient {
             userRepository.addFriend(requesterEntity, addresseeEntity);
             return null;
         });
+    }
+
+    private UserEntity userEntity(String username) {
+        UserEntity ue = new UserEntity();
+        ue.setUsername(username);
+        ue.setCurrency(CurrencyValues.RUB);
+        return ue;
     }
 }
