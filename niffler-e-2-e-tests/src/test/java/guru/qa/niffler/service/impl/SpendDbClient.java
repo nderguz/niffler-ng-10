@@ -1,22 +1,21 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.repository.SpendRepository;
+import guru.qa.niffler.data.repository.impl.hibernate.SpendRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
-import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 
-import java.util.Date;
-import java.util.List;
+import java.util.UUID;
 
 
 public class SpendDbClient implements SpendClient {
+
+    private final SpendRepository spendRepositoryHibernate = new SpendRepositoryHibernate();
 
     private static final Config CFG = Config.getInstance();
     private final XaTransactionTemplate txTemplate = new XaTransactionTemplate(
@@ -25,58 +24,55 @@ public class SpendDbClient implements SpendClient {
     );
 
     @Override
-    public SpendJson getSpend(String id, String username) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public SpendJson getSpends(String username, CurrencyValues filterCurrency, Date from, Date to) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public SpendJson getSpend(UUID id) {
+        return SpendJson.fromEntity(spendRepositoryHibernate.findById(id).get());
     }
 
     @Override
     public SpendJson createSpend(SpendJson spend) {
         return txTemplate.execute(() -> {
             SpendEntity spendEntity = SpendEntity.fromJson(spend);
-            CategoryDaoJdbc categoryDaoJdbc = new CategoryDaoJdbc();
-            if (spendEntity.getCategory().getId() == null) {
-                CategoryEntity categoryEntity = categoryDaoJdbc.create(spendEntity.getCategory());
-                spendEntity.setCategory(categoryEntity);
-            }
-            return SpendJson.fromEntity(new SpendDaoJdbc().create(spendEntity));
+            spendRepositoryHibernate.create(spendEntity);
+            return SpendJson.fromEntity(spendEntity);
         });
     }
 
     @Override
     public SpendJson editSpend(SpendJson spend) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return txTemplate.execute(() -> SpendJson.fromEntity(
+                spendRepositoryHibernate.update(SpendEntity.fromJson(spend))
+        ));
     }
 
     @Override
-    public void deleteSpend(String username, List<String> ids) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    @Override
-    public CategoryJson addCategory(CategoryJson category) {
-        return txTemplate.execute(() -> {
-            var createdCategory = new CategoryDaoJdbc().create(CategoryEntity.fromJson(category));
-            return CategoryJson.fromEntity(createdCategory);
-        });
+    public CategoryJson createCategory(CategoryJson category) {
+        return txTemplate.execute(() -> CategoryJson.fromEntity(
+                spendRepositoryHibernate.createCategory(CategoryEntity.fromJson(category))
+        ));
     }
 
     @Override
     public CategoryJson updateCategory(CategoryJson category) {
         return txTemplate.execute(() -> {
-            CategoryDao categoryDaoJdbc = new CategoryDaoJdbc();
-            CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
-            categoryDaoJdbc.update(categoryEntity);
+            spendRepositoryHibernate.updateCategory(CategoryEntity.fromJson(category));
             return category;
+        });
+    }
+
+    @Override
+    public void deleteSpend(SpendJson spendJson) {
+        txTemplate.execute(() -> {
+            spendRepositoryHibernate.remove(SpendEntity.fromJson(spendJson));
+            return null;
+        });
+    }
+
+
+    @Override
+    public void deleteCategory(CategoryJson category) {
+        txTemplate.execute(() -> {
+            spendRepositoryHibernate.removeCategory(CategoryEntity.fromJson(category));
+            return null;
         });
     }
 }

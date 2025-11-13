@@ -11,20 +11,17 @@ import java.util.UUID;
 
 public interface SpendClient {
 
-    SpendJson getSpend(String id, String username);
-
-    SpendJson getSpends(String username, CurrencyValues filterCurrency, Date from, Date to);
+    SpendJson getSpend(UUID id);
 
     SpendJson createSpend(SpendJson spend);
 
     SpendJson editSpend(SpendJson spend);
 
-    void deleteSpend(String username, List<String> ids);
-
-    List<CategoryJson> getCategories(String username, boolean excludeArchived);
-
-    CategoryJson addCategory(CategoryJson category);
+    CategoryJson createCategory(CategoryJson category);
 
     CategoryJson updateCategory(CategoryJson category);
 
+    void deleteSpend(SpendJson spend);
+
+    void deleteCategory(CategoryJson category);
 }

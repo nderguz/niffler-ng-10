@@ -8,8 +8,8 @@ import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.data.repository.impl.AuthUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.UserdataUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.hibernate.AuthUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UserClient;
@@ -36,24 +36,10 @@ public class UserDbClient implements UserClient {
     @Override
     public UserJson create(String username, String password) {
         return txTemplate.execute(() -> {
-                    AuthUserEntity authUser = new AuthUserEntity();
-                    authUser.setUsername(username);
-                    authUser.setPassword(pe.encode(password));
-                    authUser.setEnabled(true);
-                    authUser.setAccountNonExpired(true);
-                    authUser.setAccountNonLocked(true);
-                    authUser.setCredentialsNonExpired(true);
-                    authUser.setAuthorities(
-                            Arrays.stream(Authority.values())
-                                    .map(a -> {
-                                        var ae = new AuthorityEntity();
-                                        ae.setAuthority(a);
-                                        ae.setUser(authUser);
-                                        return ae;
-                                    }).toList()
-                    );
+                    AuthUserEntity authUser = authUserEntity(username, password);
                     authUserRepository.create(authUser);
-                    return UserJson.fromEntity(userRepository.create(userEntity(username)));
+                    return UserJson.fromEntity(
+                            userRepository.create(userEntity(username)));
                 }
         );
     }
@@ -68,10 +54,9 @@ public class UserDbClient implements UserClient {
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
             var addresseeEntity = userRepository.findById(addressee.id())
                     .orElseThrow(() -> new RuntimeException("User with id = %s not found".formatted(requester.id())));
-            userRepository.addInvitation(requesterEntity, addresseeEntity);
+            userRepository.sendInvitation(requesterEntity, addresseeEntity);
             return null;
         });
-
     }
 
     @Override
@@ -87,6 +72,27 @@ public class UserDbClient implements UserClient {
             userRepository.addFriend(requesterEntity, addresseeEntity);
             return null;
         });
+    }
+
+    private AuthUserEntity authUserEntity(String username, String password) {
+        AuthUserEntity ue = new AuthUserEntity();
+        ue.setUsername(username);
+        ue.setPassword(pe.encode(password));
+        ue.setEnabled(true);
+        ue.setAccountNonExpired(true);
+        ue.setAccountNonLocked(true);
+        ue.setCredentialsNonExpired(true);
+        ue.setAuthorities(
+                Arrays.stream(Authority.values()).map(
+                        e -> {
+                            AuthorityEntity ae = new AuthorityEntity();
+                            ae.setUser(ue);
+                            ae.setAuthority(e);
+                            return ae;
+                        }
+                ).toList()
+        );
+        return ue;
     }
 
     private UserEntity userEntity(String username) {

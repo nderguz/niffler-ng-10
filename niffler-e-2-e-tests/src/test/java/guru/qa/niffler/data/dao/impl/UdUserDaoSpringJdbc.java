@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -59,12 +58,35 @@ public class UdUserDaoSpringJdbc implements UserdataUserDao {
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
-        return Optional.empty();
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+        return Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        "SELECT * FROM \"user\" WHERE username = ?",
+                        UdUserEntityRowMapper.INSTANCE,
+                        username
+                )
+        );
+    }
+
+    @Override
+    public UserEntity update(UserEntity user) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+        jdbcTemplate.query(
+                "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name =?, photo = ?, photo_small = ?",
+                UdUserEntityRowMapper.INSTANCE,
+                user.getId()
+        );
+        return user;
     }
 
     @Override
     public void delete(UserEntity user) {
-
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
+        jdbcTemplate.query(
+                "DELETE * FROM \"user\" WHERE id = ?",
+                UdUserEntityRowMapper.INSTANCE,
+                user.getId()
+        );
     }
 
     @Override

@@ -27,7 +27,7 @@ public class CategoryExtension implements BeforeEachCallback, AfterTestExecution
                                 anno.username(),
                                 categoryAnno.archived()
                         );
-                        CategoryJson createdCategory = spendDbClient.addCategory(category);
+                        CategoryJson createdCategory = spendDbClient.createCategory(category);
                         context.getStore(NAMESPACE).put(
                                 context.getUniqueId(),
                                 createdCategory
