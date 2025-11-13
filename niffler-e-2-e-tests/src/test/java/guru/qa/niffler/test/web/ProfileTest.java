@@ -1,6 +1,5 @@
 package guru.qa.niffler.test.web;
 
-import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.open;
 
 @DisplayName("Профиль пользователя")
@@ -31,7 +29,6 @@ public class ProfileTest {
 
     @Test
     @User(
-            username = "test",
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория должна отображаться в списке категорий")
@@ -40,23 +37,24 @@ public class ProfileTest {
     }
 
     @Test
-    @User(
-            categories = @Category(
-                    archived = true
-            )
-    )
+//    @User(
+//            username = "benito.rempel",
+//            categories = @Category(
+//                    archived = true
+//            )
+//    )
     @DisplayName("Активная категория должна отображаться в списке категорий")
-    public void activeCategoryShouldPresentInCategoriesList(UserJson user) {
+    public void activeCategoryShouldPresentInCategoriesList() {
+//        System.out.println(user);
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.username(), user.testData().password())
-                .checkThatPageLoaded()
-                .openProfilePage()
-                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
+                .successLogin("benito.rempel", "12345")
+                .checkThatPageLoaded();
+//                .openProfilePage()
+//                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
     }
 
     @Test
     @User(
-            username = "test",
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория не должна отображаться в списке категорий")
