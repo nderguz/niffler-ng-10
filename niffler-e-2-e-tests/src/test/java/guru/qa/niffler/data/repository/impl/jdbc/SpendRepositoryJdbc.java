@@ -39,7 +39,7 @@ public class SpendRepositoryJdbc implements SpendRepository {
     @Override
     public SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "UPDATE category SET username = ?, spendDate = ?, amount = ?, description = ? WHERE id = ?"
+                "UPDATE spend SET username = ?, spend_date = ?, amount = ?, description = ? WHERE id = ?"
         )) {
             ps.setString(1, spend.getUsername());
             ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
@@ -47,7 +47,6 @@ public class SpendRepositoryJdbc implements SpendRepository {
             ps.setString(4, spend.getDescription());
             ps.setObject(5, spend.getId());
             ps.executeUpdate();
-            categoryDao.update(spend.getCategory());
             return spend;
         } catch (SQLException e) {
             throw new RuntimeException(e);

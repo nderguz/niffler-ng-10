@@ -37,7 +37,7 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
     public SpendEntity update(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
         jdbcTemplate.update(
-                "UPDATE category SET username = ?, spendDate = ?, amount = ?, description = ? WHERE id = ?",
+                "UPDATE spend SET username = ?, spendDate = ?, amount = ?, description = ? WHERE id = ?",
                 SpendEntityRowMapper.INSTANCE,
                 spend.getUsername(),
                 spend.getSpendDate(),

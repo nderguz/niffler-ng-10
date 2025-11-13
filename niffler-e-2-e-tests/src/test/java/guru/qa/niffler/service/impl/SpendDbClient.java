@@ -33,7 +33,6 @@ public class SpendDbClient implements SpendClient {
         return txTemplate.execute(() -> {
             SpendEntity spendEntity = SpendEntity.fromJson(spend);
             spendRepositoryHibernate.create(spendEntity);
-            spendRepositoryHibernate.createCategory(spendEntity.getCategory());
             return SpendJson.fromEntity(spendEntity);
         });
     }

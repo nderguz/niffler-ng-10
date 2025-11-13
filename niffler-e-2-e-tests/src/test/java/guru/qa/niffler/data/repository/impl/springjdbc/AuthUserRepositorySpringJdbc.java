@@ -30,7 +30,7 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     @Override
     public AuthUserEntity update(AuthUserEntity user) {
-        return null;
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
