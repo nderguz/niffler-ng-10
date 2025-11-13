@@ -37,20 +37,19 @@ public class ProfileTest {
     }
 
     @Test
-//    @User(
-//            username = "benito.rempel",
-//            categories = @Category(
-//                    archived = true
-//            )
-//    )
+    @User(
+            username = "benito.rempel",
+            categories = @Category(
+                    archived = true
+            )
+    )
     @DisplayName("Активная категория должна отображаться в списке категорий")
-    public void activeCategoryShouldPresentInCategoriesList() {
-//        System.out.println(user);
+    public void activeCategoryShouldPresentInCategoriesList(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin("benito.rempel", "12345")
-                .checkThatPageLoaded();
-//                .openProfilePage()
-//                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
+                .checkThatPageLoaded()
+                .openProfilePage()
+                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
     }
 
     @Test
