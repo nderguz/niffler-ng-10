@@ -15,49 +15,47 @@ import static guru.qa.niffler.data.jpa.EntityManagers.em;
 public class SpendRepositoryHibernate implements SpendRepository {
 
     private static final Config CFG = Config.getInstance();
-    private final EntityManager manager = em(CFG.spendJdbcUrl());
+
+    private final EntityManager entityManager = em(CFG.spendJdbcUrl());
 
     @Override
     public SpendEntity create(SpendEntity spend) {
-        manager.joinTransaction();
-        manager.persist(spend);
+        entityManager.joinTransaction();
+        entityManager.persist(spend);
         return spend;
     }
 
     @Override
     public SpendEntity update(SpendEntity spend) {
-        manager.joinTransaction();
-        manager.merge(spend);
-        return spend;
+        entityManager.joinTransaction();
+        return entityManager.merge(spend);
     }
 
     @Override
     public CategoryEntity createCategory(CategoryEntity category) {
-        manager.joinTransaction();
-        manager.persist(category);
+        entityManager.joinTransaction();
+        entityManager.persist(category);
         return category;
     }
 
     @Override
     public CategoryEntity updateCategory(CategoryEntity category) {
-        manager.joinTransaction();
-        manager.merge(category);
-        return category;
+        entityManager.joinTransaction();
+        return entityManager.merge(category);
     }
 
     @Override
     public Optional<CategoryEntity> findCategoryById(UUID id) {
         return Optional.ofNullable(
-                manager.find(CategoryEntity.class, id)
+                entityManager.find(CategoryEntity.class, id)
         );
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
         try {
-            return Optional.ofNullable(
-                    manager.createQuery(
-                                    "SELECT c FROM CategoryEntity c WHERE c.username =: username and c.name =: name", CategoryEntity.class)
+            return Optional.of(
+                    entityManager.createQuery("select c from CategoryEntity c where c.username =: username and c.name =: name", CategoryEntity.class)
                             .setParameter("username", username)
                             .setParameter("name", name)
                             .getSingleResult()
@@ -70,16 +68,15 @@ public class SpendRepositoryHibernate implements SpendRepository {
     @Override
     public Optional<SpendEntity> findById(UUID id) {
         return Optional.ofNullable(
-                manager.find(SpendEntity.class, id)
+                entityManager.find(SpendEntity.class, id)
         );
     }
 
     @Override
     public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
         try {
-            return Optional.ofNullable(
-                    manager.createQuery(
-                                    "SELECT s FROM SpendEntity s WHERE s.username =: username and s.description =: description", SpendEntity.class)
+            return Optional.of(
+                    entityManager.createQuery("select s from SpendEntity s where s.username =: username and s.description =: description", SpendEntity.class)
                             .setParameter("username", username)
                             .setParameter("description", description)
                             .getSingleResult()
@@ -91,16 +88,13 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
     @Override
     public void remove(SpendEntity spend) {
-        manager.joinTransaction();
-        if(!manager.contains(spend)){
-            manager.merge(spend);
-        }
-        manager.remove(spend);
+        entityManager.joinTransaction();
+        entityManager.remove(entityManager.contains(spend) ? spend : entityManager.merge(spend));
     }
 
     @Override
     public void removeCategory(CategoryEntity category) {
-        manager.joinTransaction();
-        manager.remove(category);
+        entityManager.joinTransaction();
+        entityManager.remove(entityManager.contains(category) ? category : entityManager.merge(category));
     }
 }

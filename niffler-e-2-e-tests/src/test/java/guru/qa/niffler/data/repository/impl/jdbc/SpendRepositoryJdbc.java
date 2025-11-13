@@ -22,13 +22,15 @@ import static guru.qa.niffler.data.tpl.Connections.holder;
 public class SpendRepositoryJdbc implements SpendRepository {
 
     private static final Config CFG = Config.getInstance();
+
+    private final String url = CFG.spendJdbcUrl();
     private final SpendDao spendDao = new SpendDaoJdbc();
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
 
     @Override
     public SpendEntity create(SpendEntity spend) {
         final UUID categoryId = spend.getCategory().getId();
-        if (categoryId == null && categoryDao.findCategoryById(categoryId).isEmpty()) {
+        if (categoryId == null || categoryDao.findCategoryById(categoryId).isEmpty()) {
             spend.setCategory(
                     categoryDao.create(spend.getCategory())
             );
@@ -38,19 +40,9 @@ public class SpendRepositoryJdbc implements SpendRepository {
 
     @Override
     public SpendEntity update(SpendEntity spend) {
-        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "UPDATE spend SET username = ?, spend_date = ?, amount = ?, description = ? WHERE id = ?"
-        )) {
-            ps.setString(1, spend.getUsername());
-            ps.setDate(2, new java.sql.Date(spend.getSpendDate().getTime()));
-            ps.setDouble(3, spend.getAmount());
-            ps.setString(4, spend.getDescription());
-            ps.setObject(5, spend.getId());
-            ps.executeUpdate();
-            return spend;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        spendDao.update(spend);
+        categoryDao.update(spend.getCategory());
+        return spend;
     }
 
     @Override
@@ -69,8 +61,8 @@ public class SpendRepositoryJdbc implements SpendRepository {
     }
 
     @Override
-    public Optional<CategoryEntity> findCategoryByUsernameAndSpendName(String username, String name) {
-        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+    public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String name) {
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "SELECT * FROM category WHERE username = ? and name = ?"
         )) {
             ps.setString(1, username);
@@ -92,28 +84,12 @@ public class SpendRepositoryJdbc implements SpendRepository {
 
     @Override
     public Optional<SpendEntity> findById(UUID id) {
-        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
-                "SELECT * FROM category WHERE id = ?"
-        )) {
-            ps.setObject(1, id);
-            ps.execute();
-            try (ResultSet rs = ps.getResultSet()) {
-                if (rs.next()) {
-                    return Optional.ofNullable(
-                            SpendEntityRowMapper.INSTANCE.mapRow(rs, rs.getRow())
-                    );
-                } else {
-                    return Optional.empty();
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return spendDao.findSpendById(id);
     }
 
     @Override
     public Optional<SpendEntity> findByUsernameAndSpendDescription(String username, String description) {
-        try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
                 "SELECT * FROM spend WHERE username = ? and description = ?"
         )) {
             ps.setString(1, username);
@@ -135,11 +111,25 @@ public class SpendRepositoryJdbc implements SpendRepository {
 
     @Override
     public void remove(SpendEntity spend) {
-        spendDao.delete(spend);
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "DELETE FROM spend WHERE id = ?"
+        )) {
+            ps.setObject(1, spend.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void removeCategory(CategoryEntity category) {
-        categoryDao.delete(category);
+        try (PreparedStatement ps = holder(url).connection().prepareStatement(
+                "DELETE FROM category WHERE id = ?"
+        )) {
+            ps.setObject(1, category.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

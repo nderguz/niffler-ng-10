@@ -7,10 +7,9 @@ import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
-
-import static jakarta.persistence.FetchType.EAGER;
 
 @Getter
 @Setter
@@ -49,9 +48,6 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "addressee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FriendshipEntity> friendshipAddressees = new ArrayList<>();
-
-    @OneToMany(fetch = EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-    private List<PushTokenEntity> pushTokens = new ArrayList<>();
 
     public void addFriends(FriendshipStatus status, UserEntity... friends) {
         List<FriendshipEntity> friendsEntities = Stream.of(friends)
@@ -101,14 +97,16 @@ public class UserEntity implements Serializable {
         }
     }
 
-    public static UserEntity fromJson(UserJson user) {
+    public static UserEntity fromJson(UserJson json) {
         UserEntity ue = new UserEntity();
-        ue.setUsername(user.username());
-        ue.setSurname(ue.getSurname());
-        ue.setFirstname(user.firstName());
-        ue.setPhoto(user.photo());
-        ue.setPhotoSmall(user.photoSmall());
-        ue.setCurrency(CurrencyValues.RUB);
+        ue.setId(json.id());
+        ue.setUsername(json.username());
+        ue.setCurrency(json.currency());
+        ue.setFirstname(json.firstname());
+        ue.setSurname(json.surname());
+        ue.setFullname(json.fullname());
+        ue.setPhoto(json.photo() != null ? json.photo().getBytes(StandardCharsets.UTF_8) : null);
+        ue.setPhotoSmall(json.photoSmall() != null ? json.photoSmall().getBytes(StandardCharsets.UTF_8) : null);
         return ue;
     }
 
