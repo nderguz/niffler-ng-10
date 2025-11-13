@@ -32,7 +32,7 @@ public class LoginPage {
         return new RegisterPage();
     }
 
-    public void checkErrorMessage(String message){
+    public void checkErrorMessage(String message) {
         formError.shouldHave(text(message));
     }
 }

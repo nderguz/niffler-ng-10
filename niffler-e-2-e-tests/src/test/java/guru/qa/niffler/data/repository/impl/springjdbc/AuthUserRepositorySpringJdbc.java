@@ -7,17 +7,21 @@ import guru.qa.niffler.data.dao.impl.AuthAuthorityDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
-import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
+import guru.qa.niffler.data.extractor.AuthUserEntityExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
-import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static guru.qa.niffler.data.tpl.DataSources.dataSource;
 
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
+
+    private final String url = CFG.authJdbcUrl();
     private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
 
@@ -29,31 +33,50 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity user) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
     public Optional<AuthUserEntity> findById(UUID id) {
-        return authUserDao.findById(id);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource(url));
+        final List<AuthUserEntity> result = jdbcTemplate.query(
+                """
+                            SELECT a.id as authority_id,
+                           authority,
+                           user_id as id,
+                           u.username,
+                           u.password,
+                           u.enabled,
+                           u.account_non_expired,
+                           u.account_non_locked,
+                           u.credentials_non_expired
+                           FROM "user" u join authority a on u.id = a.user_id WHERE u.id = ?
+                        """,
+                AuthUserEntityExtractor.INSTANCE,
+                id
+        );
+        return result == null || result.isEmpty()
+                ? Optional.empty()
+                : Optional.of(result.getFirst());
     }
 
     @Override
     public Optional<AuthUserEntity> findByUsername(String username) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(
-                        "SELECT a.id as authority_id, authority, user_id as id, u.username, u.password, u.enabled, " +
-                                "u.account_non_expired, u.account_non_locked, u.credentials_non_expired FROM \"user\" u " +
-                                "join authority a on u.id = a.user_id WHERE u.username = ? ",
-                        AuthUserEntityRowMapper.INSTANCE,
-                        username
-                )
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource(url));
+        final List<AuthUserEntity> result = jdbcTemplate.query(
+                """
+                            SELECT a.id as authority_id,
+                           authority,
+                           user_id as id,
+                           u.username,
+                           u.password,
+                           u.enabled,
+                           u.account_non_expired,
+                           u.account_non_locked,
+                           u.credentials_non_expired
+                           FROM "user" u join authority a on u.id = a.user_id WHERE u.username = ?
+                        """,
+                AuthUserEntityExtractor.INSTANCE,
+                username
         );
-    }
-
-    @Override
-    public void remove(AuthUserEntity user) {
-        authUserDao.deleteById(user.getId());
+        return result == null || result.isEmpty()
+                ? Optional.empty()
+                : Optional.of(result.getFirst());
     }
 }

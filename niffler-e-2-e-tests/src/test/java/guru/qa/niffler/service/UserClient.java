@@ -2,8 +2,11 @@ package guru.qa.niffler.service;
 
 import guru.qa.niffler.model.UserJson;
 
+import java.util.List;
+
 public interface UserClient {
     UserJson create(String username, String password);
-    void addInvitation(UserJson requester, UserJson addressee);
-    void addFriend(UserJson requester, UserJson addressee);
+    List<UserJson> addIncomeInvitation(UserJson targetUser, int count);
+    List<UserJson> addOutcomeInvitation(UserJson targetUser, int count);
+    List<UserJson> addFriend(UserJson targetUser, int count);
 }

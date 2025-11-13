@@ -3,6 +3,7 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.ProfilePage;
@@ -18,17 +19,8 @@ public class ProfileTest {
     private static final Config CFG = Config.getInstance();
     private ProfilePage page;
 
-    @BeforeEach
-    public void setUp() {
-        page = open(CFG.frontUrl(), LoginPage.class)
-                .successLogin("test", "test")
-                .checkThatPageLoaded()
-                .openProfilePage();
-    }
-
     @Test
     @User(
-            username = "test",
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория должна отображаться в списке категорий")
@@ -38,17 +30,21 @@ public class ProfileTest {
 
     @Test
     @User(
-            username = "test",
-            categories = @Category
+            categories = @Category(
+                    archived = true
+            )
     )
     @DisplayName("Активная категория должна отображаться в списке категорий")
-    public void activeCategoryShouldPresentInCategoriesList(CategoryJson category) {
-        page.checkCategoryExists(category.name());
+    public void activeCategoryShouldPresentInCategoriesList(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.username(), user.testData().password())
+                .checkThatPageLoaded()
+                .openProfilePage()
+                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
     }
 
     @Test
     @User(
-            username = "test",
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория не должна отображаться в списке категорий")

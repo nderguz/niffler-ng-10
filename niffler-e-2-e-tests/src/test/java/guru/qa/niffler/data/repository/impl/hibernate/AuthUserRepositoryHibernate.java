@@ -24,13 +24,6 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
     }
 
     @Override
-    public AuthUserEntity update(AuthUserEntity user) {
-        manager.joinTransaction();
-        manager.merge(user);
-        return user;
-    }
-
-    @Override
     public Optional<AuthUserEntity> findById(UUID id) {
         return Optional.ofNullable(
                 manager.find(AuthUserEntity.class, id)
@@ -49,12 +42,4 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
         }
     }
 
-    @Override
-    public void remove(AuthUserEntity user) {
-        manager.joinTransaction();
-        if (!manager.contains(user)){
-            user = manager.merge(user);
-        }
-        manager.remove(user);
-    }
 }
