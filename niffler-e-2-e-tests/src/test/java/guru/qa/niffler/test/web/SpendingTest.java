@@ -5,6 +5,7 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CurrencyValues;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
@@ -35,5 +36,23 @@ public class SpendingTest {
                 .setNewSpendingDescription(newDescription)
                 .save()
                 .checkThatTableContains(newDescription);
+    }
+
+    @Test
+    @User(
+            spendings = @Spending(
+                    category = "Учеба",
+                    amount = 89900,
+                    currency = CurrencyValues.RUB,
+                    description = "Обучение Niffler 2.0 юбилейный поток!"
+            )
+    )
+    public void checkSpendingShouldBeInHistory(UserJson userJson){
+        String spendingDescription = userJson.testData().spendings().getFirst().description();
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(userJson.username(), userJson.testData().password())
+                .checkThatPageLoaded()
+                .search(spendingDescription)
+                .checkThatTableContains(spendingDescription);
     }
 }

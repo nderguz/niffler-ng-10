@@ -18,6 +18,8 @@ public class FriendsTest {
 
     private static final Config CFG = Config.getInstance();
 
+    //todo поменять Очередь на созданный механизм
+
     @Test
     @UsersQueue
     @DisplayName("Должен отображаться список друзей")

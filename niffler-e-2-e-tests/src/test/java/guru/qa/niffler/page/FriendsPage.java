@@ -48,4 +48,19 @@ public class FriendsPage {
         return this;
     }
 
+    public FriendsPage checkFriendExistInFriendsList(String friendName){
+        //todo реализовать поиск друга в списке друзей
+        return this;
+    }
+
+    public FriendsPage acceptIncomeInvitation(){
+
+        return this;
+    }
+
+    public FriendsPage addFriend(String name){
+        //todo реализовать поиск в All people и добавление в друзья
+        return this;
+    }
+
 }
