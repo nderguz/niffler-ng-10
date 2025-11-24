@@ -19,7 +19,6 @@ public class SpendingTest {
     private static final Config CFG = Config.getInstance();
 
     @User(
-            username = "test",
             spendings = @Spending(
                     category = "Учеба",
                     amount = 89900,
@@ -28,11 +27,11 @@ public class SpendingTest {
             )
     )
     @Test
-    void spendingDescriptionShouldBeEditedByTableAction(SpendJson spending) {
+    void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation";
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin("test", "test")
-                .editSpending(spending.description())
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .editSpending(user.getTestData().spendings().getFirst().description())
                 .setNewSpendingDescription(newDescription)
                 .save()
                 .checkThatTableContains(newDescription);
