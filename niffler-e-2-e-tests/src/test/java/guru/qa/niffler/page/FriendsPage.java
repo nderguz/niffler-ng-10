@@ -34,7 +34,8 @@ public class FriendsPage {
     }
 
     public FriendsPage checkIncomeInvitationShouldBeVisible(List<UserJson> income) {
-        friendRequestsRow.findBy(text(friendName))
+        search(income.getFirst().getUsername());
+        friendRequestsRow.findBy(text(income.getFirst().getUsername()))
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));
@@ -43,27 +44,16 @@ public class FriendsPage {
 
     public FriendsPage checkOutcomeInvitationShouldBeVisible(List<UserJson> outcome) {
         allPeopleTab.click();
-        searchInput.setValue(friendName).pressEnter();
-        allPeopleRows.findBy(text(friendName))
+        search(outcome.getFirst().getUsername());
+        allPeopleRows.findBy(text(outcome.getFirst().getUsername()))
                 .shouldBe(visible)
                 .$(".MuiChip-label")
                 .shouldHave(text("Waiting..."));
         return this;
     }
 
-    public FriendsPage checkFriendExistInFriendsList(String friendName){
-        //todo реализовать поиск друга в списке друзей
+    public FriendsPage search(String keyword){
+        searchInput.setValue(keyword).pressEnter();
         return this;
     }
-
-    public FriendsPage acceptIncomeInvitation(){
-
-        return this;
-    }
-
-    public FriendsPage addFriend(String name){
-        //todo реализовать поиск в All people и добавление в друзья
-        return this;
-    }
-
 }
