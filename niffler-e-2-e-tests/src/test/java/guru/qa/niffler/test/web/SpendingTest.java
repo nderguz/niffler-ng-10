@@ -5,7 +5,7 @@ import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.model.CurrencyValues;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.Test;
@@ -48,9 +48,9 @@ public class SpendingTest {
             )
     )
     public void checkSpendingShouldBeInHistory(UserJson userJson){
-        String spendingDescription = userJson.testData().spendings().getFirst().description();
+        String spendingDescription = userJson.getTestData().spendings().getFirst().description();
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(userJson.username(), userJson.testData().password())
+                .successLogin(userJson.getUsername(), userJson.getTestData().password())
                 .checkThatPageLoaded()
                 .search(spendingDescription)
                 .checkThatTableContains(spendingDescription);

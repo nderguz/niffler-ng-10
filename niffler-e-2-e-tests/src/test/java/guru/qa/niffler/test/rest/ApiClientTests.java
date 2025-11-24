@@ -2,7 +2,7 @@ package guru.qa.niffler.test.rest;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.service.impl.UserApiClient;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class ApiClientTests {
 
         //todo дописать проверку на случайного входящего друга
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(userJson.username(), userJson.testData().password())
+                .successLogin(userJson.getUsername(), userJson.getTestData().password())
                 .checkThatPageLoaded()
                 .openFriendsPage();
     }

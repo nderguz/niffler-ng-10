@@ -2,6 +2,9 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.user.UserJson;
+
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -30,7 +33,7 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible(String friendName) {
+    public FriendsPage checkIncomeInvitationShouldBeVisible(List<UserJson> income) {
         friendRequestsRow.findBy(text(friendName))
                 .shouldBe(visible)
                 .$("button[type='button']")
@@ -38,7 +41,7 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkOutcomeInvitationShouldBeVisible(String friendName) {
+    public FriendsPage checkOutcomeInvitationShouldBeVisible(List<UserJson> outcome) {
         allPeopleTab.click();
         searchInput.setValue(friendName).pressEnter();
         allPeopleRows.findBy(text(friendName))
