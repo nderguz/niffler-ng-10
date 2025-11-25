@@ -1,4 +1,4 @@
-package guru.qa.niffler.service.impl;
+package guru.qa.niffler.api.impl;
 
 import guru.qa.niffler.api.SpendApi;
 import guru.qa.niffler.config.Config;
@@ -9,6 +9,9 @@ import lombok.SneakyThrows;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class SpendApiClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();

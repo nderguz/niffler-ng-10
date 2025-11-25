@@ -4,11 +4,14 @@ import com.atomikos.icatch.jta.UserTransactionImp;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@ParametersAreNonnullByDefault
 public class XaTransactionTemplate {
 
     private final JdbcConnectionHolders holders;
@@ -27,7 +30,7 @@ public class XaTransactionTemplate {
         return execute(Connection.TRANSACTION_REPEATABLE_READ, actions);
     }
 
-    public <T> T execute(int isolationLvl, Supplier<T>... actions) {
+    public @Nullable <T> T execute(int isolationLvl, Supplier<T>... actions) {
         UserTransaction ut = new UserTransactionImp();
         try {
             ut.begin();
