@@ -9,6 +9,10 @@ import retrofit2.http.*;
 import java.util.Date;
 import java.util.List;
 
+
+/*
+По SpendApi код был добавлен ранее
+ */
 public interface SpendApi {
 
     @GET("internal/spends/{id}")

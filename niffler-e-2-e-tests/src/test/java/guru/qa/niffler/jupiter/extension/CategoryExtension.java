@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.service.SpendClient;
 import guru.qa.niffler.service.impl.SpendDbClient;
@@ -34,7 +34,7 @@ public class CategoryExtension implements
 
                         Optional<UserJson> testUser = UserExtension.createdUser();
                         final String username = testUser.isPresent()
-                                ? testUser.get().username()
+                                ? testUser.get().getUsername()
                                 : userAnno.username();
 
                         List<CategoryJson> result = new ArrayList<>();
@@ -61,7 +61,7 @@ public class CategoryExtension implements
                         }
 
                         if (testUser.isPresent()) {
-                            testUser.get().testData().categories().addAll(
+                            testUser.get().getTestData().categories().addAll(
                                     result
                             );
                         } else {

@@ -2,7 +2,7 @@ package guru.qa.niffler.jupiter.extension;
 
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
@@ -32,7 +32,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
 
                                 Optional<UserJson> testUser = UserExtension.createdUser();
                                 final String username = testUser.isPresent()
-                                        ? testUser.get().username()
+                                        ? testUser.get().getUsername()
                                         : userAnno.username();
 
                                 List<SpendJson> result = new ArrayList<>();
@@ -58,7 +58,7 @@ public class SpendingExtension implements BeforeEachCallback, ParameterResolver 
                                 }
 
                                 if (testUser.isPresent()) {
-                                    testUser.get().testData().spendings().addAll(
+                                    testUser.get().getTestData().spendings().addAll(
                                             result
                                     );
                                 } else {

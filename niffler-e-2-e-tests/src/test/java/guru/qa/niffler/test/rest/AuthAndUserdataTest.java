@@ -1,6 +1,6 @@
 package guru.qa.niffler.test.rest;
 
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserDbClient;
 import org.junit.jupiter.api.Test;

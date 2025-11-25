@@ -12,7 +12,7 @@ import guru.qa.niffler.data.repository.impl.hibernate.AuthUserRepositoryHibernat
 import guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.FriendshipStatus;
-import guru.qa.niffler.model.UserJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,7 +55,7 @@ public class UserDbClient implements UserClient {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
+                    targetUser.getId()
             ).orElseThrow();
 
             for (int i = 0; i < count; i++) {
@@ -79,7 +79,7 @@ public class UserDbClient implements UserClient {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
+                    targetUser.getId()
             ).orElseThrow();
 
             for (int i = 0; i < count; i++) {
@@ -103,7 +103,7 @@ public class UserDbClient implements UserClient {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
-                    targetUser.id()
+                    targetUser.getId()
             ).orElseThrow();
 
             for (int i = 0; i < count; i++) {

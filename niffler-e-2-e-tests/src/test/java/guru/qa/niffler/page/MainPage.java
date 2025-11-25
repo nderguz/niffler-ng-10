@@ -14,6 +14,7 @@ public class MainPage {
     private final SelenideElement spendings = $("#spendings");
     private final SelenideElement menuBtn = $("button[aria-label='Menu']");
     private final ElementsCollection menuOptions = $$("li a");
+    private final SelenideElement searchInput = $("input[aria-label='search']");
 
     public MainPage checkThatPageLoaded() {
         spendingTable.shouldBe(visible);
@@ -41,5 +42,10 @@ public class MainPage {
         menuBtn.click();
         menuOptions.find(text("Profile")).click();
         return new ProfilePage();
+    }
+
+    public MainPage search(String inputText) {
+        searchInput.val(inputText).pressEnter();
+        return this;
     }
 }

@@ -3,11 +3,8 @@ package guru.qa.niffler.test.web;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.User;
-import guru.qa.niffler.model.UserJson;
-import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
-import guru.qa.niffler.page.ProfilePage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,15 +14,18 @@ import static com.codeborne.selenide.Selenide.open;
 public class ProfileTest {
 
     private static final Config CFG = Config.getInstance();
-    private ProfilePage page;
 
     @Test
     @User(
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория должна отображаться в списке категорий")
-    public void checkArchivedCategoryExists(CategoryJson category) {
-        page.checkArchivedCategoryIsNotExists(category.name());
+    public void checkArchivedCategoryExists(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .checkThatPageLoaded()
+                .openProfilePage()
+                .checkArchivedCategoryIsNotExists(user.getTestData().categories().getFirst().name());
     }
 
     @Test
@@ -37,10 +37,10 @@ public class ProfileTest {
     @DisplayName("Активная категория должна отображаться в списке категорий")
     public void activeCategoryShouldPresentInCategoriesList(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.username(), user.testData().password())
+                .successLogin(user.getUsername(), user.getTestData().password())
                 .checkThatPageLoaded()
                 .openProfilePage()
-                .checkArchivedCategoryExists(user.testData().categories().getFirst().name());
+                .checkArchivedCategoryExists(user.getTestData().categories().getFirst().name());
     }
 
     @Test
@@ -48,8 +48,12 @@ public class ProfileTest {
             categories = @Category(archived = true)
     )
     @DisplayName("Архивная категория не должна отображаться в списке категорий")
-    public void archivedCategoryShouldNotPresentInCategoriesList(CategoryJson category) {
-        page.checkArchivedCategoryIsNotExists(category.name());
+    public void archivedCategoryShouldNotPresentInCategoriesList(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .checkThatPageLoaded()
+                .openProfilePage()
+                .checkArchivedCategoryIsNotExists(user.getTestData().categories().getFirst().name());
     }
 }
 

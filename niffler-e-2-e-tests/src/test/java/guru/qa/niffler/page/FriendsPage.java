@@ -2,6 +2,9 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.model.user.UserJson;
+
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -30,22 +33,27 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible(String friendName) {
-        friendRequestsRow.findBy(text(friendName))
+    public FriendsPage checkIncomeInvitationShouldBeVisible(String username) {
+        search(username);
+        friendRequestsRow.findBy(text(username))
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));
         return this;
     }
 
-    public FriendsPage checkOutcomeInvitationShouldBeVisible(String friendName) {
+    public FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
         allPeopleTab.click();
-        searchInput.setValue(friendName).pressEnter();
-        allPeopleRows.findBy(text(friendName))
+        search(username);
+        allPeopleRows.findBy(text(username))
                 .shouldBe(visible)
                 .$(".MuiChip-label")
                 .shouldHave(text("Waiting..."));
         return this;
     }
 
+    public FriendsPage search(String keyword){
+        searchInput.setValue(keyword).pressEnter();
+        return this;
+    }
 }
