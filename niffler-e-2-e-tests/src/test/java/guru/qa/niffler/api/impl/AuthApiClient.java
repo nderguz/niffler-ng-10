@@ -1,4 +1,4 @@
-package guru.qa.niffler.service.impl;
+package guru.qa.niffler.api.impl;
 
 import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.config.Config;
