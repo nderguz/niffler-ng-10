@@ -40,7 +40,7 @@ public class FriendsTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .openFriendsPage()
-                .checkIncomeInvitationShouldBeVisible(user.getTestData().incomeInvitations());
+                .checkIncomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 
     @Test
@@ -50,6 +50,6 @@ public class FriendsTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .openFriendsPage()
-                .checkOutcomeInvitationShouldBeVisible(user.getTestData().outcomeInvitations());
+                .checkOutcomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 }

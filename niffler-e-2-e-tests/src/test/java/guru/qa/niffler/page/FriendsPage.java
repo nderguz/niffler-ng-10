@@ -33,19 +33,19 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible(List<UserJson> income) {
-        search(income.getFirst().getUsername());
-        friendRequestsRow.findBy(text(income.getFirst().getUsername()))
+    public FriendsPage checkIncomeInvitationShouldBeVisible(String username) {
+        search(username);
+        friendRequestsRow.findBy(text(username))
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));
         return this;
     }
 
-    public FriendsPage checkOutcomeInvitationShouldBeVisible(List<UserJson> outcome) {
+    public FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
         allPeopleTab.click();
-        search(outcome.getFirst().getUsername());
-        allPeopleRows.findBy(text(outcome.getFirst().getUsername()))
+        search(username);
+        allPeopleRows.findBy(text(username))
                 .shouldBe(visible)
                 .$(".MuiChip-label")
                 .shouldHave(text("Waiting..."));
