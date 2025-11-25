@@ -9,8 +9,12 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.Step;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+@ParametersAreNonnullByDefault
 public class SpendDbClient implements SpendClient {
     private static final Config CFG = Config.getInstance();
 
@@ -20,8 +24,9 @@ public class SpendDbClient implements SpendClient {
             CFG.spendJdbcUrl()
     );
 
+    @Step("Создание траты через вызов SQL")
     @Override
-    public SpendJson createSpend(SpendJson spend) {
+    public @Nullable SpendJson createSpend(SpendJson spend) {
         return xaTransactionTemplate.execute(() -> {
                     SpendEntity spendEntity = SpendEntity.fromJson(spend);
                     if (spendEntity.getCategory().getId() == null) {
@@ -35,8 +40,9 @@ public class SpendDbClient implements SpendClient {
         );
     }
 
+    @Step("Создание категории через вызов SQL")
     @Override
-    public CategoryJson createCategory(CategoryJson category) {
+    public @Nullable CategoryJson createCategory(CategoryJson category) {
         return xaTransactionTemplate.execute(() -> CategoryJson.fromEntity(
                         spendRepository.createCategory(
                                 CategoryEntity.fromJson(category)
@@ -45,8 +51,9 @@ public class SpendDbClient implements SpendClient {
         );
     }
 
+    @Step("Обновление категории через вызов SQL")
     @Override
-    public CategoryJson updateCategory(CategoryJson category) {
+    public @Nullable CategoryJson updateCategory(CategoryJson category) {
         return xaTransactionTemplate.execute(() -> CategoryJson.fromEntity(
                         spendRepository.updateCategory(
                                 CategoryEntity.fromJson(category)

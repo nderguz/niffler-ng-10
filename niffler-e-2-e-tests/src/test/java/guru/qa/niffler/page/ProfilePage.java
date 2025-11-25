@@ -3,10 +3,13 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
+@ParametersAreNonnullByDefault
 public class ProfilePage {
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement nameInput = $("#name");

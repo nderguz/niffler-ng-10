@@ -7,6 +7,9 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.model.CurrencyValues;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +18,14 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendDaoJdbc implements SpendDao {
 
     private static final Config CFG = Config.getInstance();
     private static final String URL = CFG.spendJdbcUrl();
 
     @Override
-    public SpendEntity create(SpendEntity spend) {
+    public @Nullable SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?)",
@@ -52,7 +56,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAll() {
+    public @Nonnull List<SpendEntity> findAll() {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 "SELECT * FROM spend")) {
             ps.execute();
@@ -79,7 +83,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public List<SpendEntity> findAllByUsername(String username) {
+    public @Nonnull List<SpendEntity> findAllByUsername(String username) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 "SELECT * FROM spend where username = ?")) {
             ps.setString(1, username);
@@ -128,7 +132,7 @@ public class SpendDaoJdbc implements SpendDao {
     }
 
     @Override
-    public SpendEntity update(SpendEntity spend) {
+    public @Nullable SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 """
                       UPDATE "spend"

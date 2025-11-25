@@ -2,13 +2,16 @@ package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.user.UserEntity;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public interface UserdataUserRepository {
-    UserEntity create(UserEntity user);
+    @Nullable UserEntity create(UserEntity user);
 
-    UserEntity update(UserEntity user);
+    @Nullable UserEntity update(UserEntity user);
 
     Optional<UserEntity> findById(UUID id);
 

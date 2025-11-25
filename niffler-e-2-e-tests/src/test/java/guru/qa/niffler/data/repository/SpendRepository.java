@@ -3,17 +3,20 @@ package guru.qa.niffler.data.repository;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public interface SpendRepository {
-    SpendEntity create(SpendEntity spend);
+    @Nullable SpendEntity create(SpendEntity spend);
 
-    SpendEntity update(SpendEntity spend);
+    @Nullable SpendEntity update(SpendEntity spend);
 
-    CategoryEntity createCategory(CategoryEntity category);
+    @Nullable CategoryEntity createCategory(CategoryEntity category);
 
-    CategoryEntity updateCategory(CategoryEntity category);
+    @Nullable CategoryEntity updateCategory(CategoryEntity category);
 
     Optional<CategoryEntity> findCategoryById(UUID id);
 

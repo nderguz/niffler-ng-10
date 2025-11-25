@@ -13,9 +13,12 @@ import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositorySpringJdbc implements SpendRepository {
     private static final Config CFG = Config.getInstance();
 
@@ -24,7 +27,7 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
     private final CategoryDao categoryDao = new CategoryDaoSpringJdbc();
 
     @Override
-    public SpendEntity create(SpendEntity spend) {
+    public @Nullable SpendEntity create(SpendEntity spend) {
         final UUID categoryId = spend.getCategory().getId();
         if (categoryId == null || categoryDao.findCategoryById(categoryId).isEmpty()) {
             spend.setCategory(
@@ -35,19 +38,19 @@ public class SpendRepositorySpringJdbc implements SpendRepository {
     }
 
     @Override
-    public SpendEntity update(SpendEntity spend) {
+    public @Nullable SpendEntity update(SpendEntity spend) {
         spendDao.update(spend);
         categoryDao.update(spend.getCategory());
         return spend;
     }
 
     @Override
-    public CategoryEntity createCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity createCategory(CategoryEntity category) {
         return categoryDao.create(category);
     }
 
     @Override
-    public CategoryEntity updateCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity updateCategory(CategoryEntity category) {
         return categoryDao.update(category);
     }
 

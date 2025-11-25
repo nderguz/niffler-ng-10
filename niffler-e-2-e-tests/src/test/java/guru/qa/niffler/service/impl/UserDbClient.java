@@ -17,13 +17,16 @@ import guru.qa.niffler.service.UserClient;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
-
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 
     private static final Config CFG = Config.getInstance();
@@ -38,7 +41,7 @@ public class UserDbClient implements UserClient {
     );
 
     @Override
-    public UserJson create(String username, String password) {
+    public @Nullable UserJson create(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUser = authUserEntity(username, password);
                     authUserRepository.create(authUser);
@@ -51,7 +54,7 @@ public class UserDbClient implements UserClient {
     }
 
     @Override
-    public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -75,7 +78,7 @@ public class UserDbClient implements UserClient {
     }
 
     @Override
-    public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -99,7 +102,7 @@ public class UserDbClient implements UserClient {
     }
 
     @Override
-    public List<UserJson> addFriend(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addFriend(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
