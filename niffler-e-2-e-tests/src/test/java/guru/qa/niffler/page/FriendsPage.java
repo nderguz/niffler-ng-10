@@ -20,11 +20,9 @@ public class FriendsPage {
     private final SelenideElement friendsTab = $("a[href='/people/friends']");
     private final SelenideElement allPeopleTab = $("a[href='/people/all']");
     private final SelenideElement friendRequestsTable = $("#requests");
-    private final SelenideElement allPeopleTable = $(".MuiTable-root");
     private final SelenideElement myFriendsTable = $("#friends");
     private final SelenideElement popup = $("div[role='dialog']");
 
-    private final ElementsCollection allPeopleRows = allPeopleTable.$$("tbody tr");
     private final ElementsCollection requestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
 
@@ -60,17 +58,6 @@ public class FriendsPage {
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));
-        return this;
-    }
-
-    @Step("Проверить исходящее приглашение пользователю {username}")
-    public @Nonnull FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
-        searchField.search(username);
-        allPeopleTab.click();
-        allPeopleRows.findBy(text(username))
-                .shouldBe(visible)
-                .$(".MuiChip-label")
-                .shouldHave(text("Waiting..."));
         return this;
     }
 

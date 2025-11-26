@@ -53,7 +53,7 @@ public class FriendsTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .getHeader()
-                .toFriendsPage()
+                .toAllPeoplesPage()
                 .checkOutcomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 }
