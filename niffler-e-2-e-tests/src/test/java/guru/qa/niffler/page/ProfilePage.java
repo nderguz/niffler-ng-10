@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,11 @@ public class ProfilePage {
     private final SelenideElement saveChangesBtn = $("button[type='submit']");
     private final SelenideElement uploadNewPictureInput = $("input[type='file']");
     private final SelenideElement registerPasskeyBtn = $("");
+    private final Header header = new Header();
+
+    public @Nonnull Header getHeader(){
+        return header;
+    }
 
     @Step("Ввести новое имя пользователя: {name}")
     public @Nonnull ProfilePage setNewName(String name) {

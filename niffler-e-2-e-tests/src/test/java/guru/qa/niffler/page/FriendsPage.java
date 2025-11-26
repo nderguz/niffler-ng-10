@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
@@ -24,6 +25,12 @@ public class FriendsPage {
     private final ElementsCollection allPeopleRows = allPeopleTable.$$("tbody tr");
     private final ElementsCollection friendRequestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
+
+    private final Header header = new Header();
+
+    public @Nonnull Header getHeader(){
+        return header;
+    }
 
     @Step("Проверить, что список друзей пуст")
     public @Nonnull FriendsPage checkFriendsListIsEmpty() {
