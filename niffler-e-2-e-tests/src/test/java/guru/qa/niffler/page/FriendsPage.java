@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
@@ -10,6 +11,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
@@ -20,15 +22,16 @@ public class FriendsPage {
     private final SelenideElement friendRequestsTable = $("#requests");
     private final SelenideElement allPeopleTable = $(".MuiTable-root");
     private final SelenideElement myFriendsTable = $("#friends");
-    private final SelenideElement searchInput = $("input[aria-label='search']");
+    private final SelenideElement popup = $("div[role='dialog']");
 
     private final ElementsCollection allPeopleRows = allPeopleTable.$$("tbody tr");
-    private final ElementsCollection friendRequestsRow = friendRequestsTable.$$("tbody tr");
+    private final ElementsCollection requestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
 
+    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
     private final Header header = new Header();
 
-    public @Nonnull Header getHeader(){
+    public @Nonnull Header getHeader() {
         return header;
     }
 
@@ -44,10 +47,16 @@ public class FriendsPage {
         return this;
     }
 
+    @Step("Проверить, что список входящих приглашений пуст")
+    public @Nonnull FriendsPage checkIncomeInvitationListIsEmpty(){
+        requestsRow.first().shouldNotBe(visible);
+        return this;
+    }
+
     @Step("Проверить входящее приглашение пользователю {username}")
     public @Nonnull FriendsPage checkIncomeInvitationShouldBeVisible(String username) {
-        search(username);
-        friendRequestsRow.findBy(text(username))
+        searchField.search(username);
+        requestsRow.findBy(text(username))
                 .shouldBe(visible)
                 .$("button[type='button']")
                 .shouldHave(text("Accept"));
@@ -56,8 +65,8 @@ public class FriendsPage {
 
     @Step("Проверить исходящее приглашение пользователю {username}")
     public @Nonnull FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
+        searchField.search(username);
         allPeopleTab.click();
-        search(username);
         allPeopleRows.findBy(text(username))
                 .shouldBe(visible)
                 .$(".MuiChip-label")
@@ -65,9 +74,23 @@ public class FriendsPage {
         return this;
     }
 
-    @Step("Выполнить поиск в поисковой строке: {keyword}")
-    public @Nonnull FriendsPage search(String keyword) {
-        searchInput.setValue(keyword).pressEnter();
+    @Step("Принять запрос дружбы от пользователя {incomeInvUsername}")
+    public FriendsPage acceptIncomeInvitation(String username) {
+        searchField.search(username);
+        requestsRow.get(0)
+                .find(byText("Accept"))
+                .click();
+        return this;
+    }
+
+    @Step("Отклонить запрос дружбы от пользователя {incomeInvUsername}")
+    public FriendsPage declineIncomeInvitation(String username) {
+        searchField.search(username);
+        requestsRow.get(0)
+                .$$("button[type='button']")
+                .get(1)
+                .click();
+        popup.find(byText("Decline")).click();
         return this;
     }
 }

@@ -25,7 +25,7 @@ public class ProfilePage {
     private final SelenideElement registerPasskeyBtn = $("");
     private final Header header = new Header();
 
-    public @Nonnull Header getHeader(){
+    public @Nonnull Header getHeader() {
         return header;
     }
 
@@ -49,7 +49,7 @@ public class ProfilePage {
     }
 
     @Step("Проверить, что изменение юзернейма недоступно")
-    public @Nonnull ProfilePage checkUsernameDisabled(){
+    public @Nonnull ProfilePage checkUsernameDisabled() {
         usernameInput.shouldBe(disabled);
         return this;
     }
@@ -74,14 +74,20 @@ public class ProfilePage {
     }
 
     @Step("Проверить, что архивная категория {category} не существует")
-    public @Nonnull ProfilePage checkArchivedCategoryIsNotExists(String category){
+    public @Nonnull ProfilePage checkArchivedCategoryIsNotExists(String category) {
         categoryArchived.find(text(category)).shouldBe(not(exist));
         return this;
     }
 
     @Step("Нажать на переключатель \"Show archived\"")
-    public @Nonnull ProfilePage switchShowArchived(){
+    public @Nonnull ProfilePage switchShowArchived() {
         archiveSwitcher.click();
+        return this;
+    }
+
+    @Step("Проверить поле Name")
+    public ProfilePage checkName(String name) {
+        nameInput.shouldHave(value(name));
         return this;
     }
 }

@@ -11,23 +11,38 @@ import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
 public class EditSpendingPage {
-  private final SelenideElement descriptionInput = $("#description");
-  private final SelenideElement saveBtn = $("#save");
+    private final SelenideElement descriptionInput = $("#description");
+    private final SelenideElement saveBtn = $("#save");
+    private final SelenideElement amountInput = $("#amount");
+    private final SelenideElement categoryInput = $("#category");
+
     private final Header header = new Header();
 
-    public @Nonnull Header getHeader(){
+    public @Nonnull Header getHeader() {
         return header;
     }
 
-  @Step("Ввести новое описание траты: {description}")
-  public @Nonnull EditSpendingPage setNewSpendingDescription(String description) {
-    descriptionInput.val(description);
-    return this;
-  }
+    @Step("Ввести новое описание траты: {description}")
+    public @Nonnull EditSpendingPage setNewSpendingDescription(String description) {
+        descriptionInput.val(description);
+        return this;
+    }
 
-  @Step("Нажать на кнопку \"Save\"")
-  public @Nonnull MainPage save() {
-    saveBtn.click();
-    return new MainPage();
-  }
+    @Step("Ввести стоимость {amount}")
+    public @Nonnull EditSpendingPage setNewAmount(Double amount){
+        amountInput.setValue(amount.toString());
+        return this;
+    }
+
+    @Step("Ввести категорию {category}")
+    public @Nonnull EditSpendingPage setNewCategory(String category){
+        categoryInput.setValue(category);
+        return this;
+    }
+
+    @Step("Нажать на кнопку \"Save\"")
+    public @Nonnull MainPage save() {
+        saveBtn.click();
+        return new MainPage();
+    }
 }

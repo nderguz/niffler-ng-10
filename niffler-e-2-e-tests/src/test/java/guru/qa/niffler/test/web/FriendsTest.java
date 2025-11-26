@@ -19,7 +19,8 @@ public class FriendsTest {
     public void friendShouldBePresentInFriendsTable(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .checkFriendsListIsNotEmpty();
     }
 
@@ -29,7 +30,8 @@ public class FriendsTest {
     public void friendsTableShouldBeEmptyForNewUser(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .checkFriendsListIsEmpty();
     }
 
@@ -39,7 +41,8 @@ public class FriendsTest {
     public void incomeInvitationShouldBePresentInFriendsTable(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .checkIncomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 
@@ -49,7 +52,8 @@ public class FriendsTest {
     public void outcomeInvitationShouldBePresentInAllPeoplesTable(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .openFriendsPage()
+                .getHeader()
+                .toFriendsPage()
                 .checkOutcomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 }
