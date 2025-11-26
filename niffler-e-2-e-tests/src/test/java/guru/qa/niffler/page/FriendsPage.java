@@ -2,10 +2,10 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.model.user.UserJson;
+import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
@@ -25,17 +25,20 @@ public class FriendsPage {
     private final ElementsCollection friendRequestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
 
-    public FriendsPage checkFriendsListIsEmpty() {
+    @Step("Проверить, что список друзей пуст")
+    public @Nonnull FriendsPage checkFriendsListIsEmpty() {
         myFriendsRows.first().shouldNotBe(visible);
         return this;
     }
 
-    public FriendsPage checkFriendsListIsNotEmpty() {
+    @Step("Проверить, что список друзей не пуст")
+    public @Nonnull FriendsPage checkFriendsListIsNotEmpty() {
         myFriendsRows.first().shouldBe(visible);
         return this;
     }
 
-    public FriendsPage checkIncomeInvitationShouldBeVisible(String username) {
+    @Step("Проверить входящее приглашение пользователю {username}")
+    public @Nonnull FriendsPage checkIncomeInvitationShouldBeVisible(String username) {
         search(username);
         friendRequestsRow.findBy(text(username))
                 .shouldBe(visible)
@@ -44,7 +47,8 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
+    @Step("Проверить исходящее приглашение пользователю {username}")
+    public @Nonnull FriendsPage checkOutcomeInvitationShouldBeVisible(String username) {
         allPeopleTab.click();
         search(username);
         allPeopleRows.findBy(text(username))
@@ -54,7 +58,8 @@ public class FriendsPage {
         return this;
     }
 
-    public FriendsPage search(String keyword){
+    @Step("Выполнить поиск в поисковой строке: {keyword}")
+    public @Nonnull FriendsPage search(String keyword) {
         searchInput.setValue(keyword).pressEnter();
         return this;
     }

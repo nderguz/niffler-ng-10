@@ -14,6 +14,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
+import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -40,6 +41,7 @@ public class UserDbClient implements UserClient {
             CFG.userdataJdbcUrl()
     );
 
+    @Step("Создание пользователя через вызов SQL")
     @Override
     public @Nullable UserJson create(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
@@ -53,6 +55,7 @@ public class UserDbClient implements UserClient {
         );
     }
 
+    @Step("Добавление входящих приглашений через вызов SQL")
     @Override
     public @Nonnull List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
@@ -77,6 +80,7 @@ public class UserDbClient implements UserClient {
         return result;
     }
 
+    @Step("Добавление исходящих приглашений через вызов SQL")
     @Override
     public @Nonnull List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
@@ -101,6 +105,7 @@ public class UserDbClient implements UserClient {
         return result;
     }
 
+    @Step("Добавление пользователей в друзья через вызов SQL")
     @Override
     public @Nonnull List<UserJson> addFriend(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();

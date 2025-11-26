@@ -1,7 +1,9 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
@@ -17,34 +19,40 @@ public class RegisterPage {
     private final SelenideElement formSingInBtn = $(".form_sign-in");
     private final SelenideElement formError = $(".form__error");
 
-    public RegisterPage setUsername(String username){
+    @Step("Ввести имя пользователя: {username}")
+    public @Nonnull RegisterPage setUsername(String username){
         usernameInput.val(username);
         return this;
     }
 
-    public RegisterPage setPassword(String password){
+    @Step("Ввести пароль: {password}")
+    public @Nonnull RegisterPage setPassword(String password){
         passwordInput.val(password);
         return this;
     }
 
-    public RegisterPage setSubmitPassword(String password){
+    @Step("Ввести пароль повторно: {password}")
+    public @Nonnull RegisterPage setSubmitPassword(String password){
         passwordSubmitInput.val(password);
         return this;
     }
 
-    public LoginPage successSubmit(){
+    @Step("Нажать на кнопку \"Sign up\"")
+    public @Nonnull LoginPage successSubmit(){
         signUp();
         formSingInBtn.click();
         return new LoginPage();
     }
 
-    public RegisterPage checkErrorMessage(String message){
+    @Step("Проверить наличие сообщения об ошибке: {message}")
+    public @Nonnull RegisterPage checkErrorMessage(String message){
         formError.shouldBe(visible);
         formError.shouldHave(text(message));
         return this;
     }
 
-    public RegisterPage signUp(){
+    @Step("Нажать на кнопку \"Sign in\"")
+    public @Nonnull RegisterPage signUp(){
         signUpBtn.click();
         return this;
     }

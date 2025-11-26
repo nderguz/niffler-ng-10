@@ -3,32 +3,34 @@ package guru.qa.niffler.page.component;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.*;
 
+import javax.annotation.Nonnull;
+
 import static com.codeborne.selenide.Selenide.$;
 
 public class Header {
     private final SelenideElement self = $("#root header");
 
-    public FriendsPage toFriendsPage() {
+    public @Nonnull FriendsPage toFriendsPage() {
 
     }
 
-    public PeoplePage toAllPeoplesPage() {
+    public @Nonnull PeoplePage toAllPeoplesPage() {
 
     }
 
-    public ProfilePage toProfilePage() {
+    public @Nonnull ProfilePage toProfilePage() {
 
     }
 
-    public LoginPage signOut() {
+    public @Nonnull LoginPage signOut() {
 
     }
 
-    public EditSpendingPage toAddSpendingPage() {
+    public @Nonnull EditSpendingPage toAddSpendingPage() {
 
     }
 
-    public MainPage toMainPage() {
+    public @Nonnull MainPage toMainPage() {
 
     }
 }

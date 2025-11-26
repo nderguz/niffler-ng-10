@@ -1,7 +1,9 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
@@ -15,14 +17,16 @@ public class LoginPage {
     private final SelenideElement createAccountBtn = $("#register-button");
     private final SelenideElement formError = $(".form__error");
 
-    public MainPage successLogin(String username, String password) {
+    @Step("Авторизоваться с валидными кредами")
+    public @Nonnull MainPage successLogin(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
         submitBtn.click();
         return new MainPage();
     }
 
-    public LoginPage badLogin(String username, String password) {
+    @Step("Авторизоваться с невалидными кредами")
+    public @Nonnull LoginPage badLogin(String username, String password) {
         usernameInput.val(username);
         passwordInput.val(password);
         submitBtn.click();
@@ -30,11 +34,13 @@ public class LoginPage {
         return this;
     }
 
-    public RegisterPage registerPage() {
+    @Step("Открыть страницу регистрации")
+    public @Nonnull RegisterPage registerPage() {
         createAccountBtn.click();
         return new RegisterPage();
     }
 
+    @Step("Проверить наличие текста ошибки: {message}")
     public void checkErrorMessage(String message) {
         formError.shouldHave(text(message));
     }
