@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface CategoryDao {
-    @Nullable
+    @Nonnull
     CategoryEntity create(CategoryEntity category);
 
     Optional<CategoryEntity> findCategoryById(UUID id);
@@ -26,6 +26,6 @@ public interface CategoryDao {
 
     void delete(CategoryEntity category);
 
-    @Nullable
+    @Nonnull
     CategoryEntity update(CategoryEntity category);
 }

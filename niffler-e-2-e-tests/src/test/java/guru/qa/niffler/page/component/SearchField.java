@@ -18,12 +18,12 @@ public class SearchField {
     @Step("Выполнение поиска в поисковой строке: {query}")
     public @Nonnull SearchField search(String query){
         self.setValue(query).pressEnter();
-        return new SearchField(self);
+        return this;
     }
 
     @Step("Очистка поисковой строки")
     public @Nonnull SearchField clearIfNotEmpty(){
         self.setValue("");
-        return new SearchField(self);
+        return this;
     }
 }

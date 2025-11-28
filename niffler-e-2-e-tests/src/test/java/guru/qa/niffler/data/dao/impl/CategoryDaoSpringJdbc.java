@@ -23,8 +23,9 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity create(CategoryEntity category) {
+    public CategoryEntity create(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
         KeyHolder kh = new GeneratedKeyHolder();
 
@@ -99,8 +100,9 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
         );
     }
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity update(CategoryEntity category) {
+    public CategoryEntity update(CategoryEntity category) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
         jdbcTemplate.update(con -> {
                     PreparedStatement ps = con.prepareStatement(

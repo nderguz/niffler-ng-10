@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface AuthUserDao {
-    @Nullable
+    @Nonnull
     AuthUserEntity create(AuthUserEntity user);
 
     Optional<AuthUserEntity> findById(UUID id);

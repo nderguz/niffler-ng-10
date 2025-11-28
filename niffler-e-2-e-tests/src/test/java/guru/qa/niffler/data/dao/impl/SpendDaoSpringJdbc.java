@@ -29,8 +29,9 @@ public class SpendDaoSpringJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
     private static final String URL = CFG.spendJdbcUrl();
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity create(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource(URL));
         KeyHolder kh = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -92,8 +93,9 @@ public class SpendDaoSpringJdbc implements SpendDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity update(SpendEntity spend) {
+    public SpendEntity update(SpendEntity spend) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource(URL));
         jdbcTemplate.update("""
                           UPDATE "spend"

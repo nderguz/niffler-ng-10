@@ -20,8 +20,9 @@ public class CategoryDaoJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity create(CategoryEntity category) {
+    public CategoryEntity create(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO category (username, name, archived)" +
@@ -150,8 +151,9 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity update(CategoryEntity category) {
+    public CategoryEntity update(CategoryEntity category) {
 
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "UPDATE category " +

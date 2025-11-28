@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.FriendshipEntity;
 import guru.qa.niffler.data.entity.user.UserEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +27,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     private static final Config CFG = Config.getInstance();
 
     @Override
-    public @Nullable UserEntity create(UserEntity user) {
+    public @Nonnull UserEntity create(UserEntity user) {
 
         try (PreparedStatement ps = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "INSERT INTO \"user\" (username, currency, firstname, surname, full_name, photo, photo_small)" +
@@ -98,7 +99,7 @@ public class UserDataDaoJdbc implements UserdataUserDao {
     }
 
     @Override
-    public @Nullable UserEntity update(UserEntity user) {
+    public @Nonnull UserEntity update(UserEntity user) {
         try (PreparedStatement usersPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(
                 "UPDATE \"user\" SET currency = ?, firstname = ?, surname = ?, photo = ?, photo_small = ? WHERE id = ?");
              PreparedStatement friendsPs = holder(CFG.userdataJdbcUrl()).connection().prepareStatement(

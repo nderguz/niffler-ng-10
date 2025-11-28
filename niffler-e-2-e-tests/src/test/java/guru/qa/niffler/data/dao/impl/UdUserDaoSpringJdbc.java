@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.UserdataUserDao;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,7 +25,7 @@ public class UdUserDaoSpringJdbc implements UserdataUserDao {
     private static final Config CFG = Config.getInstance();
 
     @Override
-    public @Nullable UserEntity create(UserEntity user) {
+    public @Nonnull UserEntity create(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         KeyHolder kh = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -73,7 +74,7 @@ public class UdUserDaoSpringJdbc implements UserdataUserDao {
     }
 
     @Override
-    public @Nullable UserEntity update(UserEntity user) {
+    public @Nonnull UserEntity update(UserEntity user) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.userdataJdbcUrl()));
         jdbcTemplate.query(
                 "UPDATE \"user\" SET username = ?, currency = ?, firstname = ?, surname = ?, full_name =?, photo = ?, photo_small = ?",

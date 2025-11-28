@@ -24,8 +24,9 @@ public class SpendDaoJdbc implements SpendDao {
     private static final Config CFG = Config.getInstance();
     private static final String URL = CFG.spendJdbcUrl();
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity create(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 "INSERT INTO spend (username, spend_date, currency, amount, description, category_id) " +
                         "VALUES ( ?, ?, ?, ?, ?, ?)",
@@ -131,8 +132,9 @@ public class SpendDaoJdbc implements SpendDao {
         }
     }
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity update(SpendEntity spend) {
+    public SpendEntity update(SpendEntity spend) {
         try (PreparedStatement ps = holder(URL).connection().prepareStatement(
                 """
                       UPDATE "spend"

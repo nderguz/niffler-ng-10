@@ -11,7 +11,8 @@ import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface SpendDao {
-    @Nullable
+
+    @Nonnull
     SpendEntity create(SpendEntity spend);
 
     @Nonnull
@@ -22,7 +23,7 @@ public interface SpendDao {
 
     Optional<SpendEntity> findSpendById(UUID id);
 
-    @Nullable
+    @Nonnull
     SpendEntity update(SpendEntity spend);
 
     void deleteSpend(SpendEntity spend);
