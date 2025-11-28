@@ -7,11 +7,14 @@ import guru.qa.niffler.data.repository.SpendRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.jpa.EntityManagers.em;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryHibernate implements SpendRepository {
 
     private static final Config CFG = Config.getInstance();
@@ -19,27 +22,27 @@ public class SpendRepositoryHibernate implements SpendRepository {
     private final EntityManager entityManager = em(CFG.spendJdbcUrl());
 
     @Override
-    public SpendEntity create(SpendEntity spend) {
+    public @Nullable SpendEntity create(SpendEntity spend) {
         entityManager.joinTransaction();
         entityManager.persist(spend);
         return spend;
     }
 
     @Override
-    public SpendEntity update(SpendEntity spend) {
+    public @Nullable SpendEntity update(SpendEntity spend) {
         entityManager.joinTransaction();
         return entityManager.merge(spend);
     }
 
     @Override
-    public CategoryEntity createCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity createCategory(CategoryEntity category) {
         entityManager.joinTransaction();
         entityManager.persist(category);
         return category;
     }
 
     @Override
-    public CategoryEntity updateCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity updateCategory(CategoryEntity category) {
         entityManager.joinTransaction();
         return entityManager.merge(category);
     }

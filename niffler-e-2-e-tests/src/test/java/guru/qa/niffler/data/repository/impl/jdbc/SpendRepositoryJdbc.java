@@ -11,6 +11,8 @@ import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.data.mapper.SpendEntityRowMapper;
 import guru.qa.niffler.data.repository.SpendRepository;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,6 +21,7 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class SpendRepositoryJdbc implements SpendRepository {
 
     private static final Config CFG = Config.getInstance();
@@ -28,7 +31,7 @@ public class SpendRepositoryJdbc implements SpendRepository {
     private final CategoryDao categoryDao = new CategoryDaoJdbc();
 
     @Override
-    public SpendEntity create(SpendEntity spend) {
+    public @Nullable SpendEntity create(SpendEntity spend) {
         final UUID categoryId = spend.getCategory().getId();
         if (categoryId == null || categoryDao.findCategoryById(categoryId).isEmpty()) {
             spend.setCategory(
@@ -39,19 +42,19 @@ public class SpendRepositoryJdbc implements SpendRepository {
     }
 
     @Override
-    public SpendEntity update(SpendEntity spend) {
+    public @Nullable SpendEntity update(SpendEntity spend) {
         spendDao.update(spend);
         categoryDao.update(spend.getCategory());
         return spend;
     }
 
     @Override
-    public CategoryEntity createCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity createCategory(CategoryEntity category) {
         return categoryDao.create(category);
     }
 
     @Override
-    public CategoryEntity updateCategory(CategoryEntity category) {
+    public @Nullable CategoryEntity updateCategory(CategoryEntity category) {
         return categoryDao.update(category);
     }
 

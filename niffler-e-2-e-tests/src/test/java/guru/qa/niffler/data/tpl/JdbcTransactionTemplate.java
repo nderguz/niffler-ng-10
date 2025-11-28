@@ -1,5 +1,6 @@
 package guru.qa.niffler.data.tpl;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
@@ -18,7 +19,7 @@ public class JdbcTransactionTemplate {
         this.holder = Connections.holder(jdbcUrl);
     }
 
-    public JdbcTransactionTemplate holdConnectionAfterAction() {
+    public @Nonnull JdbcTransactionTemplate holdConnectionAfterAction() {
         this.closeAfterAction.set(false);
         return this;
     }

@@ -7,12 +7,16 @@ import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.jupiter.extension.UserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
-import lombok.SneakyThrows;
+import io.qameta.allure.Step;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
+@ParametersAreNonnullByDefault
 public class UserApiClient implements UserClient {
 
     private static final Config CFG = Config.getInstance();
@@ -43,21 +48,25 @@ public class UserApiClient implements UserClient {
     private final UserdataApi userdataApi = userdataRetrofit.create(UserdataApi.class);
     private final AuthApi authApi = authRetrofit.create(AuthApi.class);
 
+    @Step("Регистрация нового пользователя через API")
     @Override
-    @SneakyThrows
-    public UserJson create(String username, String password) {
-        authApi.requestRegisterForm().execute();
-        authApi.register(
-                username,
-                password,
-                password,
-                cm.getCookieStore().getCookies()
-                        .stream()
-                        .filter(c -> c.getName().equals("XSRF-TOKEN"))
-                        .findFirst()
-                        .get()
-                        .getValue()
-        ).execute();
+    public @Nullable UserJson create(String username, String password) {
+        try {
+            authApi.requestRegisterForm().execute();
+            authApi.register(
+                    username,
+                    password,
+                    password,
+                    cm.getCookieStore().getCookies()
+                            .stream()
+                            .filter(c -> c.getName().equals("XSRF-TOKEN"))
+                            .findFirst()
+                            .get()
+                            .getValue()
+            ).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         var createdUser = new UserJson();
         createdUser.setUsername(username);
@@ -65,8 +74,9 @@ public class UserApiClient implements UserClient {
         return createdUser;
     }
 
+    @Step("Добавление входящих приглашений дружбы")
     @Override
-    public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             for (int i = 0; i < count; i++) {
@@ -78,8 +88,9 @@ public class UserApiClient implements UserClient {
         return result;
     }
 
+    @Step("Добавление исходящих приглашений дружбы")
     @Override
-    public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             for (int i = 0; i < count; i++) {
@@ -88,11 +99,12 @@ public class UserApiClient implements UserClient {
                 userdataApi.sendInvitation(targetUser.getUsername(), user.getUsername());
             }
         }
-        return List.of();
+        return result;
     }
 
+    @Step("Добавление в друзья пользователя")
     @Override
-    public List<UserJson> addFriend(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addFriend(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             for (int i = 0; i < count; i++) {

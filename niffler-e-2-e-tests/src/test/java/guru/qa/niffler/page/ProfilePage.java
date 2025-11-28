@@ -2,11 +2,17 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import io.qameta.allure.Step;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
+@ParametersAreNonnullByDefault
 public class ProfilePage {
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement nameInput = $("#name");
@@ -17,51 +23,71 @@ public class ProfilePage {
     private final SelenideElement saveChangesBtn = $("button[type='submit']");
     private final SelenideElement uploadNewPictureInput = $("input[type='file']");
     private final SelenideElement registerPasskeyBtn = $("");
+    private final Header header = new Header();
 
-    public ProfilePage setNewName(String name) {
+    public @Nonnull Header getHeader() {
+        return header;
+    }
+
+    @Step("Ввести новое имя пользователя: {name}")
+    public @Nonnull ProfilePage setNewName(String name) {
         nameInput.clear();
         nameInput.val(name);
         return this;
     }
 
-    public ProfilePage uploadNewPicture(String path) {
+    @Step("Загрузить новую картинку профиля")
+    public @Nonnull ProfilePage uploadNewPicture(String path) {
         uploadNewPictureInput.uploadFromClasspath(path);
         return this;
     }
 
-    public ProfilePage addCategory(String category) {
+    @Step("Добавить новую категорию")
+    public @Nonnull ProfilePage addCategory(String category) {
         categoryInput.setValue(category).pressEnter();
         return this;
     }
 
-    public ProfilePage checkUsernameDisabled(){
+    @Step("Проверить, что изменение юзернейма недоступно")
+    public @Nonnull ProfilePage checkUsernameDisabled() {
         usernameInput.shouldBe(disabled);
         return this;
     }
 
-    public ProfilePage saveChanges() {
+    @Step("Нажать кнопку \"Сохранить изменения\"")
+    public @Nonnull ProfilePage saveChanges() {
         saveChangesBtn.click();
         return this;
     }
 
-    public ProfilePage checkCategoryExists(String category) {
+    @Step("Проверить, что категория {category} существует")
+    public @Nonnull ProfilePage checkCategoryExists(String category) {
         categoryCommon.find(text(category)).shouldBe(visible);
         return this;
     }
 
-    public ProfilePage checkArchivedCategoryExists(String category) {
+    @Step("Проверить, что архивная категория {category} существует")
+    public @Nonnull ProfilePage checkArchivedCategoryExists(String category) {
         switchShowArchived();
         categoryArchived.find(text(category)).shouldBe(visible);
         return this;
     }
 
-    public ProfilePage checkArchivedCategoryIsNotExists(String category){
+    @Step("Проверить, что архивная категория {category} не существует")
+    public @Nonnull ProfilePage checkArchivedCategoryIsNotExists(String category) {
         categoryArchived.find(text(category)).shouldBe(not(exist));
         return this;
     }
 
-    public ProfilePage switchShowArchived(){
+    @Step("Нажать на переключатель \"Show archived\"")
+    public @Nonnull ProfilePage switchShowArchived() {
         archiveSwitcher.click();
+        return this;
+    }
+
+    @Step("Проверить поле Name")
+    public ProfilePage checkName(String name) {
+        nameInput.shouldHave(value(name));
         return this;
     }
 }

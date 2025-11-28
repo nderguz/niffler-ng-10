@@ -4,6 +4,9 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +15,12 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class CategoryDaoJdbc implements CategoryDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     @Override
     public CategoryEntity create(CategoryEntity category) {
 
@@ -91,7 +96,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAllByUsername(String username) {
+    public @Nonnull List<CategoryEntity> findAllByUsername(String username) {
 
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "SELECT * from category WHERE username = ?"
@@ -112,7 +117,7 @@ public class CategoryDaoJdbc implements CategoryDao {
     }
 
     @Override
-    public List<CategoryEntity> findAll() {
+    public @Nonnull List<CategoryEntity> findAll() {
         try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
                 "SELECT * from category"
         )) {
@@ -146,6 +151,7 @@ public class CategoryDaoJdbc implements CategoryDao {
         }
     }
 
+    @Nonnull
     @Override
     public CategoryEntity update(CategoryEntity category) {
 

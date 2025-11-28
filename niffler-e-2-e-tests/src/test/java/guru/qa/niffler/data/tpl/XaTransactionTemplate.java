@@ -4,6 +4,7 @@ import com.atomikos.icatch.jta.UserTransactionImp;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.Connection;
@@ -21,7 +22,7 @@ public class XaTransactionTemplate {
         this.holders = Connections.holders(jdbcUrls);
     }
 
-    public XaTransactionTemplate holdConnectionAfterAction() {
+    public @Nonnull XaTransactionTemplate holdConnectionAfterAction() {
         this.closeAfterAction.set(false);
         return this;
     }

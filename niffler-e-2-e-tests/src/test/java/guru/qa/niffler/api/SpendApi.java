@@ -6,13 +6,13 @@ import guru.qa.niffler.model.spend.SpendJson;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Date;
 import java.util.List;
 
 
-/*
-По SpendApi код был добавлен ранее
- */
+@ParametersAreNonnullByDefault
 public interface SpendApi {
 
     @GET("internal/spends/{id}")
@@ -20,9 +20,9 @@ public interface SpendApi {
 
     @GET("internal/spends/all")
     Call<SpendJson> getSpends(@Query("username") String username,
-                              @Query("filterCurrency") CurrencyValues filterCurrency,
-                              @Query("from") Date from,
-                              @Query("to") Date to);
+                              @Nullable @Query("filterCurrency") CurrencyValues filterCurrency,
+                              @Nullable @Query("from") Date from,
+                              @Nullable @Query("to") Date to);
 
     @POST("internal/spends/add")
     Call<SpendJson> addSpend(@Body SpendJson spend);

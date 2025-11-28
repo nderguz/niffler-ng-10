@@ -7,6 +7,9 @@ import guru.qa.niffler.data.entity.auth.Authority;
 import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.mapper.AuthUserEntityRowMapper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,10 +20,12 @@ import java.util.UUID;
 
 import static guru.qa.niffler.data.tpl.Connections.holder;
 
+@ParametersAreNonnullByDefault
 public class AuthUserDaoJdbc implements AuthUserDao {
 
     private static final Config CFG = Config.getInstance();
 
+    @Nonnull
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
@@ -109,7 +114,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
     }
 
     @Override
-    public List<AuthUserEntity> findAll() {
+    public @Nonnull List<AuthUserEntity> findAll() {
         try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
                 "SELECT * FROM \"user\" "
         )) {

@@ -24,7 +24,8 @@ public class ProfileTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .checkThatPageLoaded()
-                .openProfilePage()
+                .getHeader()
+                .toProfilePage()
                 .checkArchivedCategoryIsNotExists(user.getTestData().categories().getFirst().name());
     }
 
@@ -39,7 +40,8 @@ public class ProfileTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .checkThatPageLoaded()
-                .openProfilePage()
+                .getHeader()
+                .toProfilePage()
                 .checkArchivedCategoryExists(user.getTestData().categories().getFirst().name());
     }
 
@@ -52,7 +54,8 @@ public class ProfileTest {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .checkThatPageLoaded()
-                .openProfilePage()
+                .getHeader()
+                .toProfilePage()
                 .checkArchivedCategoryIsNotExists(user.getTestData().categories().getFirst().name());
     }
 }

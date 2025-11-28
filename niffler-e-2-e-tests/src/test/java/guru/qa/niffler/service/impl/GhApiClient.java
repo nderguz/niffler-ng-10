@@ -1,13 +1,15 @@
-package guru.qa.niffler.api.impl;
+package guru.qa.niffler.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import guru.qa.niffler.api.GhApi;
 import guru.qa.niffler.config.Config;
+import io.qameta.allure.Step;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.Objects;
@@ -27,7 +29,8 @@ public class GhApiClient {
 
     private final GhApi ghApi = retrofit.create(GhApi.class);
 
-    public @Nonnull String issueState(String issueNumber) {
+    @Step("Получение статуса задачи github по id: {issueNumber}")
+    public @Nullable String issueState(String issueNumber) {
         final Response<JsonNode> response;
         try {
             response = ghApi.issue("Bearer " + System.getenv(GH_TOKEN_ENV),

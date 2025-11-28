@@ -14,16 +14,20 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
+import io.qameta.allure.Step;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 
-
+@ParametersAreNonnullByDefault
 public class UserDbClient implements UserClient {
 
     private static final Config CFG = Config.getInstance();
@@ -37,8 +41,9 @@ public class UserDbClient implements UserClient {
             CFG.userdataJdbcUrl()
     );
 
+    @Step("Создание пользователя через вызов SQL")
     @Override
-    public UserJson create(String username, String password) {
+    public @Nullable UserJson create(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
                     AuthUserEntity authUser = authUserEntity(username, password);
                     authUserRepository.create(authUser);
@@ -50,8 +55,9 @@ public class UserDbClient implements UserClient {
         );
     }
 
+    @Step("Добавление входящих приглашений через вызов SQL")
     @Override
-    public List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addIncomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -74,8 +80,9 @@ public class UserDbClient implements UserClient {
         return result;
     }
 
+    @Step("Добавление исходящих приглашений через вызов SQL")
     @Override
-    public List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addOutcomeInvitation(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(
@@ -98,8 +105,9 @@ public class UserDbClient implements UserClient {
         return result;
     }
 
+    @Step("Добавление пользователей в друзья через вызов SQL")
     @Override
-    public List<UserJson> addFriend(UserJson targetUser, int count) {
+    public @Nonnull List<UserJson> addFriend(UserJson targetUser, int count) {
         final List<UserJson> result = new ArrayList<>();
         if (count > 0) {
             UserEntity targetEntity = userdataUserRepository.findById(

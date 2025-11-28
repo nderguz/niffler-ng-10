@@ -1,51 +1,51 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Header;
+import guru.qa.niffler.page.component.SearchField;
+import guru.qa.niffler.page.component.SpendingTable;
+import io.qameta.allure.Step;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
 
+@ParametersAreNonnullByDefault
 public class MainPage {
-    private final SelenideElement spendingTable = $("#spendings");
     private final SelenideElement statistics = $("#stat");
     private final SelenideElement spendings = $("#spendings");
-    private final SelenideElement menuBtn = $("button[aria-label='Menu']");
-    private final ElementsCollection menuOptions = $$("li a");
-    private final SelenideElement searchInput = $("input[aria-label='search']");
+    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
+    private final Header header = new Header();
+    private final SpendingTable spendingTable = new SpendingTable();
 
-    public MainPage checkThatPageLoaded() {
-        spendingTable.shouldBe(visible);
+    public @Nonnull Header getHeader(){
+        return header;
+    }
+
+    @Step("Главная страница загрузилась корректно")
+    public @Nonnull MainPage checkThatPageLoaded() {
         statistics.shouldBe(visible);
         return this;
     }
 
-    public FriendsPage openFriendsPage(){
-        menuBtn.click();
-        menuOptions.find(text("Friends")).click();
-        return new FriendsPage();
-    }
-
-    public EditSpendingPage editSpending(String description) {
-        spendingTable.$$("tbody tr").find(text(description)).$$("td").get(5).click();
+    @Step("Нажать на трату {description}")
+    public @Nonnull EditSpendingPage editSpending(String description) {
+        spendingTable.editSpending(description);
         return new EditSpendingPage();
     }
 
-    public MainPage checkThatTableContains(String description) {
-        spendingTable.$$("tbody tr").find(text(description)).should(visible);
+    @Step("Проверить, что в тратах существует {description}")
+    public @Nonnull MainPage checkThatTableContains(String description) {
+        spendingTable.checkTableContains(description);
         return this;
     }
 
-    public ProfilePage openProfilePage() {
-        menuBtn.click();
-        menuOptions.find(text("Profile")).click();
-        return new ProfilePage();
-    }
-
-    public MainPage search(String inputText) {
-        searchInput.val(inputText).pressEnter();
+    @Step("Выполнить поиск в поисковой строке: {inputText}")
+    public @Nonnull MainPage search(String inputText) {
+        searchField.search(inputText);
         return this;
     }
 }
