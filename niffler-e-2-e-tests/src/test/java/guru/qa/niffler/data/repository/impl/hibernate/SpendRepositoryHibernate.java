@@ -7,6 +7,7 @@ import guru.qa.niffler.data.repository.SpendRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
@@ -21,28 +22,32 @@ public class SpendRepositoryHibernate implements SpendRepository {
 
     private final EntityManager entityManager = em(CFG.spendJdbcUrl());
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity create(SpendEntity spend) {
+    public SpendEntity create(SpendEntity spend) {
         entityManager.joinTransaction();
         entityManager.persist(spend);
         return spend;
     }
 
+    @Nonnull
     @Override
-    public @Nullable SpendEntity update(SpendEntity spend) {
+    public SpendEntity update(SpendEntity spend) {
         entityManager.joinTransaction();
         return entityManager.merge(spend);
     }
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity createCategory(CategoryEntity category) {
+    public CategoryEntity createCategory(CategoryEntity category) {
         entityManager.joinTransaction();
         entityManager.persist(category);
         return category;
     }
 
+    @Nonnull
     @Override
-    public @Nullable CategoryEntity updateCategory(CategoryEntity category) {
+    public CategoryEntity updateCategory(CategoryEntity category) {
         entityManager.joinTransaction();
         return entityManager.merge(category);
     }
