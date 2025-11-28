@@ -2,21 +2,42 @@ package guru.qa.niffler.data.repository;
 
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
+import guru.qa.niffler.data.repository.impl.hibernate.AuthUserRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.hibernate.SpendRepositoryHibernate;
+import guru.qa.niffler.data.repository.impl.jdbc.AuthUserRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.jdbc.SpendRepositoryJdbc;
+import guru.qa.niffler.data.repository.impl.springjdbc.AuthUserRepositorySpringJdbc;
+import guru.qa.niffler.data.repository.impl.springjdbc.SpendRepositorySpringJdbc;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public interface SpendRepository {
-    @Nullable SpendEntity create(SpendEntity spend);
 
-    @Nullable SpendEntity update(SpendEntity spend);
+    @Nonnull
+    static SpendRepository getInstance() {
+        return switch (System.getProperty("repository", "jpa")) {
+            case "jpa" -> new SpendRepositoryHibernate();
+            case "jdbc" -> new SpendRepositoryJdbc();
+            case "spring" -> new SpendRepositorySpringJdbc();
+            default -> throw new IllegalStateException("Unknown repository: " + System.getProperty("repository"));
+        };
+    }
 
-    @Nullable CategoryEntity createCategory(CategoryEntity category);
+    @Nonnull
+    SpendEntity create(SpendEntity spend);
 
-    @Nullable CategoryEntity updateCategory(CategoryEntity category);
+    @Nonnull
+    SpendEntity update(SpendEntity spend);
+
+    @Nonnull
+    CategoryEntity createCategory(CategoryEntity category);
+
+    @Nonnull
+    CategoryEntity updateCategory(CategoryEntity category);
 
     Optional<CategoryEntity> findCategoryById(UUID id);
 

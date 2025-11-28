@@ -6,6 +6,7 @@ import guru.qa.niffler.data.entity.user.FriendshipStatus;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
@@ -16,13 +17,15 @@ public class UserdataUserRepositoryJdbc implements UserdataUserRepository {
 
     private final UserdataUserDao udUserDao = new UserDataDaoJdbc();
 
+    @Nonnull
     @Override
-    public @Nullable UserEntity create(UserEntity user) {
+    public UserEntity create(UserEntity user) {
         return udUserDao.create(user);
     }
 
+    @Nonnull
     @Override
-    public @Nullable UserEntity update(UserEntity user) {
+    public UserEntity update(UserEntity user) {
         return udUserDao.update(user);
     }
 

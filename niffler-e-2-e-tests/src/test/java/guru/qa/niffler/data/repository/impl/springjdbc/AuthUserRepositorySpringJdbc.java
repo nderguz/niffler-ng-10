@@ -11,6 +11,7 @@ import guru.qa.niffler.data.extractor.AuthUserEntityExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -28,8 +29,9 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
     private final AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
     private final AuthAuthorityDao authAuthorityDao = new AuthAuthorityDaoSpringJdbc();
 
+    @Nonnull
     @Override
-    public @Nullable AuthUserEntity create(AuthUserEntity user) {
+    public AuthUserEntity create(AuthUserEntity user) {
         authUserDao.create(user);
         authAuthorityDao.create(user.getAuthorities().toArray(new AuthorityEntity[0]));
         return user;
