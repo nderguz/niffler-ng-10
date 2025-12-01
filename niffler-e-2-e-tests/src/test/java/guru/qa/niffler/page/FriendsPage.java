@@ -2,7 +2,6 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
@@ -15,7 +14,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class FriendsPage {
+public class FriendsPage extends BasePage<FriendsPage> {
 
     private final SelenideElement friendsTab = $("a[href='/people/friends']");
     private final SelenideElement allPeopleTab = $("a[href='/people/all']");
@@ -26,12 +25,7 @@ public class FriendsPage {
     private final ElementsCollection requestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
 
-    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
-    private final Header header = new Header();
-
-    public @Nonnull Header getHeader() {
-        return header;
-    }
+    private final SearchField searchField = new SearchField();
 
     @Step("Проверить, что список друзей пуст")
     public @Nonnull FriendsPage checkFriendsListIsEmpty() {

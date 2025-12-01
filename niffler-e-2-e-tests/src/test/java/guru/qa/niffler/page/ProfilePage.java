@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 @ParametersAreNonnullByDefault
-public class ProfilePage {
+public class ProfilePage extends  BasePage<ProfilePage> {
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement nameInput = $("#name");
     private final SelenideElement categoryInput = $("#category");
@@ -23,11 +23,6 @@ public class ProfilePage {
     private final SelenideElement saveChangesBtn = $("button[type='submit']");
     private final SelenideElement uploadNewPictureInput = $("input[type='file']");
     private final SelenideElement registerPasskeyBtn = $("");
-    private final Header header = new Header();
-
-    public @Nonnull Header getHeader() {
-        return header;
-    }
 
     @Step("Ввести новое имя пользователя: {name}")
     public @Nonnull ProfilePage setNewName(String name) {
