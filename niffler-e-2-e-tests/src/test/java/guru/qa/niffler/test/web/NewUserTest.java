@@ -76,6 +76,5 @@ public class NewUserTest {
                 .checkName(newUsername)
                 .addCategory(newCategoryName)
                 .checkCategoryExists(newCategoryName);
-
     }
 }

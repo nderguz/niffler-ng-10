@@ -14,13 +14,13 @@ import static com.codeborne.selenide.Selenide.$;
 public abstract class BasePage<T extends BasePage<?>> {
 
     protected final Header header = new Header();
-    protected final SelenideElement snackbar = $(".MuiAlert-message");
+    protected final SelenideElement alert = $(".MuiAlert-message");
 
     @SuppressWarnings("unchecked")
-    @Step("Проверить сообщение алерта: {}")
+    @Step("Проверить сообщение алерта: {text}")
     @Nonnull
-    public T checkSnackbarText(String text) {
-        snackbar.shouldHave(text(text));
+    public T checkAlertText(String text) {
+        alert.shouldHave(text(text));
         return (T) this;
     }
 

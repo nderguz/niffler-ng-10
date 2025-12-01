@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.page.component.Popup;
 import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
@@ -20,7 +21,7 @@ public class FriendsPage extends BasePage<FriendsPage> {
     private final SelenideElement allPeopleTab = $("a[href='/people/all']");
     private final SelenideElement friendRequestsTable = $("#requests");
     private final SelenideElement myFriendsTable = $("#friends");
-    private final SelenideElement popup = $("div[role='dialog']");
+    private final Popup popup = new Popup();
 
     private final ElementsCollection requestsRow = friendRequestsTable.$$("tbody tr");
     private final ElementsCollection myFriendsRows = myFriendsTable.$$("tbody tr");
@@ -64,6 +65,16 @@ public class FriendsPage extends BasePage<FriendsPage> {
         return this;
     }
 
+    @Step("Удалить пользователя {username} из друзей")
+    public @Nonnull FriendsPage removeFriend(String username){
+        searchField.search(username);
+        myFriendsRows.get(0)
+                .find(byText("Unfriend"))
+                .click();
+        popup.clickBtnByText("Delete");
+        return this;
+    }
+
     @Step("Отклонить запрос дружбы от пользователя {incomeInvUsername}")
     public FriendsPage declineIncomeInvitation(String username) {
         searchField.search(username);
@@ -71,7 +82,7 @@ public class FriendsPage extends BasePage<FriendsPage> {
                 .$$("button[type='button']")
                 .get(1)
                 .click();
-        popup.find(byText("Decline")).click();
+        popup.clickBtnByText("Decline");
         return this;
     }
 }

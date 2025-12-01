@@ -43,4 +43,9 @@ public class MainPage extends BasePage<MainPage> {
         searchField.search(inputText);
         return this;
     }
+
+    public @Nonnull MainPage deleteSpending(String description) {
+        spendings.deleteSpending(description);
+        return this;
+    }
 }

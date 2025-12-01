@@ -19,12 +19,11 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 public final class UserApiClient extends RestClient implements UserClient {
 
     private final UserdataApi userdataApi;
-    private final AuthApiClient authApiClient;
+    private final AuthApiClient authApiClient = new AuthApiClient();
 
     public UserApiClient() {
         super(CFG.userdataUrl());
         this.userdataApi = create(UserdataApi.class);
-        this.authApiClient = create(AuthApiClient.class);
     }
 
     @Step("Регистрация нового пользователя через API")
