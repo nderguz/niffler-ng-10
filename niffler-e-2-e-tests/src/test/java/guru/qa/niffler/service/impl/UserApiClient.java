@@ -1,9 +1,6 @@
 package guru.qa.niffler.service.impl;
 
-import guru.qa.niffler.api.AuthApi;
 import guru.qa.niffler.api.UserdataApi;
-import guru.qa.niffler.api.core.ThreadSafeCookieStore;
-import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.jupiter.extension.UserExtension;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.RestClient;
@@ -11,7 +8,6 @@ import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,33 +19,28 @@ import static guru.qa.niffler.utils.RandomDataUtils.randomUsername;
 public final class UserApiClient extends RestClient implements UserClient {
 
     private final UserdataApi userdataApi;
-    private final AuthApi authApi;
+    private final AuthApiClient authApiClient;
 
     public UserApiClient() {
         super(CFG.userdataUrl());
         this.userdataApi = create(UserdataApi.class);
-        this.authApi = create(AuthApi.class);
+        this.authApiClient = create(AuthApiClient.class);
     }
 
     @Step("Регистрация нового пользователя через API")
     @Override
-    public @Nullable UserJson create(String username, String password) {
+    public @Nonnull UserJson create(String username, String password) {
+        UserJson user = null;
         try {
-            authApi.requestRegisterForm().execute();
-            authApi.register(
-                    username,
-                    password,
-                    password,
-                    ThreadSafeCookieStore.INSTANCE.xsrfCookie()
-            ).execute();
+            authApiClient.register(username, password);
+            user = userdataApi.currentUser(username).execute().body();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        var createdUser = new UserJson();
-        createdUser.setUsername(username);
-        createdUser.setCurrency(CurrencyValues.RUB);
-        return createdUser;
+        if (user == null) {
+            throw new RuntimeException("Error while creating user");
+        }
+        return user;
     }
 
     @Step("Добавление входящих приглашений дружбы")
