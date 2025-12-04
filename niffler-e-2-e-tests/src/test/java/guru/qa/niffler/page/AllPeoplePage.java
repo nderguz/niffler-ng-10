@@ -2,7 +2,6 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.page.component.Header;
 import guru.qa.niffler.page.component.SearchField;
 import io.qameta.allure.Step;
 
@@ -12,16 +11,11 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
-public class AllPeoplePage {
+public class AllPeoplePage extends BasePage<AllPeoplePage> {
 
-    private final Header header = new Header();
-    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
+    private final SearchField searchField = new SearchField();
     private final SelenideElement allPeopleTable = $(".MuiTable-root");
     private final ElementsCollection allPeopleRows = allPeopleTable.$$("tbody tr");
-
-    public @Nonnull Header getHeader() {
-        return header;
-    }
 
     @Step("Поиск пользователя с никнеймом {username}")
     public @Nonnull AllPeoplePage searchPerson(String username) {

@@ -13,13 +13,16 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 @ParametersAreNonnullByDefault
-public class Header {
+public class Header extends BaseComponent<Header> {
 
-    private final SelenideElement self = $("#root header");
     private final SelenideElement menuBtn = self.$("button[aria-label='Menu']");
     private final ElementsCollection menuOptions = $$("li a");
     private final SelenideElement mainIcon = self.$("h1");
     private final SelenideElement newSpendingBtn = self.$("a[href='/spending']");
+
+    public Header() {
+        super($("#root header"));
+    }
 
     @Step("Открыть страницу со списком друзей")
     public @Nonnull FriendsPage toFriendsPage() {

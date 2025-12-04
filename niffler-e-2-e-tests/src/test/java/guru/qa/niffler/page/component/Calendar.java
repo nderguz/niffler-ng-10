@@ -16,13 +16,17 @@ import static com.codeborne.selenide.Selenide.$$;
 import static java.util.Calendar.*;
 
 @ParametersAreNonnullByDefault
-public class Calendar {
+public class Calendar extends BaseComponent<Calendar> {
 
     private final SelenideElement calendarButton = $("button[aria-label*='Choose date']");
     private final SelenideElement previousMonthBtn = $("button[title='Previous month']");
     private final SelenideElement nextMonthBtn = $("button[title='Next month']");
     private final SelenideElement currentDate = $(".MuiPickersCalendarHeader-label");
     private final ElementsCollection dateRows = $$(".MuiDayCalendar-weekContainer");
+
+    public Calendar(SelenideElement self) {
+        super(self);
+    }
 
     @Step("Выбор даты в календаре: {date}")
     public @Nonnull Calendar selectDateInCalendar(Date date) {

@@ -11,21 +11,23 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
-public class SpendingTable {
+public class SpendingTable extends BaseComponent<SpendingTable> {
 
-    private final SelenideElement self = $("#spendings");
-    private final SearchField searchField = new SearchField($("input[aria-label='search']"));
+    private final SearchField searchField = new SearchField();
     private final SelenideElement currencyBox = self.$("#currency");
     private final SelenideElement periodBox = self.$("#period");
     private final SelenideElement deleteBtn = self.$("#delete");
-    private final SelenideElement popup = $("div[role='dialog']");
+    private final Popup popup = new Popup();
 
     private final ElementsCollection periodOptions = self.$$(".MuiMenu-list");
     private final ElementsCollection spendingRows = self.$("tbody").$$("tr");
+
+    public SpendingTable() {
+        super($("#spendings"));
+    }
 
     @Step("Выбрать период трат: {period}")
     public @Nonnull SpendingTable selectPeriod(DataFilterValues period) {
@@ -48,7 +50,7 @@ public class SpendingTable {
         var row = spendingRows.find(text(description));
         row.$$("td").get(0).click();
         deleteBtn.click();
-        popup.find(byText("Delete")).click();
+        popup.clickBtnByText("Delete");
         return this;
     }
 
