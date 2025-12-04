@@ -43,6 +43,25 @@ allure {
         aspectjVersion.set("1.9.22")
         aspectjWeaver.set(true)
     }
+    useJUnit5 {
+        version = "${allureVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+    systemProperties(System.getProperties())
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+    }
+
+
+    reports {
+        junitXml.required = true
+        html.required = false
+    }
 }
 
 xjcGeneration {
