@@ -25,4 +25,8 @@ public class EntityManagers {
                     return Persistence.createEntityManagerFactory(jdbcUrl);
                 }).createEntityManager());
     }
+
+    public static void closeAllEmfs(){
+        EMFS.values().forEach(EntityManagerFactory::close);
+    }
 }
