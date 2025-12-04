@@ -6,8 +6,10 @@ import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,5 +85,20 @@ public final class UserApiClient extends RestClient implements UserClient {
             }
         }
         return result;
+    }
+
+    @NotNull
+    @Override
+    public List<UserJson> allUsers(String username, @Nullable String searchQuery) {
+        try {
+            var result = userdataApi.allUsers(username, searchQuery).execute();
+            if(result.body() != null){
+                return result.body();
+            }else{
+                return List.of();
+            }
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
     }
 }
