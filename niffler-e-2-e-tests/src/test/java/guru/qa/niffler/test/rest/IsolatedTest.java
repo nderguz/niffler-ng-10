@@ -3,12 +3,12 @@ package guru.qa.niffler.test.rest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.impl.UserApiClient;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@Isolated
+@Order(Integer.MAX_VALUE)
 public class IsolatedTest {
 
     private final UserApiClient userApiClient = new UserApiClient();

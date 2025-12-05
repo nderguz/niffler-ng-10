@@ -2,7 +2,9 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,9 +20,10 @@ public class LoginTest {
 
     @Test
     @DisabledByIssue("3")
-    void mainPageShouldBeDisplayedAfterSuccessLogin() {
+    @User
+    void mainPageShouldBeDisplayedAfterSuccessLogin(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
-                .successLogin("test", "test")
+                .successLogin(user.getUsername(), user.getTestData().password())
                 .checkThatPageLoaded();
     }
 }

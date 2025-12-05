@@ -25,7 +25,7 @@ public interface UserdataApi {
     Call<UserJson> sendInvitation(@Query("username") String username,
                                   @Query("targetUsername") String targetUsername);
 
-    @POST("internal/users/accept")
+    @POST("internal/invitations/accept")
     Call<UserJson> acceptInvitation(@Query("username") String username,
                                     @Query("targetUsername") String targetUsername);
 

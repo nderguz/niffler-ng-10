@@ -9,7 +9,6 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @Order(1)
 @Execution(ExecutionMode.SAME_THREAD)
 public class OrderedTest {

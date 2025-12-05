@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.codeborne.selenide.Selenide.open;
 
-@ExtendWith(BrowserExtension.class)
 public class SpendingTest {
 
     private static final Config CFG = Config.getInstance();

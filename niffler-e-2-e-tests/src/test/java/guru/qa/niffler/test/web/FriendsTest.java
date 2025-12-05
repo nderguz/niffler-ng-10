@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@DisplayName("Функционал добавления в друзья")
 public class FriendsTest {
 
     private static final Config CFG = Config.getInstance();
@@ -54,6 +55,6 @@ public class FriendsTest {
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .getHeader()
                 .toAllPeoplesPage()
-                .checkOutcomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
+                .checkOutcomeInvitationShouldBeVisible(user.getTestData().outcomeInvitations().getFirst().getUsername());
     }
 }
