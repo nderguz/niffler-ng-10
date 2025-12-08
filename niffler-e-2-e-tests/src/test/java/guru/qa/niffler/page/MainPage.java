@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
@@ -82,6 +83,7 @@ public class MainPage extends BasePage<MainPage> {
 
     @Step("Сравнение скриншотов")
     public void assertStatisticsScreenshot(BufferedImage expected) throws IOException {
+        Selenide.sleep(4000);
         BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
         assertFalse(new ScreenDiffResult(
                 expected,

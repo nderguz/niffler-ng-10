@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class SpendingTest {
 
@@ -65,7 +63,7 @@ public class SpendingTest {
                     description = "Обучение Niffler 2.0 юбилейный поток!"
             )
     )
-    @ScreenShotTest("img/expected-stat.png")
+    @ScreenShotTest(value = "img/expected-stat.png")
     public void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         open(CFG.frontUrl(), LoginPage.class)
@@ -89,7 +87,7 @@ public class SpendingTest {
                     )
             }
     )
-    @ScreenShotTest("img/spend-removal.png")
+    @ScreenShotTest(value = "img/spend-removal.png")
     public void checkStatComponentAfterSpendRemove(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();
@@ -118,7 +116,7 @@ public class SpendingTest {
                     )
             }
     )
-    @ScreenShotTest("img/spend-edit.png")
+    @ScreenShotTest(value = "img/spend-edit.png")
     public void checkStatComponentAfterSpendEdit(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();
@@ -149,8 +147,7 @@ public class SpendingTest {
                     )
             }
     )
-    @ScreenShotTest("img/spend-archive.png")
-    @Test
+    @ScreenShotTest(value = "img/spend-archive.png")
     public void checkStatComponentWithArchiveSpend(UserJson user, BufferedImage expected) throws IOException {
         int categoryCount = user.getTestData().spendings().size();
         open(CFG.frontUrl(), LoginPage.class)
@@ -164,6 +161,34 @@ public class SpendingTest {
                 .toMainPage()
                 .checkLegendCount(categoryCount)
                 .checkArchiveLegendName()
+                .assertStatisticsScreenshot(expected);
+    }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 1000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    )
+            }
+    )
+    @ScreenShotTest(value = "img/spend-rewrite.png", rewriteExpected = true)
+    public void rewriteExpectedScreenshotTest(UserJson user, BufferedImage expected) throws IOException {
+        int categoryCount = user.getTestData().spendings().size();
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .checkLegendCount(categoryCount)
+                .checkLegendNames(user.getTestData().spendings())
+                .editSpending(user.getTestData().spendings().getFirst().description())
+                .setNewAmount(60000.0)
+                .save()
                 .assertStatisticsScreenshot(expected);
     }
 }

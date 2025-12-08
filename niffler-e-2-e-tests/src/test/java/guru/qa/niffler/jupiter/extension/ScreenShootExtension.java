@@ -12,12 +12,13 @@ import org.springframework.core.io.ClassPathResource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
 import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
 
-public class ScreenShootExtension implements BeforeEachCallback, ParameterResolver, TestExecutionExceptionHandler {
+public class ScreenShootExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver, TestExecutionExceptionHandler {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShootExtension.class);
     public static final ObjectMapper objectMapper = new ObjectMapper();
@@ -27,8 +28,23 @@ public class ScreenShootExtension implements BeforeEachCallback, ParameterResolv
     public void beforeEach(ExtensionContext context) throws Exception {
         AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
                 .ifPresent(anno -> {
-                    context.getStore(NAMESPACE)
-                                    .put(context.getUniqueId(), anno.value());
+                    context.getStore(NAMESPACE).put(context.getUniqueId(), anno.value());
+                });
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
+                .ifPresent(anno -> {
+                    if (anno.rewriteExpected()) {
+                        var actual = getActual();
+                        File output = new File("src/test/resources/" + anno.value());
+                        try {
+                            ImageIO.write(actual, "png", output);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 });
     }
 
@@ -61,31 +77,31 @@ public class ScreenShootExtension implements BeforeEachCallback, ParameterResolv
         throw throwable;
     }
 
-    public static void setExpected(BufferedImage expected){
+    public static void setExpected(BufferedImage expected) {
         context().getStore(NAMESPACE).put("expected", expected);
     }
 
-    public static BufferedImage getExpected(){
+    public static BufferedImage getExpected() {
         return context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
-    public static void setActual(BufferedImage actual){
+    public static void setActual(BufferedImage actual) {
         context().getStore(NAMESPACE).put("actual", actual);
     }
 
-    public static BufferedImage getActual(){
+    public static BufferedImage getActual() {
         return context().getStore(NAMESPACE).get("actual", BufferedImage.class);
     }
 
-    public static void setDiff(BufferedImage diff){
+    public static void setDiff(BufferedImage diff) {
         context().getStore(NAMESPACE).put("diff", diff);
     }
 
-    public static BufferedImage getDiff(){
+    public static BufferedImage getDiff() {
         return context().getStore(NAMESPACE).get("diff", BufferedImage.class);
     }
 
-    private static byte[] imageToBytes(BufferedImage image){
+    private static byte[] imageToBytes(BufferedImage image) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
