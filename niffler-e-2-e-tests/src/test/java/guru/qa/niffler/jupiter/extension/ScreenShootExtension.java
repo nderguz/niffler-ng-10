@@ -15,10 +15,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-public class ScreenShootExtension implements ParameterResolver, TestExecutionExceptionHandler {
+import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
+
+public class ScreenShootExtension implements BeforeEachCallback, ParameterResolver, TestExecutionExceptionHandler {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShootExtension.class);
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
+
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception {
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
+                .ifPresent(anno -> {
+                    context.getStore(NAMESPACE)
+                                    .put(context.getUniqueId(), anno.value());
+                });
+    }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -29,7 +41,8 @@ public class ScreenShootExtension implements ParameterResolver, TestExecutionExc
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("img/expected-stat.png").getInputStream());
+        final ExtensionContext methodContext = context();
+        return ImageIO.read(new ClassPathResource(methodContext.getStore(NAMESPACE).get(methodContext.getUniqueId(), String.class)).getInputStream());
     }
 
     @Override
@@ -49,27 +62,27 @@ public class ScreenShootExtension implements ParameterResolver, TestExecutionExc
     }
 
     public static void setExpected(BufferedImage expected){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
+        context().getStore(NAMESPACE).put("expected", expected);
     }
 
     public static BufferedImage getExpected(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+        return context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
     public static void setActual(BufferedImage actual){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("actual", actual);
+        context().getStore(NAMESPACE).put("actual", actual);
     }
 
     public static BufferedImage getActual(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("actual", BufferedImage.class);
+        return context().getStore(NAMESPACE).get("actual", BufferedImage.class);
     }
 
     public static void setDiff(BufferedImage diff){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("diff", diff);
+        context().getStore(NAMESPACE).put("diff", diff);
     }
 
     public static BufferedImage getDiff(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("diff", BufferedImage.class);
+        return context().getStore(NAMESPACE).get("diff", BufferedImage.class);
     }
 
     private static byte[] imageToBytes(BufferedImage image){
