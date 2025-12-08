@@ -3,14 +3,20 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.page.component.Popup;
+import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.imageio.ImageIO;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
@@ -101,5 +107,14 @@ public class ProfilePage extends BasePage<ProfilePage> {
     public ProfilePage checkName(String name) {
         nameInput.shouldHave(value(name));
         return this;
+    }
+
+    @Step("Сравнение скриншотов")
+    public void assertProfilePicScreenshot(BufferedImage expected) throws IOException {
+        BufferedImage actual = ImageIO.read($("img[class*='MuiAvatar-img'][class*='css-1hy9t21']").screenshot());
+        assertFalse(new ScreenDiffResult(
+                expected,
+                actual
+        ));
     }
 }

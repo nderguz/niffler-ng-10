@@ -12,13 +12,41 @@ import org.springframework.core.io.ClassPathResource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
-public class ScreenShootExtension implements ParameterResolver, TestExecutionExceptionHandler {
+import static guru.qa.niffler.jupiter.extension.TestMethodContextExtension.context;
+
+public class ScreenShootExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver, TestExecutionExceptionHandler {
 
     public static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(ScreenShootExtension.class);
     public static final ObjectMapper objectMapper = new ObjectMapper();
+
+
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception {
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
+                .ifPresent(anno -> {
+                    context.getStore(NAMESPACE).put(context.getUniqueId(), anno.value());
+                });
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+        AnnotationSupport.findAnnotation(context.getRequiredTestMethod(), ScreenShotTest.class)
+                .ifPresent(anno -> {
+                    if (anno.rewriteExpected()) {
+                        var actual = getActual();
+                        File output = new File("src/test/resources/" + anno.value());
+                        try {
+                            ImageIO.write(actual, "png", output);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+    }
 
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -29,7 +57,8 @@ public class ScreenShootExtension implements ParameterResolver, TestExecutionExc
     @SneakyThrows
     @Override
     public BufferedImage resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("img/expected-stat.png").getInputStream());
+        final ExtensionContext methodContext = context();
+        return ImageIO.read(new ClassPathResource(methodContext.getStore(NAMESPACE).get(methodContext.getUniqueId(), String.class)).getInputStream());
     }
 
     @Override
@@ -48,31 +77,31 @@ public class ScreenShootExtension implements ParameterResolver, TestExecutionExc
         throw throwable;
     }
 
-    public static void setExpected(BufferedImage expected){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("expected", expected);
+    public static void setExpected(BufferedImage expected) {
+        context().getStore(NAMESPACE).put("expected", expected);
     }
 
-    public static BufferedImage getExpected(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+    public static BufferedImage getExpected() {
+        return context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
-    public static void setActual(BufferedImage actual){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("actual", actual);
+    public static void setActual(BufferedImage actual) {
+        context().getStore(NAMESPACE).put("actual", actual);
     }
 
-    public static BufferedImage getActual(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("actual", BufferedImage.class);
+    public static BufferedImage getActual() {
+        return context().getStore(NAMESPACE).get("actual", BufferedImage.class);
     }
 
-    public static void setDiff(BufferedImage diff){
-        TestMethodContextExtension.context().getStore(NAMESPACE).put("diff", diff);
+    public static void setDiff(BufferedImage diff) {
+        context().getStore(NAMESPACE).put("diff", diff);
     }
 
-    public static BufferedImage getDiff(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("diff", BufferedImage.class);
+    public static BufferedImage getDiff() {
+        return context().getStore(NAMESPACE).get("diff", BufferedImage.class);
     }
 
-    private static byte[] imageToBytes(BufferedImage image){
+    private static byte[] imageToBytes(BufferedImage image) {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();

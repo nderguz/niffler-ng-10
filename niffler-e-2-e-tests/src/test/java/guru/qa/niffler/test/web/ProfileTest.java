@@ -2,13 +2,19 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DisplayName("Профиль пользователя")
 public class ProfileTest {
@@ -57,6 +63,17 @@ public class ProfileTest {
                 .getHeader()
                 .toProfilePage()
                 .checkArchivedCategoryIsNotExists(user.getTestData().categories().getFirst().name());
+    }
+
+    @User
+    @ScreenShotTest("img/profile-pic.png")
+    public void uploadNewProfilePictureShouldBeVisible(UserJson user, BufferedImage expected) throws IOException {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .getHeader()
+                .toProfilePage()
+                .uploadNewPicture("img/profile-pic.png")
+                .assertProfilePicScreenshot(expected);
     }
 }
 
