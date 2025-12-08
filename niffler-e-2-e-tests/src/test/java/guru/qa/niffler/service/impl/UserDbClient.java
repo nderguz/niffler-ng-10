@@ -8,8 +8,6 @@ import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserdataUserRepository;
-import guru.qa.niffler.data.repository.impl.hibernate.AuthUserRepositoryHibernate;
-import guru.qa.niffler.data.repository.impl.hibernate.UserdataUserRepositoryHibernate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
@@ -128,6 +126,12 @@ public final class UserDbClient implements UserClient {
             }
         }
         return result;
+    }
+
+    @Nonnull
+    @Override
+    public List<UserJson> allUsers(String username, @Nullable String searchQuery) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     private UserEntity userEntity(String username) {

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@DisplayName("Тесты для нового пользователя")
 public class NewUserTest {
 
     private static final Config CFG = Config.getInstance();

@@ -20,4 +20,7 @@ public interface UserClient {
 
     @Nonnull
     List<UserJson> addFriend(UserJson targetUser, int count);
+
+    @Nonnull
+    List<UserJson> allUsers(String username, @Nullable String searchQuery);
 }

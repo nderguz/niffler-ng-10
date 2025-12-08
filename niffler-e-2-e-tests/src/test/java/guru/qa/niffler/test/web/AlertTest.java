@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@DisplayName("Проверки алертов на всех страницах")
 public class AlertTest {
 
     private static final Config CFG = Config.getInstance();

@@ -28,7 +28,6 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-@ExtendWith(BrowserExtension.class)
 public class SpendingTest {
 
     private static final Config CFG = Config.getInstance();
