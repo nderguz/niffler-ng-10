@@ -5,6 +5,7 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserApiClient;
+import guru.qa.niffler.service.impl.UserDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 

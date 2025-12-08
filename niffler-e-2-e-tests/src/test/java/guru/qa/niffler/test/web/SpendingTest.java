@@ -179,7 +179,7 @@ public class SpendingTest {
                     )
             }
     )
-    @ScreenShotTest(value = "img/spend-rewrite.png", rewriteExpected = true)
+    @ScreenShotTest(value = "img/spend-rewrite.png")
     public void rewriteExpectedScreenshotTest(UserJson user, BufferedImage expected) throws IOException {
         int categoryCount = user.getTestData().spendings().size();
         open(CFG.frontUrl(), LoginPage.class)
