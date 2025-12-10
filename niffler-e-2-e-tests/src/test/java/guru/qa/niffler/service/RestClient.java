@@ -50,7 +50,9 @@ public abstract class RestClient {
                 builder.addInterceptor(interceptor);
             }
         }
-        builder.addNetworkInterceptor(new AllureOkHttp3());
+        builder.addNetworkInterceptor(new AllureOkHttp3()
+                .setRequestTemplate("http-request-attachment.ftl")
+                .setResponseTemplate("http-response-attachment.ftl"));
         builder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC));
         this.okHttpClient = builder.build();
 
@@ -64,5 +66,4 @@ public abstract class RestClient {
     protected <T> T create(Class<T> serviceClass) {
         return retrofit.create(serviceClass);
     }
-
 }
