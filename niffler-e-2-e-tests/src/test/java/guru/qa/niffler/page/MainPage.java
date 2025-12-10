@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.model.Bubble;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
@@ -91,6 +92,21 @@ public class MainPage extends BasePage<MainPage> {
                 expected,
                 actual
         ), "Screen comparison failure");
+    }
+
+    public MainPage assertStatBubble(Bubble... bubbles){
+        statComponent.checkBubbles(bubbles);
+        return this;
+    }
+
+    public MainPage assertStatBubbleInAnyOrder(Bubble... bubbles){
+        statComponent.checkBubblesInAnyOrder(bubbles);
+        return this;
+    }
+
+    public MainPage assertStatBubbleContains(Bubble... bubbles){
+        statComponent.checkBubblesContains(bubbles);
+        return this;
     }
 
     private String generateStatLegendName(SpendJson spend) {
