@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
+import guru.qa.niffler.page.component.StatComponent;
 import guru.qa.niffler.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 
@@ -29,6 +30,7 @@ public class MainPage extends BasePage<MainPage> {
     private final ElementsCollection statisticsLegend = $$("div[id='legend-container'] ul");
     private final SpendingTable spendings = new SpendingTable();
     private final SearchField searchField = new SearchField();
+    private final StatComponent statComponent = new StatComponent();
 
     private final SpendingTable spendingTable = new SpendingTable();
 
@@ -83,12 +85,12 @@ public class MainPage extends BasePage<MainPage> {
 
     @Step("Сравнение скриншотов")
     public void assertStatisticsScreenshot(BufferedImage expected) throws IOException {
-        Selenide.sleep(4000);
-        BufferedImage actual = ImageIO.read($("canvas[role='img']").screenshot());
+        Selenide.sleep(3000);
+        BufferedImage actual = statComponent.chartScreenshot();
         assertFalse(new ScreenDiffResult(
                 expected,
                 actual
-        ));
+        ), "Screen comparison failure");
     }
 
     private String generateStatLegendName(SpendJson spend) {
