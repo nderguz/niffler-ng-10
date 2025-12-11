@@ -262,4 +262,31 @@ public class SpendingTest {
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .assertStatBubbleContains(new Bubble(Color.blue100, "Test category 1 1000 ₽"));
     }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 2000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    ),
+                    @Spending(
+                            category = "Required category",
+                            amount = 4000.15,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 5"
+                    )}
+    )
+    @Test
+    public void statTableShouldContains(UserJson user){
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .assertSpendingTable(user.getTestData().spendings());
+    }
 }

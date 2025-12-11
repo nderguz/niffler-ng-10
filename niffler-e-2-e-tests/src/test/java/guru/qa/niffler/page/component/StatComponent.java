@@ -26,20 +26,20 @@ public class StatComponent extends BaseComponent<StatComponent> {
     }
 
     @Nonnull
-    public StatComponent checkBubbles(Bubble... expectedColors) {
-        bubbles.should(statBubble(expectedColors));
+    public StatComponent checkBubbles(Bubble... expectedBubbles) {
+        bubbles.should(statBubble(expectedBubbles));
         return this;
     }
 
     @Nonnull
-    public StatComponent checkBubblesInAnyOrder(Bubble... expectedColors){
-        bubbles.should(statBubblesInAnyOrder(expectedColors));
+    public StatComponent checkBubblesInAnyOrder(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesInAnyOrder(expectedBubbles));
         return this;
     }
 
     @Nonnull
-    public StatComponent checkBubblesContains(Bubble... expectedColors){
-        bubbles.should(statBubblesContains(expectedColors));
+    public StatComponent checkBubblesContains(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesContains(expectedBubbles));
         return this;
     }
 }

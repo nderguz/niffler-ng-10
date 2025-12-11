@@ -79,6 +79,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @Step("Удаление спендинга: {description}")
     public @Nonnull MainPage deleteSpending(String description) {
         spendings.deleteSpending(description);
         return this;
@@ -94,18 +95,27 @@ public class MainPage extends BasePage<MainPage> {
         ), "Screen comparison failure");
     }
 
-    public MainPage assertStatBubble(Bubble... bubbles){
+    @Step("Сравнение списка категорий под статистикой: {bubbles}")
+    public @Nonnull MainPage assertStatBubble(Bubble... bubbles){
         statComponent.checkBubbles(bubbles);
         return this;
     }
 
-    public MainPage assertStatBubbleInAnyOrder(Bubble... bubbles){
+    @Step("Сравнение списка категорий под статистикой в любом порядке: {bubbles}")
+    public @Nonnull MainPage assertStatBubbleInAnyOrder(Bubble... bubbles){
         statComponent.checkBubblesInAnyOrder(bubbles);
         return this;
     }
 
-    public MainPage assertStatBubbleContains(Bubble... bubbles){
+    @Step("Проверить наличие категорий под статистикой: {bubbles}")
+    public @Nonnull MainPage assertStatBubbleContains(Bubble... bubbles){
         statComponent.checkBubblesContains(bubbles);
+        return this;
+    }
+
+    @Step("Проверить корректность заполнения спендингов в таблице")
+    public @Nonnull MainPage assertSpendingTable(List<SpendJson> spendings) {
+        spendingTable.checkSpendingTable(spendings);
         return this;
     }
 

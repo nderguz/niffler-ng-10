@@ -6,6 +6,7 @@ import com.codeborne.selenide.WebElementCondition;
 import com.codeborne.selenide.WebElementsCondition;
 import guru.qa.niffler.condition.model.Bubble;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
@@ -29,39 +30,37 @@ public class StatConditions {
         };
     }
 
-    public static WebElementsCondition statBubble(Bubble... expectedColors) {
+    public static WebElementsCondition statBubble(Bubble... expectedBubbles) {
         return new WebElementsCondition() {
-            private final String expected = Arrays.stream(expectedColors).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
+            private final String expected = Arrays.stream(expectedBubbles).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
             @Nonnull
             @Override
             public CheckResult check(Driver driver, List<WebElement> elements) {
-                if (ArrayUtils.isEmpty(expectedColors)) {
+                if (ArrayUtils.isEmpty(expectedBubbles)) {
                     throw new IllegalArgumentException("No expected colors given");
                 }
 
-                if (expectedColors.length != elements.size()) {
-                    String message = String.format("List size mismatch (expected: %s, actual: %s", expectedColors.length, elements.size());
+                if (expectedBubbles.length != elements.size()) {
+                    String message = String.format("List size mismatch (expected: %s, actual: %s", expectedBubbles.length, elements.size());
                     return rejected(message, elements);
                 }
 
                 boolean passed = true;
-                Map<String, String> actualRgbaList = new HashMap<>();
+                Map<String, String> actualRgbaWithText = new HashMap<>();
                 for (int i = 0; i < elements.size(); i++) {
                     final WebElement elementToCheck = elements.get(i);
 
-                    final String colorToCheck = expectedColors[i].color().rgb;
-                    final String textToCheck = expectedColors[i].text();
+                    final String colorToCheck = expectedBubbles[i].color().rgb;
+                    final String textToCheck = expectedBubbles[i].text();
                     final String textElement = elementToCheck.getText();
                     final String rgbaElement = elementToCheck.getCssValue("background-color");
-                    actualRgbaList.put(rgbaElement, textElement);
+                    actualRgbaWithText.put(rgbaElement, textElement);
                     if (passed) {
                         passed = rgbaElement.equals(colorToCheck) && textToCheck.equals(textElement);
                     }
                 }
                 if (!passed) {
-                    final String actualRgba = actualRgbaList.toString();
-                    final String message = String.format("List colors mismatch (expected: %s, actual: %s", expected, actualRgba);
-                    return rejected(message, actualRgba);
+                    return getFailedResult(expected, actualRgbaWithText);
                 }
                 return accepted();
             }
@@ -73,40 +72,33 @@ public class StatConditions {
         };
     }
 
-    public static WebElementsCondition statBubblesInAnyOrder(Bubble... expectedColors) {
+    public static WebElementsCondition statBubblesInAnyOrder(Bubble... expectedBubbles) {
         return new WebElementsCondition() {
-            private final String expected = Arrays.stream(expectedColors).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
+            private final String expected = Arrays.stream(expectedBubbles).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
             @Override
             @Nonnull
             public CheckResult check(Driver driver, List<WebElement> elements) {
-                if (ArrayUtils.isEmpty(expectedColors)) {
+                if (ArrayUtils.isEmpty(expectedBubbles)) {
                     throw new IllegalArgumentException("No expected colors given");
                 }
 
-                if (expectedColors.length != elements.size()) {
-                    String message = String.format("List size mismatch (expected: %s, actual: %s", expectedColors.length, elements.size());
+                if (expectedBubbles.length != elements.size()) {
+                    String message = String.format("List size mismatch (expected: %s, actual: %s", expectedBubbles.length, elements.size());
                     return rejected(message, elements);
                 }
 
-                Map<String, String> actualRgbaListWithText = new HashMap<>();
-                for (final WebElement elementToCheck : elements) {
-                    final String textElement = elementToCheck.getText();
-                    final String rgbaElement = elementToCheck.getCssValue("background-color");
-                    actualRgbaListWithText.put(rgbaElement, textElement);
-                }
+                Map<String, String> actualRgbaWithText = getActualElementsByMap(elements);
                 boolean passed = true;
                 for (int i = 0; i < elements.size(); i++) {
-                    final String colorToCheck = expectedColors[i].color().rgb;
-                    final String textToCheck = expectedColors[i].text();
-                    var exsisted = actualRgbaListWithText.get(colorToCheck);
+                    final String colorToCheck = expectedBubbles[i].color().rgb;
+                    final String textToCheck = expectedBubbles[i].text();
+                    var exsisted = actualRgbaWithText.get(colorToCheck);
                     if (passed) {
                         passed = exsisted.equals(textToCheck);
                     }
                 }
                 if (!passed) {
-                    final String actualRgba = actualRgbaListWithText.toString();
-                    final String message = String.format("List colors mismatch (expected: %s, actual: %s", expected, actualRgba);
-                    return rejected(message, actualRgba);
+                    return getFailedResult(expected, actualRgbaWithText);
                 }
                 return accepted();
             }
@@ -118,35 +110,28 @@ public class StatConditions {
         };
     }
 
-    public static WebElementsCondition statBubblesContains(Bubble... expectedColors) {
+    public static WebElementsCondition statBubblesContains(Bubble... expectedBubbles) {
         return new WebElementsCondition() {
-            private final String expected = Arrays.stream(expectedColors).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
+            private final String expected = Arrays.stream(expectedBubbles).map(c -> c.color().rgb + "=" + c.text()).toList().toString();
             @Override
             @Nonnull
             public CheckResult check(Driver driver, List<WebElement> elements) {
-                if (ArrayUtils.isEmpty(expectedColors)) {
+                if (ArrayUtils.isEmpty(expectedBubbles)) {
                     throw new IllegalArgumentException("No expected colors given");
                 }
 
-                Map<String, String> actualRgbaListWithText = new HashMap<>();
-                for (final WebElement elementToCheck : elements) {
-                    final String textElement = elementToCheck.getText();
-                    final String rgbaElement = elementToCheck.getCssValue("background-color");
-                    actualRgbaListWithText.put(rgbaElement, textElement);
-                }
+                Map<String, String> actualRgbaWithText = getActualElementsByMap(elements);
                 boolean passed = true;
-                for (int i = 0; i < expectedColors.length; i++) {
-                    final String colorToCheck = expectedColors[i].color().rgb;
-                    final String textToCheck = expectedColors[i].text();
-                    var exsisted = actualRgbaListWithText.get(colorToCheck);
+                for (int i = 0; i < expectedBubbles.length; i++) {
+                    final String colorToCheck = expectedBubbles[i].color().rgb;
+                    final String textToCheck = expectedBubbles[i].text();
+                    var exsisted = actualRgbaWithText.get(colorToCheck);
                     if (passed) {
                         passed = exsisted.equals(textToCheck);
                     }
                 }
                 if (!passed) {
-                    final String actualRgba = actualRgbaListWithText.toString();
-                    final String message = String.format("List colors mismatch (expected: %s, actual: %s", expected, actualRgba);
-                    return rejected(message, actualRgba);
+                    return getFailedResult(expected, actualRgbaWithText);
                 }
                 return accepted();
             }
@@ -156,5 +141,24 @@ public class StatConditions {
                 return expected;
             }
         };
+    }
+
+
+    @NotNull
+    private static CheckResult getFailedResult(String expected, Map<String, String> actualRgbaWithText) {
+        final String actualRgba = actualRgbaWithText.toString();
+        final String message = String.format("List colors mismatch (expected: %s, actual: %s", expected, actualRgba);
+        return rejected(message, actualRgba);
+    }
+
+    @NotNull
+    private static Map<String, String> getActualElementsByMap(List<WebElement> elements) {
+        Map<String, String> actualRgbaListWithText = new HashMap<>();
+        for (final WebElement elementToCheck : elements) {
+            final String textElement = elementToCheck.getText();
+            final String rgbaElement = elementToCheck.getCssValue("background-color");
+            actualRgbaListWithText.put(rgbaElement, textElement);
+        }
+        return actualRgbaListWithText;
     }
 }

@@ -2,16 +2,21 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.SpendConditions;
 import guru.qa.niffler.model.DataFilterValues;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import java.util.List;
+
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
+import static guru.qa.niffler.condition.SpendConditions.*;
 
 @ParametersAreNonnullByDefault
 public class SpendingTable extends BaseComponent<SpendingTable> {
@@ -74,6 +79,11 @@ public class SpendingTable extends BaseComponent<SpendingTable> {
     @Step("Проверить, что размер таблицы равен {expectedSize}")
     public @Nonnull SpendingTable checkTableSize(int expectedSize) {
         spendingRows.should(size(expectedSize));
+        return this;
+    }
+
+    public @Nonnull SpendingTable checkSpendingTable(List<SpendJson> spendings) {
+        spendingRows.should(spends(spendings));
         return this;
     }
 }
