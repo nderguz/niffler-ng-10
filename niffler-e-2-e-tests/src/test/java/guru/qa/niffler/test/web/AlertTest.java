@@ -91,7 +91,7 @@ public class AlertTest {
     }
 
     @Test
-    @User(spendings = @Spending (
+    @User(spendings = @Spending(
             category = "TestCategory",
             amount = 10000,
             currency = CurrencyValues.RUB,
@@ -111,7 +111,7 @@ public class AlertTest {
     }
 
     @Test
-    @User(spendings = @Spending (
+    @User(spendings = @Spending(
             category = "TestCategory",
             amount = 10000,
             currency = CurrencyValues.RUB,
