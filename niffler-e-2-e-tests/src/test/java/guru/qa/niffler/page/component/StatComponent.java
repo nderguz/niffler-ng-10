@@ -2,7 +2,7 @@ package guru.qa.niffler.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.condition.model.Bubble;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.$;
-import static guru.qa.niffler.condition.StatConditions.color;
+import static guru.qa.niffler.condition.StatConditions.*;
 
-public class StatComponent extends BaseComponent<StatComponent>{
+public class StatComponent extends BaseComponent<StatComponent> {
     public StatComponent() {
         super($("#stat"));
     }
@@ -26,8 +26,20 @@ public class StatComponent extends BaseComponent<StatComponent>{
     }
 
     @Nonnull
-    public StatComponent checkBubbles(Color... expectedColor){
-        bubbles.should(color(expectedColor));
+    public StatComponent checkBubbles(Bubble... expectedBubbles) {
+        bubbles.should(statBubble(expectedBubbles));
+        return this;
+    }
+
+    @Nonnull
+    public StatComponent checkBubblesInAnyOrder(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesInAnyOrder(expectedBubbles));
+        return this;
+    }
+
+    @Nonnull
+    public StatComponent checkBubblesContains(Bubble... expectedBubbles) {
+        bubbles.should(statBubblesContains(expectedBubbles));
         return this;
     }
 }

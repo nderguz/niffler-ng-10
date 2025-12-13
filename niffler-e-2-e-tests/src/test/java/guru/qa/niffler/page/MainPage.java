@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.model.Bubble;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
@@ -78,6 +79,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
+    @Step("Удаление спендинга: {description}")
     public @Nonnull MainPage deleteSpending(String description) {
         spendings.deleteSpending(description);
         return this;
@@ -91,6 +93,30 @@ public class MainPage extends BasePage<MainPage> {
                 expected,
                 actual
         ), "Screen comparison failure");
+    }
+
+    @Step("Сравнение списка категорий под статистикой: {bubbles}")
+    public @Nonnull MainPage assertStatBubble(Bubble... bubbles){
+        statComponent.checkBubbles(bubbles);
+        return this;
+    }
+
+    @Step("Сравнение списка категорий под статистикой в любом порядке: {bubbles}")
+    public @Nonnull MainPage assertStatBubbleInAnyOrder(Bubble... bubbles){
+        statComponent.checkBubblesInAnyOrder(bubbles);
+        return this;
+    }
+
+    @Step("Проверить наличие категорий под статистикой: {bubbles}")
+    public @Nonnull MainPage assertStatBubbleContains(Bubble... bubbles){
+        statComponent.checkBubblesContains(bubbles);
+        return this;
+    }
+
+    @Step("Проверить корректность заполнения спендингов в таблице")
+    public @Nonnull MainPage assertSpendingTable(List<SpendJson> spendings) {
+        spendingTable.checkSpendingTable(spendings);
+        return this;
     }
 
     private String generateStatLegendName(SpendJson spend) {

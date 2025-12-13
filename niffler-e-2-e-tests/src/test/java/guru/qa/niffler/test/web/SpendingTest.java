@@ -1,5 +1,7 @@
 package guru.qa.niffler.test.web;
 
+import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.condition.model.Bubble;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
@@ -190,5 +192,101 @@ public class SpendingTest {
                 .setNewAmount(60000.0)
                 .save()
                 .assertStatisticsScreenshot(expected);
+    }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 2000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    )}
+    )
+    @Test
+    public void statChipsShouldBeOrderedAndCorrect(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .assertStatBubble(new Bubble(Color.YELLOW, "Test category 2 2000 ₽"), new Bubble(Color.GREEN, "Test category 1 1000 ₽"));
+    }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 2000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    )}
+    )
+    @Test
+    public void statChipsShouldBeInAnyOrderAndCorrect(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .assertStatBubbleInAnyOrder(new Bubble(Color.GREEN, "Test category 1 1000 ₽"), new Bubble(Color.YELLOW, "Test category 2 2000 ₽"));
+    }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 2000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    ),
+                    @Spending(
+                            category = "Required category",
+                            amount = 4000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 5"
+                    )}
+    )
+    @Test
+    public void statChipsShouldContains(UserJson user) {
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .assertStatBubbleContains(new Bubble(Color.BLUE_100, "Test category 1 1000 ₽"));
+    }
+
+    @User(
+            spendings = {@Spending(
+                    category = "Test category 1",
+                    amount = 1000,
+                    currency = CurrencyValues.RUB,
+                    description = "Test description 1"
+            ),
+                    @Spending(
+                            category = "Test category 2",
+                            amount = 2000,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 2"
+                    ),
+                    @Spending(
+                            category = "Required category",
+                            amount = 4000.15,
+                            currency = CurrencyValues.RUB,
+                            description = "Test description 5"
+                    )}
+    )
+    @Test
+    public void statTableShouldContains(UserJson user){
+        open(CFG.frontUrl(), LoginPage.class)
+                .successLogin(user.getUsername(), user.getTestData().password())
+                .assertSpendingTable(user.getTestData().spendings());
     }
 }
