@@ -14,6 +14,7 @@ public class FriendsTest {
 
     private static final Config CFG = Config.getInstance();
 
+
     @Test
     @User(friends = 3)
     @DisplayName("Должен отображаться список друзей")

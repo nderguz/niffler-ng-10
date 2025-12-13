@@ -284,7 +284,7 @@ public class SpendingTest {
                     )}
     )
     @Test
-    public void statTableShouldContains(UserJson user){
+    public void statTableShouldContains(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
                 .assertSpendingTable(user.getTestData().spendings());
