@@ -212,7 +212,7 @@ public class SpendingTest {
     public void statChipsShouldBeOrderedAndCorrect(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .assertStatBubble(new Bubble(Color.yellow, "Test category 2 2000 ₽"), new Bubble(Color.green, "Test category 1 1000 ₽"));
+                .assertStatBubble(new Bubble(Color.YELLOW, "Test category 2 2000 ₽"), new Bubble(Color.GREEN, "Test category 1 1000 ₽"));
     }
 
     @User(
@@ -233,7 +233,7 @@ public class SpendingTest {
     public void statChipsShouldBeInAnyOrderAndCorrect(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .assertStatBubbleInAnyOrder(new Bubble(Color.green, "Test category 1 1000 ₽"), new Bubble(Color.yellow, "Test category 2 2000 ₽"));
+                .assertStatBubbleInAnyOrder(new Bubble(Color.GREEN, "Test category 1 1000 ₽"), new Bubble(Color.YELLOW, "Test category 2 2000 ₽"));
     }
 
     @User(
@@ -260,7 +260,7 @@ public class SpendingTest {
     public void statChipsShouldContains(UserJson user) {
         open(CFG.frontUrl(), LoginPage.class)
                 .successLogin(user.getUsername(), user.getTestData().password())
-                .assertStatBubbleContains(new Bubble(Color.blue100, "Test category 1 1000 ₽"));
+                .assertStatBubbleContains(new Bubble(Color.BLUE_100, "Test category 1 1000 ₽"));
     }
 
     @User(
