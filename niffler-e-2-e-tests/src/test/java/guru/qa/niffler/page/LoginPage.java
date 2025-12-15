@@ -1,5 +1,7 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
@@ -7,15 +9,31 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
 
 @ParametersAreNonnullByDefault
 public class LoginPage extends BasePage<LoginPage> {
-    private final SelenideElement usernameInput = $("#username");
-    private final SelenideElement passwordInput = $("#password");
-    private final SelenideElement submitBtn = $("#login-button");
-    private final SelenideElement createAccountBtn = $("#register-button");
-    private final SelenideElement formError = $(".form__error");
+    private final SelenideElement usernameInput;
+    private final SelenideElement passwordInput;
+    private final SelenideElement submitBtn;
+    private final SelenideElement createAccountBtn;
+    private final SelenideElement formError;
+
+    public LoginPage(SelenideDriver driver) {
+        super(driver);
+        this.usernameInput = driver.$("#username");
+        this.passwordInput = driver.$("#password");
+        this.submitBtn = driver.$("#login-button");
+        this.createAccountBtn = driver.$("#register-button");
+        this.formError = driver.$(".form__error");
+    }
+
+    public LoginPage() {
+        this.usernameInput = Selenide.$("#username");
+        this.passwordInput = Selenide.$("#password");
+        this.submitBtn = Selenide.$("#login-button");
+        this.createAccountBtn = Selenide.$("#register-button");
+        this.formError = Selenide.$(".form__error");
+    }
 
     @Step("Авторизоваться с валидными кредами")
     public @Nonnull MainPage successLogin(String username, String password) {
