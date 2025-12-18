@@ -2,6 +2,7 @@ package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.model.Bubble;
 import guru.qa.niffler.model.spend.SpendJson;
@@ -27,13 +28,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
-    private final SelenideElement statistics = $("#stat");
-    private final ElementsCollection statisticsLegend = $$("div[id='legend-container'] ul");
+    private final SelenideElement statistics;
+    private final ElementsCollection statisticsLegend;
     private final SpendingTable spendings = new SpendingTable();
     private final SearchField searchField = new SearchField();
     private final StatComponent statComponent = new StatComponent();
 
     private final SpendingTable spendingTable = new SpendingTable();
+
+    public MainPage(SelenideDriver driver){
+        super(driver);
+        this.statistics = driver.$("#stat");
+        this.statisticsLegend = driver.$$("div[id='legend-container'] ul");
+    }
+
+    public MainPage(){
+        this.statistics = $("#stat");
+        this.statisticsLegend = $$("div[id='legend-container'] ul");
+    }
 
     @Step("Главная страница загрузилась корректно")
     public @Nonnull MainPage checkThatPageLoaded() {
