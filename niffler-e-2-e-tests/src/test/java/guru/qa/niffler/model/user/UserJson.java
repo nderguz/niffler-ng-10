@@ -55,18 +55,26 @@ public class UserJson {
         );
     }
 
+    public UserJson(String username, TestData testData) {
+        this.username = username;
+        this.testData = testData;
+    }
+
     public UserJson addTestData(TestData testData) {
-        return new UserJson(
-                id,
-                username,
-                firstname,
-                surname,
-                fullname,
-                currency,
-                photo,
-                photoSmall,
-                friendshipStatus,
-                testData
-        );
+        this.testData = testData;
+        return this;
+        // Due to User extension refactor this code was removed
+//        return new UserJson(
+//                id,
+//                username,
+//                firstname,
+//                surname,
+//                fullname,
+//                currency,
+//                photo,
+//                photoSmall,
+//                friendshipStatus,
+//                testData
+//        );
     }
 }

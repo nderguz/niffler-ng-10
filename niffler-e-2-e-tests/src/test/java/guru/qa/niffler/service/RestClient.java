@@ -8,6 +8,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.java.net.cookiejar.JavaNetCookieJar;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.lang3.ArrayUtils;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -16,6 +17,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+
+import static org.apache.commons.lang3.ArrayUtils.*;
 
 @ParametersAreNonnullByDefault
 public abstract class RestClient {
@@ -33,6 +36,10 @@ public abstract class RestClient {
         this(baseUrl, JacksonConverterFactory.create(), followRedirects, null);
     }
 
+    public RestClient(String baseUrl, boolean followRedirects, @Nullable Interceptor... interceptors) {
+        this(baseUrl, JacksonConverterFactory.create(), followRedirects, interceptors);
+    }
+
     public RestClient(String baseUrl, Converter.Factory converterFactory, boolean followRedirects, @Nullable Interceptor... interceptors) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .followRedirects(followRedirects)
@@ -45,9 +52,9 @@ public abstract class RestClient {
                         )
                 );
 
-        if (interceptors != null) {
+        if (isNotEmpty(interceptors)) {
             for (Interceptor interceptor : interceptors) {
-                builder.addInterceptor(interceptor);
+                builder.addNetworkInterceptor(interceptor);
             }
         }
         builder.addNetworkInterceptor(new AllureOkHttp3()
