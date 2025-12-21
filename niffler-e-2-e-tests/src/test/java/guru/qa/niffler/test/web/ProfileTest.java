@@ -1,11 +1,13 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.ProfilePage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

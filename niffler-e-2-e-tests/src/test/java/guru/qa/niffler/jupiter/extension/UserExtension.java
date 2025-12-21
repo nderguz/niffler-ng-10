@@ -5,7 +5,6 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserApiClient;
-import guru.qa.niffler.service.impl.UserDbClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -41,11 +40,10 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                                         new ArrayList<>(),
                                         new ArrayList<>()
                                 );
-
-                                context.getStore(NAMESPACE).put(
-                                        context.getUniqueId(),
-                                        user.addTestData(testData)
-                                );
+                                System.out.println("UE user data = " + user);
+                                System.out.println("UE test data = " + testData);
+                                user.addTestData(testData);
+                                setUser(user);
                             }
                         }
                 );
@@ -60,12 +58,20 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
     @Override
     public UserJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws
             ParameterResolutionException {
-        return createdUser().orElseThrow();
+        return getUser().orElseThrow();
     }
 
-    public static Optional<UserJson> createdUser() {
-        final ExtensionContext methodContext = context();
-        return Optional.ofNullable(methodContext.getStore(NAMESPACE)
-                .get(methodContext.getUniqueId(), UserJson.class));
+    public static void setUser(UserJson user) {
+        final ExtensionContext context = context();
+        context.getStore(NAMESPACE).put(
+                context.getUniqueId(),
+                user
+        );
+    }
+
+    public static Optional<UserJson> getUser() {
+        final ExtensionContext context = context();
+        return Optional.ofNullable(context.getStore(NAMESPACE)
+                .get(context.getUniqueId(), UserJson.class));
     }
 }

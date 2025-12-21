@@ -32,7 +32,7 @@ public class CategoryExtension implements
                 .ifPresent(userAnno -> {
                     if (ArrayUtils.isNotEmpty(userAnno.categories())) {
 
-                        Optional<UserJson> testUser = UserExtension.createdUser();
+                        Optional<UserJson> testUser = UserExtension.getUser();
                         final String username = testUser.isPresent()
                                 ? testUser.get().getUsername()
                                 : userAnno.username();

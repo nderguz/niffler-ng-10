@@ -5,6 +5,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.model.Bubble;
+import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;
@@ -14,7 +15,6 @@ import io.qameta.allure.Step;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ParametersAreNonnullByDefault
 public class MainPage extends BasePage<MainPage> {
+    public static final String URL = CFG.frontUrl() + "main";
     private final SelenideElement statistics;
     private final ElementsCollection statisticsLegend;
     private final SpendingTable spendings = new SpendingTable();
@@ -36,13 +37,13 @@ public class MainPage extends BasePage<MainPage> {
 
     private final SpendingTable spendingTable = new SpendingTable();
 
-    public MainPage(SelenideDriver driver){
+    public MainPage(SelenideDriver driver) {
         super(driver);
         this.statistics = driver.$("#stat");
         this.statisticsLegend = driver.$$("div[id='legend-container'] ul");
     }
 
-    public MainPage(){
+    public MainPage() {
         this.statistics = $("#stat");
         this.statisticsLegend = $$("div[id='legend-container'] ul");
     }
@@ -108,19 +109,19 @@ public class MainPage extends BasePage<MainPage> {
     }
 
     @Step("Сравнение списка категорий под статистикой: {bubbles}")
-    public @Nonnull MainPage assertStatBubble(Bubble... bubbles){
+    public @Nonnull MainPage assertStatBubble(Bubble... bubbles) {
         statComponent.checkBubbles(bubbles);
         return this;
     }
 
     @Step("Сравнение списка категорий под статистикой в любом порядке: {bubbles}")
-    public @Nonnull MainPage assertStatBubbleInAnyOrder(Bubble... bubbles){
+    public @Nonnull MainPage assertStatBubbleInAnyOrder(Bubble... bubbles) {
         statComponent.checkBubblesInAnyOrder(bubbles);
         return this;
     }
 
     @Step("Проверить наличие категорий под статистикой: {bubbles}")
-    public @Nonnull MainPage assertStatBubbleContains(Bubble... bubbles){
+    public @Nonnull MainPage assertStatBubbleContains(Bubble... bubbles) {
         statComponent.checkBubblesContains(bubbles);
         return this;
     }
