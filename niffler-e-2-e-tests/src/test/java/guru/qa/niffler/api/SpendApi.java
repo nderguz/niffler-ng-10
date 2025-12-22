@@ -19,7 +19,7 @@ public interface SpendApi {
     Call<SpendJson> getSpend(@Path("id") String id, @Query("username") String username);
 
     @GET("internal/spends/all")
-    Call<SpendJson> getSpends(@Query("username") String username,
+    Call<List<SpendJson>> getSpends(@Query("username") String username,
                               @Nullable @Query("filterCurrency") CurrencyValues filterCurrency,
                               @Nullable @Query("from") Date from,
                               @Nullable @Query("to") Date to);

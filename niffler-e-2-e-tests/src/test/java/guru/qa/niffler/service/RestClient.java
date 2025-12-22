@@ -8,7 +8,6 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.java.net.cookiejar.JavaNetCookieJar;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.apache.commons.lang3.ArrayUtils;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -18,7 +17,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
-import static org.apache.commons.lang3.ArrayUtils.*;
+import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 
 @ParametersAreNonnullByDefault
 public abstract class RestClient {

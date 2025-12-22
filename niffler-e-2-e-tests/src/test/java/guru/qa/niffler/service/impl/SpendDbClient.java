@@ -10,9 +10,12 @@ import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
+import org.apache.hc.core5.http.MethodNotSupportedException;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @ParametersAreNonnullByDefault
 public final class SpendDbClient implements SpendClient {
@@ -60,5 +63,17 @@ public final class SpendDbClient implements SpendClient {
                         )
                 )
         );
+    }
+
+    @NotNull
+    @Override
+    public List<CategoryJson> getCategories(String username, boolean excludeArchived) {
+        throw new UnsupportedOperationException("Not implemented for DB call");
+    }
+
+    @NotNull
+    @Override
+    public List<SpendJson> getSpends(String username) {
+        throw new UnsupportedOperationException("Not implemented for DB call");
     }
 }

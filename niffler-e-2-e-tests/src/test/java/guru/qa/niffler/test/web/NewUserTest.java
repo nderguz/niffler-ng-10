@@ -30,7 +30,6 @@ public class NewUserTest {
     @Test
     @DisplayName("Отклонение заявки в друзья")
     @User(incomeInvitations = 1)
-    @ApiLogin
     public void declineIncomeInvitation(UserJson user) {
         var incomeInvUsername = user.getTestData().incomeInvitations().getFirst().getUsername();
         open(FriendsPage.URL, FriendsPage.class)

@@ -3,10 +3,13 @@ package guru.qa.niffler.service.impl;
 import com.codeborne.selenide.Stopwatch;
 import guru.qa.niffler.api.UserdataApi;
 import guru.qa.niffler.jupiter.extension.UserExtension;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
+import org.jetbrains.annotations.NotNull;
+import retrofit2.Response;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,9 +126,24 @@ public final class UserApiClient extends RestClient implements UserClient {
     @Override
     public List<UserJson> allUsers(String username, @Nullable String searchQuery) {
         try {
-            var result = userdataApi.allUsers(username, searchQuery).execute();
-            if (result.body() != null) {
-                return result.body();
+            var response = userdataApi.allUsers(username, searchQuery).execute();
+            if (response.body() != null) {
+                return response.body();
+            } else {
+                return List.of();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @NotNull
+    @Override
+    public List<UserJson> getFriends(String username, String searchQuery) {
+        try {
+            var response = userdataApi.friends(username, searchQuery).execute();
+            if (response.body() != null) {
+                return response.body();
             } else {
                 return List.of();
             }

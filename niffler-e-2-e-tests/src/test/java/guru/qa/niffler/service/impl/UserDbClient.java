@@ -15,6 +15,7 @@ import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -136,6 +137,12 @@ public final class UserDbClient implements UserClient {
     @Override
     public List<UserJson> allUsers(String username, @Nullable String searchQuery) {
         throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @NotNull
+    @Override
+    public List<UserJson> getFriends(String username, String searchQuery) {
+        throw new UnsupportedOperationException("Not implemented for DB call");
     }
 
     private UserEntity userEntity(String username) {
