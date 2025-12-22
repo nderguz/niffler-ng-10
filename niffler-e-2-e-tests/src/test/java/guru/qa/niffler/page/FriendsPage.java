@@ -17,6 +17,7 @@ import static com.codeborne.selenide.Selenide.$;
 @ParametersAreNonnullByDefault
 public class FriendsPage extends BasePage<FriendsPage> {
 
+    public static final String URL = CFG.frontUrl() + "people/friends";
     private final SelenideElement friendsTab = $("a[href='/people/friends']");
     private final SelenideElement allPeopleTab = $("a[href='/people/all']");
     private final SelenideElement friendRequestsTable = $("#requests");
