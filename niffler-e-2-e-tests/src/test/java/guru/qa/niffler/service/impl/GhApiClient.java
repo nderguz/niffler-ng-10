@@ -5,6 +5,7 @@ import guru.qa.niffler.api.GhApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.service.RestClient;
 import io.qameta.allure.Step;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -25,7 +26,7 @@ public final class GhApiClient extends RestClient {
     private final GhApi ghApi;
 
     public GhApiClient() {
-        super(CFG.ghUrl());
+        super(CFG.ghUrl(), HttpLoggingInterceptor.Level.NONE);
         this.ghApi = create(GhApi.class);
     }
 

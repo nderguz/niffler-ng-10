@@ -56,7 +56,6 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                             throw new IllegalStateException("@User must be present in case that @ApiLogin is empty");
                         }
                         userToLogin = userFromUserExtension.get();
-                        System.out.println("Test user is: " + userToLogin);
                     }else{
                         var username = apiLogin.username();
                         final List<CategoryJson> categories = spendClient.getCategories(username, false);
@@ -117,7 +116,7 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
 
     @Override
     public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return getToken();
+        return "Bearer " + getToken();
     }
 
     public static void setToken(String token) {

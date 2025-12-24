@@ -6,6 +6,7 @@ import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,7 @@ public final class SpendApiClient extends RestClient implements SpendClient {
     private final SpendApi spendApi;
 
     public SpendApiClient() {
-        super(CFG.spendUrl());
+        super(CFG.spendUrl(), HttpLoggingInterceptor.Level.NONE);
         this.spendApi = create(SpendApi.class);
     }
 
