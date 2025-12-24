@@ -8,6 +8,7 @@ import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.utils.OauthUtils;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,7 +27,7 @@ public final class AuthApiClient extends RestClient {
     private final AuthApi authApi;
 
     public AuthApiClient() {
-        super(CFG.authUrl(), true, new CodeInterceptor());
+        super(CFG.authUrl(), true, HttpLoggingInterceptor.Level.NONE, new CodeInterceptor());
         this.authApi = create(AuthApi.class);
     }
 

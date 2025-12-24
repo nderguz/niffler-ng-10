@@ -1,11 +1,13 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.user.UserJson;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@WebTest
 public class ExistedUserTest {
 
     @Test

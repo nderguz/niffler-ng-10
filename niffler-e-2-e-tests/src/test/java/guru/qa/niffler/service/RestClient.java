@@ -28,18 +28,26 @@ public abstract class RestClient {
     private final Retrofit retrofit;
 
     public RestClient(String baseUrl) {
-        this(baseUrl, JacksonConverterFactory.create(), false, null);
+        this(baseUrl, false, JacksonConverterFactory.create(),  HttpLoggingInterceptor.Level.HEADERS, null);
+    }
+
+    public RestClient(String baseUrl, HttpLoggingInterceptor.Level level) {
+        this(baseUrl, false, JacksonConverterFactory.create(), level, null);
     }
 
     public RestClient(String baseUrl, boolean followRedirects) {
-        this(baseUrl, JacksonConverterFactory.create(), followRedirects, null);
+        this(baseUrl, followRedirects, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.HEADERS, null);
+    }
+
+    public RestClient(String baseUrl, boolean followRedirects, HttpLoggingInterceptor.Level level, @Nullable Interceptor... interceptors) {
+        this(baseUrl, followRedirects, JacksonConverterFactory.create(), level, interceptors);
     }
 
     public RestClient(String baseUrl, boolean followRedirects, @Nullable Interceptor... interceptors) {
-        this(baseUrl, JacksonConverterFactory.create(), followRedirects, interceptors);
+        this(baseUrl, followRedirects, JacksonConverterFactory.create(), HttpLoggingInterceptor.Level.HEADERS, interceptors);
     }
 
-    public RestClient(String baseUrl, Converter.Factory converterFactory, boolean followRedirects, @Nullable Interceptor... interceptors) {
+    public RestClient(String baseUrl, boolean followRedirects, Converter.Factory converterFactory, HttpLoggingInterceptor.Level level, @Nullable Interceptor... interceptors) {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .followRedirects(followRedirects)
                 .cookieJar(
@@ -49,7 +57,7 @@ public abstract class RestClient {
                                         CookiePolicy.ACCEPT_ALL
                                 )
                         )
-                );
+                ).addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(level));
 
         if (isNotEmpty(interceptors)) {
             for (Interceptor interceptor : interceptors) {

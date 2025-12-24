@@ -4,6 +4,7 @@ import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Category;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.EditSpendingPage;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import static com.codeborne.selenide.Selenide.open;
 
 @DisplayName("Проверки алертов на всех страницах")
+@WebTest
 public class AlertTest {
 
     @Test

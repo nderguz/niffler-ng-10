@@ -40,8 +40,6 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                                         new ArrayList<>(),
                                         new ArrayList<>()
                                 );
-                                System.out.println("UE user data = " + user);
-                                System.out.println("UE test data = " + testData);
                                 user.addTestData(testData);
                                 setUser(user);
                             }

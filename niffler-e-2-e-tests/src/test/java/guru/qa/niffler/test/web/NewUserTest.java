@@ -2,6 +2,7 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.EditSpendingPage;
 import guru.qa.niffler.page.FriendsPage;
@@ -14,6 +15,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 
 @DisplayName("Тесты для нового пользователя")
+@WebTest
 public class NewUserTest {
 
     @Test

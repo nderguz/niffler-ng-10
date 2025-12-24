@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.rest;
 
+import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.service.impl.AuthApiClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -8,6 +9,7 @@ import retrofit2.Response;
 
 import java.io.IOException;
 
+@RestTest
 public class RegistrationTest {
 
   private final AuthApiClient authApiClient = new AuthApiClient();

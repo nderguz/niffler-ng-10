@@ -8,6 +8,7 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.user.CurrencyValues;
 import guru.qa.niffler.data.entity.user.UserEntity;
 import guru.qa.niffler.data.tpl.DataSources;
+import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@RestTest
 public class ChainedTransactionTest {
 
     private static final Config CFG = Config.getInstance();

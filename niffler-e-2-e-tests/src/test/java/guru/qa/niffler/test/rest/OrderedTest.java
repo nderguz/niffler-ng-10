@@ -1,6 +1,7 @@
 package guru.qa.niffler.test.rest;
 
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.impl.UserApiClient;
 import org.junit.jupiter.api.*;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Order(1)
 @Execution(ExecutionMode.SAME_THREAD)
+@RestTest
 public class OrderedTest {
 
     private final UserApiClient userApiClient = new UserApiClient();

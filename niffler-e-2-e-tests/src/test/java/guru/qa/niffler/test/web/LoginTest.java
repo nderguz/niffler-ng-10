@@ -5,6 +5,7 @@ import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.Driver;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.jupiter.extension.Browser;
 import guru.qa.niffler.jupiter.extension.NonStaticBrowserExtension;
 import guru.qa.niffler.model.user.UserJson;
@@ -16,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 @DisplayName("Страница логина")
+@WebTest
 public class LoginTest {
 
     @RegisterExtension

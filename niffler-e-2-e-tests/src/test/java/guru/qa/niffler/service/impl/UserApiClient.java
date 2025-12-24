@@ -7,6 +7,7 @@ import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ public final class UserApiClient extends RestClient implements UserClient {
     private final AuthApiClient authApiClient = new AuthApiClient();
 
     public UserApiClient() {
-        super(CFG.userdataUrl());
+        super(CFG.userdataUrl(), HttpLoggingInterceptor.Level.NONE);
         this.userdataApi = create(UserdataApi.class);
     }
 
