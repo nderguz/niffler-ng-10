@@ -3,13 +3,11 @@ package guru.qa.niffler.service.impl;
 import com.codeborne.selenide.Stopwatch;
 import guru.qa.niffler.api.UserdataApi;
 import guru.qa.niffler.jupiter.extension.UserExtension;
-import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
-import org.jetbrains.annotations.NotNull;
-import retrofit2.Response;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,13 +106,13 @@ public final class UserApiClient extends RestClient implements UserClient {
                 try {
                     var udResult = userdataApi.sendInvitation(targetUser.getUsername(), user.getUsername()).execute();
                     Stopwatch sw = new Stopwatch(MAX_TIMEOUT_RESPONSE_TIME);
-                    while(!sw.isTimeoutReached() && !udResult.isSuccessful()){
+                    while (!sw.isTimeoutReached() && !udResult.isSuccessful()) {
                         Thread.sleep(100);
                     }
                     var acceptResult = userdataApi.acceptInvitation(user.getUsername(), targetUser.getUsername()).execute();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
@@ -137,7 +135,7 @@ public final class UserApiClient extends RestClient implements UserClient {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<UserJson> getFriends(String username, String searchQuery) {
         try {

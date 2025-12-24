@@ -6,7 +6,6 @@ import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.SpendClient;
 import io.qameta.allure.Step;
-import org.jetbrains.annotations.NotNull;
 import retrofit2.Response;
 
 import javax.annotation.Nonnull;
@@ -82,7 +81,7 @@ public final class SpendApiClient extends RestClient implements SpendClient {
         }
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public List<SpendJson> getSpends(String username) {
         try {
