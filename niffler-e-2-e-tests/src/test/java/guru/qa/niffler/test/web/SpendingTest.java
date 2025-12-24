@@ -6,6 +6,7 @@ import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
+import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
@@ -16,6 +17,7 @@ import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@WebTest
 public class SpendingTest {
 
     @User(

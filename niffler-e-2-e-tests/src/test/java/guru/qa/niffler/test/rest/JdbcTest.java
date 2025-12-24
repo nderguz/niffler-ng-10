@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.rest;
 
+import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+@RestTest
 public class JdbcTest {
 
     @Test
