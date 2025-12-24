@@ -2,13 +2,13 @@ package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.condition.model.Bubble;
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.user.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -17,8 +17,6 @@ import java.io.IOException;
 import static com.codeborne.selenide.Selenide.open;
 
 public class SpendingTest {
-
-    private static final Config CFG = Config.getInstance();
 
     @User(
             spendings = @Spending(
@@ -29,10 +27,10 @@ public class SpendingTest {
             )
     )
     @Test
+    @ApiLogin
     void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation";
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .editSpending(user.getTestData().spendings().getFirst().description())
                 .setNewSpendingDescription(newDescription)
                 .save()
@@ -48,11 +46,10 @@ public class SpendingTest {
                     description = "Обучение Niffler 2.0 юбилейный поток!"
             )
     )
+    @ApiLogin
     public void checkSpendingShouldBeInHistory(UserJson userJson) {
         String spendingDescription = userJson.getTestData().spendings().getFirst().description();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(userJson.getUsername(), userJson.getTestData().password())
-                .checkThatPageLoaded()
+        open(MainPage.URL, MainPage.class)
                 .search(spendingDescription)
                 .checkThatTableContains(spendingDescription);
     }
@@ -65,11 +62,10 @@ public class SpendingTest {
                     description = "Обучение Niffler 2.0 юбилейный поток!"
             )
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/expected-stat.png")
-    public void checkStatComponentTest(UserJson user, BufferedImage expected) throws IOException {
-        String spendingDescription = user.getTestData().spendings().getFirst().description();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+    public void checkStatComponentTest(BufferedImage expected) throws IOException {
+        open(MainPage.URL, MainPage.class)
                 .assertStatisticsScreenshot(expected);
     }
 
@@ -89,12 +85,12 @@ public class SpendingTest {
                     )
             }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/spend-removal.png")
     public void checkStatComponentAfterSpendRemove(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .checkLegendCount(categoryCount)
                 .checkLegendNames(user.getTestData().spendings())
                 .deleteSpending(spendingDescription)
@@ -118,12 +114,12 @@ public class SpendingTest {
                     )
             }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/spend-edit.png")
     public void checkStatComponentAfterSpendEdit(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .checkLegendCount(categoryCount)
                 .checkLegendNames(user.getTestData().spendings())
                 .editSpending(spendingDescription)
@@ -149,11 +145,11 @@ public class SpendingTest {
                     )
             }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/spend-archive.png")
     public void checkStatComponentWithArchiveSpend(UserJson user, BufferedImage expected) throws IOException {
         int categoryCount = user.getTestData().spendings().size();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .checkLegendCount(categoryCount)
                 .checkLegendNames(user.getTestData().spendings())
                 .getHeader()
@@ -181,11 +177,11 @@ public class SpendingTest {
                     )
             }
     )
+    @ApiLogin
     @ScreenShotTest(value = "img/spend-rewrite.png")
     public void rewriteExpectedScreenshotTest(UserJson user, BufferedImage expected) throws IOException {
         int categoryCount = user.getTestData().spendings().size();
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .checkLegendCount(categoryCount)
                 .checkLegendNames(user.getTestData().spendings())
                 .editSpending(user.getTestData().spendings().getFirst().description())
@@ -208,10 +204,10 @@ public class SpendingTest {
                             description = "Test description 2"
                     )}
     )
+    @ApiLogin
     @Test
-    public void statChipsShouldBeOrderedAndCorrect(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+    public void statChipsShouldBeOrderedAndCorrect() {
+        open(MainPage.URL, MainPage.class)
                 .assertStatBubble(new Bubble(Color.YELLOW, "Test category 2 2000 ₽"), new Bubble(Color.GREEN, "Test category 1 1000 ₽"));
     }
 
@@ -229,10 +225,10 @@ public class SpendingTest {
                             description = "Test description 2"
                     )}
     )
+    @ApiLogin
     @Test
-    public void statChipsShouldBeInAnyOrderAndCorrect(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+    public void statChipsShouldBeInAnyOrderAndCorrect() {
+        open(MainPage.URL, MainPage.class)
                 .assertStatBubbleInAnyOrder(new Bubble(Color.GREEN, "Test category 1 1000 ₽"), new Bubble(Color.YELLOW, "Test category 2 2000 ₽"));
     }
 
@@ -256,10 +252,10 @@ public class SpendingTest {
                             description = "Test description 5"
                     )}
     )
+    @ApiLogin
     @Test
-    public void statChipsShouldContains(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+    public void statChipsShouldContains() {
+        open(MainPage.URL, MainPage.class)
                 .assertStatBubbleContains(new Bubble(Color.BLUE_100, "Test category 1 1000 ₽"));
     }
 
@@ -283,10 +279,10 @@ public class SpendingTest {
                             description = "Test description 5"
                     )}
     )
+    @ApiLogin
     @Test
     public void statTableShouldContains(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
+        open(MainPage.URL, MainPage.class)
                 .assertSpendingTable(user.getTestData().spendings());
     }
 }

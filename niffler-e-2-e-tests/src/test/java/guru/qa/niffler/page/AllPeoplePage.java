@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class AllPeoplePage extends BasePage<AllPeoplePage> {
 
+    public static final String URL = CFG.frontUrl() + "people/all";
     private final SearchField searchField = new SearchField();
     private final SelenideElement allPeopleTable = $(".MuiTable-root");
     private final ElementsCollection allPeopleRows = allPeopleTable.$$("tbody tr");

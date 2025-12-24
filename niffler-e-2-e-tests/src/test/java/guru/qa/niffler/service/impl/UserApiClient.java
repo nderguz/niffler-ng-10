@@ -8,6 +8,7 @@ import guru.qa.niffler.service.RestClient;
 import guru.qa.niffler.service.UserClient;
 import io.qameta.allure.Step;
 
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -105,13 +106,13 @@ public final class UserApiClient extends RestClient implements UserClient {
                 try {
                     var udResult = userdataApi.sendInvitation(targetUser.getUsername(), user.getUsername()).execute();
                     Stopwatch sw = new Stopwatch(MAX_TIMEOUT_RESPONSE_TIME);
-                    while(!sw.isTimeoutReached() && !udResult.isSuccessful()){
+                    while (!sw.isTimeoutReached() && !udResult.isSuccessful()) {
                         Thread.sleep(100);
                     }
                     var acceptResult = userdataApi.acceptInvitation(user.getUsername(), targetUser.getUsername()).execute();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
@@ -123,9 +124,24 @@ public final class UserApiClient extends RestClient implements UserClient {
     @Override
     public List<UserJson> allUsers(String username, @Nullable String searchQuery) {
         try {
-            var result = userdataApi.allUsers(username, searchQuery).execute();
-            if (result.body() != null) {
-                return result.body();
+            var response = userdataApi.allUsers(username, searchQuery).execute();
+            if (response.body() != null) {
+                return response.body();
+            } else {
+                return List.of();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public List<UserJson> getFriends(String username, String searchQuery) {
+        try {
+            var response = userdataApi.friends(username, searchQuery).execute();
+            if (response.body() != null) {
+                return response.body();
             } else {
                 return List.of();
             }

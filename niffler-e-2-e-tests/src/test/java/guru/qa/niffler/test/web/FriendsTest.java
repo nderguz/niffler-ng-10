@@ -1,9 +1,10 @@
 package guru.qa.niffler.test.web;
 
-import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.user.UserJson;
-import guru.qa.niffler.page.LoginPage;
+import guru.qa.niffler.page.AllPeoplePage;
+import guru.qa.niffler.page.FriendsPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,50 +13,39 @@ import static com.codeborne.selenide.Selenide.open;
 @DisplayName("Функционал добавления в друзья")
 public class FriendsTest {
 
-    private static final Config CFG = Config.getInstance();
-
-
     @Test
     @User(friends = 3)
+    @ApiLogin
     @DisplayName("Должен отображаться список друзей")
-    public void friendShouldBePresentInFriendsTable(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
-                .getHeader()
-                .toFriendsPage()
+    public void friendShouldBePresentInFriendsTable() {
+        open(FriendsPage.URL, FriendsPage.class)
                 .checkFriendsListIsNotEmpty();
     }
 
     @Test
     @User
+    @ApiLogin
     @DisplayName("Таблица друзей должна быть пустой")
-    public void friendsTableShouldBeEmptyForNewUser(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
-                .getHeader()
-                .toFriendsPage()
+    public void friendsTableShouldBeEmptyForNewUser() {
+        open(FriendsPage.URL, FriendsPage.class)
                 .checkFriendsListIsEmpty();
     }
 
     @Test
     @User(incomeInvitations = 2)
+    @ApiLogin
     @DisplayName("Должен отображаться входящий запрос на добавление в друзья")
     public void incomeInvitationShouldBePresentInFriendsTable(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
-                .getHeader()
-                .toFriendsPage()
+        open(FriendsPage.URL, FriendsPage.class)
                 .checkIncomeInvitationShouldBeVisible(user.getTestData().incomeInvitations().getFirst().getUsername());
     }
 
     @Test
     @User(outcomeInvitations = 3)
+    @ApiLogin
     @DisplayName("Статус добавления в друзья должен быть в статусе Waiting...")
     public void outcomeInvitationShouldBePresentInAllPeoplesTable(UserJson user) {
-        open(CFG.frontUrl(), LoginPage.class)
-                .successLogin(user.getUsername(), user.getTestData().password())
-                .getHeader()
-                .toAllPeoplesPage()
+        open(AllPeoplePage.URL, AllPeoplePage.class)
                 .checkOutcomeInvitationShouldBeVisible(user.getTestData().outcomeInvitations().getFirst().getUsername());
     }
 }

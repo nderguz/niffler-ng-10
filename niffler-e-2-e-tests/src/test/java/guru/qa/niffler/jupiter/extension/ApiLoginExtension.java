@@ -6,13 +6,23 @@ import guru.qa.niffler.api.core.ThreadSafeCookieStore;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
+import guru.qa.niffler.model.FriendshipStatus;
 import guru.qa.niffler.model.TestData;
+import guru.qa.niffler.model.spend.CategoryJson;
+import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.MainPage;
+import guru.qa.niffler.service.SpendClient;
+import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.AuthApiClient;
+import guru.qa.niffler.service.impl.SpendApiClient;
+import guru.qa.niffler.service.impl.UserApiClient;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver {
 
@@ -21,6 +31,8 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
     private final boolean setupBrowser;
 
     private final AuthApiClient authApiClient = new AuthApiClient();
+    private final UserClient usersClient = new UserApiClient();
+    private final SpendClient spendClient = new SpendApiClient();
 
     private ApiLoginExtension(boolean setupBrowser) {
         this.setupBrowser = setupBrowser;
@@ -46,11 +58,33 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                         userToLogin = userFromUserExtension.get();
                         System.out.println("Test user is: " + userToLogin);
                     }else{
+                        var username = apiLogin.username();
+                        final List<CategoryJson> categories = spendClient.getCategories(username, false);
+                        final List<SpendJson> spends = spendClient.getSpends(username);
+
+                        final List<UserJson> friendsList = usersClient.getFriends(username, null);
+                        final List<UserJson> friends = friendsList.stream()
+                                .filter(f -> f.getFriendshipStatus() != null && f.getFriendshipStatus().equals(FriendshipStatus.FRIEND))
+                                .toList();
+                        final List<UserJson> incomeInvitations = friendsList.stream()
+                                .filter(f -> f.getFriendshipStatus() != null &&  f.getFriendshipStatus().equals(FriendshipStatus.INVITE_RECEIVED))
+                                .toList();
+
+                        final List<UserJson> outcomeInvitations = usersClient.allUsers(username, null).stream()
+                                .filter(f -> f.getFriendshipStatus() != null && f.getFriendshipStatus().equals(FriendshipStatus.INVITE_SENT))
+                                .toList();
+
+                        var testData = new TestData(
+                                apiLogin.password(),
+                                incomeInvitations,
+                                outcomeInvitations,
+                                friends,
+                                categories,
+                                spends
+                        );
                         var fakeUser = new UserJson(
                                 apiLogin.username(),
-                                new TestData(
-                                        apiLogin.password()
-                                )
+                                testData
                         );
                         if (userFromUserExtension.isPresent()){
                             throw new IllegalStateException("@User must not be present in case that @ApiLogin contains username or password");

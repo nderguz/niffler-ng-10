@@ -12,6 +12,8 @@ import static com.codeborne.selenide.Condition.text;
 
 @ParametersAreNonnullByDefault
 public class LoginPage extends BasePage<LoginPage> {
+
+    public static final String URL = CFG.authUrl() + "login";
     private final SelenideElement usernameInput;
     private final SelenideElement passwordInput;
     private final SelenideElement submitBtn;

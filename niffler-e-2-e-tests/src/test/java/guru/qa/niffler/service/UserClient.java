@@ -23,4 +23,7 @@ public interface UserClient {
 
     @Nonnull
     List<UserJson> allUsers(String username, @Nullable String searchQuery);
+
+    @Nonnull
+    List<UserJson> getFriends(String username, @Nullable String searchQuery);
 }
