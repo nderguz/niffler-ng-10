@@ -4,6 +4,7 @@ import com.apollographql.apollo.api.ApolloResponse;
 import com.apollographql.java.client.ApolloCall;
 import com.apollographql.java.rx2.Rx2Apollo;
 import guru.qa.FriendsCategoriesQuery;
+import guru.qa.FriendsSubqueryQuery;
 import guru.qa.niffler.jupiter.annotation.ApiLogin;
 import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
@@ -28,9 +29,12 @@ public class RestrictionsGraphQlTest extends BaseGraphQlTest {
     @Test
     @ApiLogin
     @User
-    public void depthLimitRestrictions() {
+    public void subqueriesRestrictions(@Token String bearerToken) {
+        ApolloCall<FriendsSubqueryQuery.Data> subqueryCall = apolloClient.query(new FriendsSubqueryQuery())
+                .addHttpHeader("authorization", bearerToken);
 
+        ApolloResponse<FriendsSubqueryQuery.Data> response = Rx2Apollo.single(subqueryCall).blockingGet();
+
+        assertNotNull(response.errors.getFirst());
     }
-
-    //todo StatQueryControllerTests
 }
