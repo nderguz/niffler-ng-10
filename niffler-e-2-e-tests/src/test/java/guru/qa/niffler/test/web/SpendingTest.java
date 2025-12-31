@@ -284,7 +284,6 @@ public class SpendingTest {
     )
     @ApiLogin
     @Test
-    //todo refactor
     public void statTableShouldContains(UserJson user) {
         open(MainPage.URL, MainPage.class)
                 .assertSpendingTable(user.getTestData().spendings());

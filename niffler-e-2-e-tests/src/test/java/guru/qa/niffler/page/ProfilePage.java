@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @ParametersAreNonnullByDefault
 public class ProfilePage extends BasePage<ProfilePage> {
     public static final String URL = CFG.frontUrl() + "profile";
+    private final SelenideElement profileImg = $("label[for='image__input']").parent().$("img");
     private final SelenideElement usernameInput = $("#username");
     private final SelenideElement nameInput = $("#name");
     private final SelenideElement categoryInput = $("#category");
@@ -105,17 +106,24 @@ public class ProfilePage extends BasePage<ProfilePage> {
     }
 
     @Step("Проверить поле Name")
-    public ProfilePage checkName(String name) {
+    public @Nonnull ProfilePage checkName(String name) {
         nameInput.shouldHave(value(name));
         return this;
     }
 
-    @Step("Сравнение скриншотов")
-    public void assertProfilePicScreenshot(BufferedImage expected) throws IOException {
-        BufferedImage actual = ImageIO.read($("img[class*='MuiAvatar-img'][class*='css-1hy9t21']").screenshot());
+    @Step("Проверить, что фото профиля существует")
+    public @Nonnull ProfilePage checkPhotoExists(){
+        profileImg.should(attributeMatching("src", "data.image.*"));
+        return this;
+    }
+
+    @Step("Сравнение скриншотов профиля пользователя")
+    public @Nonnull ProfilePage assertProfilePicScreenshot(BufferedImage expected) throws IOException {
+        BufferedImage actual = ImageIO.read(profileImg.screenshot());
         assertFalse(new ScreenDiffResult(
                 expected,
                 actual
         ));
+        return this;
     }
 }
