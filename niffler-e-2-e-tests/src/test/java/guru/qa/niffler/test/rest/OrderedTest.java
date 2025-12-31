@@ -17,6 +17,7 @@ public class OrderedTest {
 
     private final UserApiClient userApiClient = new UserApiClient();
 
+    //todo refactor
     @Test
     @User
     public void returnEmptyUserList(UserJson user) {

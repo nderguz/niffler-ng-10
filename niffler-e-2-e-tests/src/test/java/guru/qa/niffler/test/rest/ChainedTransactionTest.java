@@ -11,6 +11,7 @@ import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.model.auth.AuthUserJson;
 import guru.qa.niffler.utils.RandomDataUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -56,6 +57,7 @@ public class ChainedTransactionTest {
     При попытке создать пустое Authority транзакция не откатилась
      */
     @Test
+    @DisplayName("Проваленный тест без отката Authority")
     public void failedTransactionTest() {
         AuthUserJson user = getNewUserJson();
 
@@ -85,6 +87,7 @@ public class ChainedTransactionTest {
     Здесь транзакция откатилась корректно
      */
     @Test
+    @DisplayName("Проваленный тест с откатывающейся транзакцией")
     public void failedTransactionSpringTest() {
         AuthUserJson user = getNewUserJson();
 

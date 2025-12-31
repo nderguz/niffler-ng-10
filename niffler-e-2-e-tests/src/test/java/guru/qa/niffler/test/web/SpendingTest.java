@@ -30,7 +30,7 @@ public class SpendingTest {
     )
     @Test
     @ApiLogin
-    void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
+    public void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation";
         open(MainPage.URL, MainPage.class)
                 .editSpending(user.getTestData().spendings().getFirst().description())
@@ -89,6 +89,7 @@ public class SpendingTest {
     )
     @ApiLogin
     @ScreenShotTest(value = "img/spend-removal.png")
+    //todo refactor
     public void checkStatComponentAfterSpendRemove(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();
@@ -283,6 +284,7 @@ public class SpendingTest {
     )
     @ApiLogin
     @Test
+    //todo refactor
     public void statTableShouldContains(UserJson user) {
         open(MainPage.URL, MainPage.class)
                 .assertSpendingTable(user.getTestData().spendings());

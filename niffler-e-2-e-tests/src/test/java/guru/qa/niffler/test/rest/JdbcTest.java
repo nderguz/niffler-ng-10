@@ -40,6 +40,7 @@ public class JdbcTest {
     }
 
     @Test
+    //todo refactor
     public void springJdbcTest() {
         UserClient usersDbClient = new UserDbClient();
         usersDbClient.create(

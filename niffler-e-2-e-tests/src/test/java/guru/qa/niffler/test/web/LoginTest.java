@@ -27,6 +27,7 @@ public class LoginTest {
     /*
         Тест запукается 2 раза параллельно в двух разных браузерах
      */
+    //todo refactor
     @DisabledByIssue("3")
     @User
     @EnumSource(value = Browser.class, names = {"CHROME", "FIREFOX"})
