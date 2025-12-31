@@ -20,6 +20,5 @@ public class SpendClientInjector implements TestInstancePostProcessor {
                 declaredField.set(testInstance, new SpendDbClient());
             }
         }
-
     }
 }

@@ -22,6 +22,7 @@ public class NewUserTest {
     @DisplayName("Принятие заявки в друзья")
     @User(incomeInvitations = 1)
     @ApiLogin
+    //todo refactor
     public void acceptIncomeInvitation(UserJson user) {
         var incomeInvUsername = user.getTestData().incomeInvitations().getFirst().getUsername();
         open(FriendsPage.URL, FriendsPage.class)
