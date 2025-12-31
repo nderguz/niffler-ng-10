@@ -9,7 +9,6 @@ import guru.qa.niffler.jupiter.annotation.Token;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.model.CurrencyValues;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class CurrenciesGraphQlTest extends BaseGraphQlTest {
     @Test
     @User
     @ApiLogin
-    @Disabled
     public void allCurrenciesShouldBeReturnedFromGateway(@Token String bearerToken) {
         ApolloCall<CurrenciesQuery.Data> currenciesCall = apolloClient.query(new CurrenciesQuery())
                 .addHttpHeader("authorization", bearerToken);
@@ -29,7 +27,7 @@ public class CurrenciesGraphQlTest extends BaseGraphQlTest {
                 .blockingGet();
 
         final CurrenciesQuery.Data data = response.dataOrThrow();
-        List<CurrenciesQuery.Currency> all =  data.currencies;
+        List<CurrenciesQuery.Currency> all = data.currencies;
         Assertions.assertEquals(
                 CurrencyValues.RUB.name(),
                 all.get(0).currency.rawValue

@@ -37,7 +37,7 @@ public final class SpendApiClient extends RestClient implements SpendClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertEquals(200, response.code());
+        assertEquals(201, response.code());
         return Objects.requireNonNull(response.body());
     }
 
