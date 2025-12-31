@@ -5,7 +5,6 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.model.Bubble;
-import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.spend.SpendJson;
 import guru.qa.niffler.page.component.SearchField;
 import guru.qa.niffler.page.component.SpendingTable;

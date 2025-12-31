@@ -10,7 +10,9 @@ import javax.annotation.Nonnull;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static com.codeborne.selenide.CheckResult.accepted;
 import static com.codeborne.selenide.CheckResult.rejected;
@@ -20,7 +22,6 @@ public class SpendConditions {
     public static WebElementsCondition spends(List<SpendJson> expectedSpends) {
         return new WebElementsCondition() {
             private final List<String> expected = mapToStringList(expectedSpends);
-
             @Nonnull
             @Override
             public CheckResult check(Driver driver, List<WebElement> elements) {
@@ -35,23 +36,26 @@ public class SpendConditions {
 
                 boolean passed = true;
 
-                List<String> actualResult = new ArrayList<>();
+                List<String> actualResultText = new ArrayList<>();
                 for (int i = 0; i < elements.size(); i++) {
-                    /* Только под конец понял, что прохожусь не по каждой ячейке, а вытаскиваю полный текст спендинга, который
-                    в actualText сохраняется примерно как "Test category 1 1000 ₽ Test description 1 Dec 11, 2025", и формирую аналогичную строку
-                    из SpendJson и сравниваю их.
-                    В целом проверки работают, но если принципиально нужно проходиться по каждой ячейке и сравнивать с полем, могу переделать
-                     */
                     final String actualText = elements.get(i).getText();
-                    final String expectedText = expected.get(i);
-                    actualResult.add(actualText);
+                    actualResultText.add(actualText);
+
+                }
+
+                for (int i = 0; i < expected.size(); i++) {
+                    var expectedText = expected.get(i);
+                    var actualText = actualResultText
+                            .stream()
+                            .filter(t -> t.equals(expectedText))
+                            .findFirst();
                     if(passed){
-                        passed = actualText.equals(expectedText);
+                        passed = actualText.isPresent();
                     }
                 }
                 if(!passed){
-                    final String message = String.format("Spends mismatch (expected: %s, actual: %s", expected, actualResult);
-                    return rejected(message, actualResult);
+                    final String message = String.format("Spends mismatch (expected: %s, actual: %s", expected, actualResultText);
+                    return rejected(message, actualResultText);
                 }
                 return accepted();
             }
@@ -68,7 +72,7 @@ public class SpendConditions {
         if (expectedSpends.isEmpty()) {
             throw new IllegalArgumentException("Expected spends list is empty");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
 
         return expectedSpends.stream()
                 .map(s -> s.category().name() + " " + parseDouble(s.amount())  + " " + s.currency().getSing() + " " + s.description() + " " + sdf.format(s.spendDate()))

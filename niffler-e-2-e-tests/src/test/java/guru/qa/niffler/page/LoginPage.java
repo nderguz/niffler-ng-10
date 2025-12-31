@@ -50,7 +50,7 @@ public class LoginPage extends BasePage<LoginPage> {
         usernameInput.val(username);
         passwordInput.val(password);
         submitBtn.click();
-        checkErrorMessage("Bad credentials");
+        checkErrorMessage("Неверные учетные данные пользователя");
         return this;
     }
 

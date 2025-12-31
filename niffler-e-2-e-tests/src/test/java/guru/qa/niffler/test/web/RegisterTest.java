@@ -1,7 +1,9 @@
 package guru.qa.niffler.test.web;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.RegisterPage;
 import guru.qa.niffler.utils.RandomDataUtils;
@@ -36,9 +38,10 @@ public class RegisterTest {
     }
 
     @Test
+    @User
     @DisplayName("Пользователь не зарегистрирован с существующим логином")
-    public void shouldNotRegisterUserWithExistingUsername() {
-        String existingLogin = "test";
+    public void shouldNotRegisterUserWithExistingUsername(UserJson user) {
+        String existingLogin = user.getUsername();
         String password = "123456";
         page.setUsername(existingLogin)
                 .setPassword(password)

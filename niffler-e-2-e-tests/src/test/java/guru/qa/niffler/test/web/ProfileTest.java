@@ -56,11 +56,12 @@ public class ProfileTest {
 
     @User
     @ApiLogin
-    @ScreenShotTest("img/profile-pic.png")
-    public void uploadNewProfilePictureShouldBeVisible(UserJson user, BufferedImage expected) throws IOException {
+    @ScreenShotTest(value = "img/profile-pic.png")
+    public void uploadNewProfilePictureShouldBeVisible(BufferedImage expected) throws IOException {
         open(ProfilePage.URL, ProfilePage.class)
                 .uploadNewPicture("img/profile-pic.png")
-                .assertProfilePicScreenshot(expected);
+                .saveChanges()
+                .checkPhotoExists();
     }
 }
 

@@ -30,7 +30,7 @@ public class SpendingTest {
     )
     @Test
     @ApiLogin
-    void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
+    public void spendingDescriptionShouldBeEditedByTableAction(UserJson user) {
         final String newDescription = "Обучение Niffler Next Generation";
         open(MainPage.URL, MainPage.class)
                 .editSpending(user.getTestData().spendings().getFirst().description())
