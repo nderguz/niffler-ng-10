@@ -16,7 +16,7 @@ public class IsolatedTest {
     private final UserApiClient userApiClient = new UserApiClient();
 
     @Test
-    @User
+    @User(outcomeInvitations = 3)
     public void returnNonEmptyUserList(UserJson user) {
         var result = userApiClient.allUsers(user.getUsername(), null);
         assertFalse(result.isEmpty());

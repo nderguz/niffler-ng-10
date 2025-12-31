@@ -16,7 +16,8 @@ import java.lang.annotation.Target;
         UserExtension.class,
         CategoryExtension.class,
         SpendingExtension.class,
-        ApiLoginExtension.class
+        ApiLoginExtension.class,
+        TruncateDatabaseExtension.class
 })
 public @interface WebTest {
 }

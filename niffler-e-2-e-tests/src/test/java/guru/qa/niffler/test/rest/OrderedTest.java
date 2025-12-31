@@ -4,7 +4,8 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.RestTest;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.impl.UserApiClient;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
@@ -17,7 +18,6 @@ public class OrderedTest {
 
     private final UserApiClient userApiClient = new UserApiClient();
 
-    //todo refactor
     @Test
     @User
     public void returnEmptyUserList(UserJson user) {
