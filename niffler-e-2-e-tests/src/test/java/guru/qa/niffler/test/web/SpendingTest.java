@@ -89,7 +89,6 @@ public class SpendingTest {
     )
     @ApiLogin
     @ScreenShotTest(value = "img/spend-removal.png")
-    //todo refactor
     public void checkStatComponentAfterSpendRemove(UserJson user, BufferedImage expected) throws IOException {
         String spendingDescription = user.getTestData().spendings().getFirst().description();
         int categoryCount = user.getTestData().spendings().size();

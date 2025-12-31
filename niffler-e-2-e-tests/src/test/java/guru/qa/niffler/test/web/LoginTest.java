@@ -2,7 +2,6 @@ package guru.qa.niffler.test.web;
 
 import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.jupiter.annotation.DisabledByIssue;
 import guru.qa.niffler.jupiter.annotation.Driver;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
@@ -24,14 +23,10 @@ public class LoginTest {
     private static final NonStaticBrowserExtension nonStaticBrowserExtension = new NonStaticBrowserExtension();
     private static final Config CFG = Config.getInstance();
 
-    /*
-        Тест запукается 2 раза параллельно в двух разных браузерах
-     */
-    //todo refactor
-    @DisabledByIssue("3")
     @User
     @EnumSource(value = Browser.class, names = {"CHROME", "FIREFOX"})
     @ParameterizedTest
+    @DisplayName("Авторизация в двух браузерах")
     public void mainPageShouldBeDisplayedAfterSuccessLogin(@Driver SelenideDriver driver, UserJson user) {
         NonStaticBrowserExtension.drivers().add(driver);
         driver.open(CFG.frontUrl());
