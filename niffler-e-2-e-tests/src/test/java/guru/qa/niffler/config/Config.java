@@ -1,5 +1,7 @@
 package guru.qa.niffler.config;
 
+import javax.annotation.Nonnull;
+
 public interface Config {
 
     static Config getInstance() {
@@ -16,23 +18,38 @@ public interface Config {
         return "secret";
     }
 
+    default int currencyGrpcPort() {return 8092;}
+
+    @Nonnull
     String frontUrl();
 
+    @Nonnull
     String authUrl();
 
+    @Nonnull
     String authJdbcUrl();
 
+    @Nonnull
     String gatewayUrl();
 
+    @Nonnull
     String userdataUrl();
 
+    @Nonnull
     String userdataJdbcUrl();
 
+    @Nonnull
     String spendUrl();
 
+    @Nonnull
     String spendJdbcUrl();
 
+    @Nonnull
+    String currencyGrpcAddress();
+
+    @Nonnull
     String currencyJdbcUrl();
 
+    @Nonnull
     String ghUrl();
 }
