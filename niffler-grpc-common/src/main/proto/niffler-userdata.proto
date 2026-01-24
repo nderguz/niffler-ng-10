@@ -74,7 +74,7 @@ message DeclineInvitationRequest {
 message FriendsRequest {
   string username = 1;
   PageInfo pageInfo = 2;
-  optional string search_query = 3;
+  optional string searchQuery= 3;
 }
 
 message RemoveFriendRequest {

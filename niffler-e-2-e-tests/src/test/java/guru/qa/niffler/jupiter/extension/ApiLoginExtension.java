@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.openqa.selenium.Cookie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver {
@@ -78,7 +79,8 @@ public class ApiLoginExtension implements BeforeEachCallback, ParameterResolver 
                                 outcomeInvitations,
                                 friends,
                                 categories,
-                                spends
+                                spends,
+                                new ArrayList<>()
                         );
                         var fakeUser = new UserJson(
                                 apiLogin.username(),

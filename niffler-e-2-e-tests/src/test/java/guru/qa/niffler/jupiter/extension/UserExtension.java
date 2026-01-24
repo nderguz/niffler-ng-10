@@ -5,6 +5,7 @@ import guru.qa.niffler.model.TestData;
 import guru.qa.niffler.model.user.UserJson;
 import guru.qa.niffler.service.UserClient;
 import guru.qa.niffler.service.impl.UserApiClient;
+import guru.qa.niffler.utils.RandomDataUtils;
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
 
@@ -31,6 +32,13 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                                 final List<UserJson> incomeInvitations = usersClient.addIncomeInvitation(user, userAnno.incomeInvitations());
                                 final List<UserJson> outcomeInvitations = usersClient.addOutcomeInvitation(user, userAnno.outcomeInvitations());
                                 final List<UserJson> friends = usersClient.addFriend(user, userAnno.friends());
+                                final List<UserJson> commonUsers = new ArrayList<>();
+                                if (userAnno.commonUsers() > 0) {
+                                    for (int i = 0; i < userAnno.commonUsers(); i++) {
+                                        final UserJson commonUser = usersClient.create(RandomDataUtils.randomUsername(), RandomDataUtils.randomPassword());
+                                        commonUsers.add(commonUser);
+                                    }
+                                }
 
                                 final TestData testData = new TestData(
                                         DEFAULT_PASSWORD,
@@ -38,7 +46,8 @@ public class UserExtension implements BeforeEachCallback, ParameterResolver {
                                         outcomeInvitations,
                                         friends,
                                         new ArrayList<>(),
-                                        new ArrayList<>()
+                                        new ArrayList<>(),
+                                        commonUsers
                                 );
                                 user.addTestData(testData);
                                 setUser(user);

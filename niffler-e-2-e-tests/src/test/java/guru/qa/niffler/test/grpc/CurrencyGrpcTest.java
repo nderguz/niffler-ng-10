@@ -48,7 +48,7 @@ public class CurrencyGrpcTest extends BaseGrpcTest {
     @Test
     @DisplayName("All currencies should return only supported fields")
     public void allCurrenciesShouldReturnOnlySupportedFields() {
-        final var allCurrenciesList = blockingStub.getAllCurrencies(Empty.getDefaultInstance());
+        final var allCurrenciesList = currencyServiceBlockingStub.getAllCurrencies(Empty.getDefaultInstance());
         step("Response contract does not contains unknown fields", () -> assertTrue(allCurrenciesList.getUnknownFields().asMap().isEmpty()));
     }
 
@@ -63,12 +63,12 @@ public class CurrencyGrpcTest extends BaseGrpcTest {
                 .setSpendCurrency(spendCurrency)
                 .setDesiredCurrency(desiredCurrency)
                 .build();
-        final var calculateResponse = step("Calculate rate", () -> blockingStub.calculateRate(request));
+        final var calculateResponse = step("Calculate rate", () -> currencyServiceBlockingStub.calculateRate(request));
         step("Check result", () -> assertEquals(expected, calculateResponse.getCalculatedAmount()));
     }
 
     private List<Currency> getAllCurrencies() {
-        return blockingStub.getAllCurrencies(Empty.getDefaultInstance()).getAllCurrenciesList();
+        return currencyServiceBlockingStub.getAllCurrencies(Empty.getDefaultInstance()).getAllCurrenciesList();
     }
 
     private static Stream<Arguments> calculationRateResult() {

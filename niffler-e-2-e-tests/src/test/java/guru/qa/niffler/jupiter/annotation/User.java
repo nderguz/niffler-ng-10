@@ -16,6 +16,8 @@ public @interface User {
 
     int friends() default 0;
 
+    int commonUsers() default 0;
+
     Category[] categories() default {};
 
     Spending[] spendings() default {};
