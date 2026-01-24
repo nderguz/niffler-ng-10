@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "niffler-currency.proto";
+
+package guru.qa.grpc.niffler;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.niffler.grpc";
+option java_outer_classname = "NifflerUserdataProto";
+
+service NifflerUserdataService {
+  rpc UpdateUser (UserMessage) returns (UserMessage) {}
+  rpc CurrentUser (CurrentUserRequest) returns (UserMessage) {}
+  rpc AllUsers (AllUsersRequest) returns (UserPageResponse) {}
+  rpc SendInvitation (SendInvitationRequest) returns (UserMessage) {}
+  rpc AcceptInvitation (AcceptInvitationRequest) returns (UserMessage) {}
+  rpc DeclineInvitation (DeclineInvitationRequest) returns (UserMessage) {}
+  rpc Friends (FriendsRequest) returns (UserPageResponse) {}
+  rpc RemoveFriend (RemoveFriendRequest) returns (google.protobuf.Empty) {}
+}
+
+message UserMessage {
+  string id = 1;
+  string username = 2;
+  optional string firstname = 3;
+  optional string surname = 4;
+  optional string fullname = 5;
+  optional CurrencyValues currency = 6;
+  optional string photo = 7;
+  optional string photo_small = 8;
+  optional FriendshipStatus friendship_status = 9;
+}
+
+message CurrentUserRequest {
+  string username = 1;
+}
+
+message AllUsersRequest {
+  string username = 1;
+  PageInfo pageInfo = 2;
+  optional string searchQuery = 3;
+}
+
+message UserPageResponse {
+  int32 totalElements = 1;
+  int32 totalPages = 2;
+  bool first = 3;
+  bool last = 4;
+  int32 size = 5;
+  repeated UserMessage users = 6;
+}
+
+message PageInfo {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message SendInvitationRequest {
+  string requester = 1;
+  string addressee = 2;
+}
+
+message AcceptInvitationRequest {
+  string requester = 1;
+  string addressee = 2;
+}
+
+message DeclineInvitationRequest {
+  string requester = 1;
+  string addressee = 2;
+}
+
+message FriendsRequest {
+  string username = 1;
+  PageInfo pageInfo = 2;
+  optional string search_query = 3;
+}
+
+message RemoveFriendRequest {
+  string requester = 1;
+  string addressee = 2;
+}
+
+enum FriendshipStatus {
+  FRIENDSHIP_STATUS_UNSPECIFIED = 0;
+  INVITE_SENT = 1;
+  INVITE_RECEIVED = 2;
+  FRIEND = 3;
+}
