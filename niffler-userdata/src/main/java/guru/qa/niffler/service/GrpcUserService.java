@@ -1,6 +1,5 @@
 package guru.qa.niffler.service;
 
-
 import com.google.protobuf.Empty;
 import guru.qa.niffler.grpc.*;
 import guru.qa.niffler.model.IUserJson;
@@ -33,28 +32,28 @@ public class GrpcUserService extends NifflerUserdataServiceGrpc.NifflerUserdataS
     }
 
     @Override
-    public void sendInvitation(SendInvitationRequest request, StreamObserver<UserMessage> responseObserver) {
+    public void sendInvitation(FriendshipActionRequest request, StreamObserver<UserMessage> responseObserver) {
         var user = userService.createFriendshipRequest(request.getRequester(), request.getAddressee());
         responseObserver.onNext(fromJson(user));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void acceptInvitation(AcceptInvitationRequest request, StreamObserver<UserMessage> responseObserver) {
+    public void acceptInvitation(FriendshipActionRequest request, StreamObserver<UserMessage> responseObserver) {
         var user = userService.acceptFriendshipRequest(request.getRequester(), request.getAddressee());
         responseObserver.onNext(fromJson(user));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void declineInvitation(DeclineInvitationRequest request, StreamObserver<UserMessage> responseObserver) {
+    public void declineInvitation(FriendshipActionRequest request, StreamObserver<UserMessage> responseObserver) {
         var user = userService.declineFriendshipRequest(request.getRequester(), request.getAddressee());
         responseObserver.onNext(fromJson(user));
         responseObserver.onCompleted();
     }
 
     @Override
-    public void allUsers(AllUsersRequest request, StreamObserver<UserPageResponse> responseObserver) {
+    public void listUsers(ListUsersRequest request, StreamObserver<UserPageResponse> responseObserver) {
         var usersPage = userService.allUsers(
                 request.getUsername(),
                 PageRequest.of(request.getPageInfo().getPage(), request.getPageInfo().getSize()),
@@ -66,7 +65,7 @@ public class GrpcUserService extends NifflerUserdataServiceGrpc.NifflerUserdataS
                 .toList();
 
         responseObserver.onNext(UserPageResponse.newBuilder()
-                .setTotalElements(usersPage.getSize())
+                .setTotalElements(Math.toIntExact(usersPage.getTotalElements()))
                 .setTotalPages(usersPage.getTotalPages())
                 .setFirst(usersPage.isFirst())
                 .setLast(usersPage.isLast())
@@ -86,7 +85,7 @@ public class GrpcUserService extends NifflerUserdataServiceGrpc.NifflerUserdataS
                 .toList();
         responseObserver.onNext(UserPageResponse.newBuilder()
                 .setTotalElements(usersPage.getSize())
-                .setTotalPages(usersPage.getTotalPages())
+                .setTotalPages((Math.toIntExact(usersPage.getTotalPages())))
                 .setFirst(usersPage.isFirst())
                 .setLast(usersPage.isLast())
                 .setSize(usersPage.getSize())
@@ -96,7 +95,7 @@ public class GrpcUserService extends NifflerUserdataServiceGrpc.NifflerUserdataS
     }
 
     @Override
-    public void removeFriend(RemoveFriendRequest request, StreamObserver<Empty> responseObserver) {
+    public void removeFriend(FriendshipActionRequest request, StreamObserver<Empty> responseObserver) {
         userService.removeFriend(request.getRequester(), request.getAddressee());
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

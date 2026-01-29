@@ -46,7 +46,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
     @DisplayName("Friendship should be removed")
     @User(friends = 1)
     public void removeFriendship(UserJson user) {
-        userdataServiceBlockingStub.removeFriend(RemoveFriendRequest.newBuilder()
+        userdataServiceBlockingStub.removeFriend(FriendshipActionRequest.newBuilder()
                 .setRequester(user.getUsername())
                 .setAddressee(user.getTestData().friends().getFirst().getUsername())
                 .build());
@@ -61,7 +61,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
     @DisplayName("Income invitation should be accepted")
     @User(incomeInvitations = 1)
     public void acceptIncomeInvitation(UserJson user) {
-        userdataServiceBlockingStub.acceptInvitation(AcceptInvitationRequest.newBuilder()
+        userdataServiceBlockingStub.acceptInvitation(FriendshipActionRequest.newBuilder()
                 .setRequester(user.getUsername())
                 .setAddressee(user.getTestData().incomeInvitations().getFirst().getUsername())
                 .build());
@@ -79,7 +79,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
     @User(incomeInvitations = 1)
     public void rejectIncomeInvitation(UserJson user) {
         userdataServiceBlockingStub.declineInvitation(
-                DeclineInvitationRequest.newBuilder()
+                FriendshipActionRequest.newBuilder()
                         .setRequester(user.getUsername())
                         .setAddressee(user.getTestData().incomeInvitations().getFirst().getUsername())
                         .build());
@@ -94,7 +94,7 @@ public class UserdataGrpcTest extends BaseGrpcTest {
     @DisplayName("Outcome invitation should be sent correctly")
     @User(commonUsers = 1)
     public void sendFriendshipInvitation(UserJson user) {
-        userdataServiceBlockingStub.sendInvitation(SendInvitationRequest.newBuilder()
+        userdataServiceBlockingStub.sendInvitation(FriendshipActionRequest.newBuilder()
                         .setRequester(user.getUsername())
                         .setAddressee(user.getTestData().commonUsers().getFirst().getUsername())
                 .build());

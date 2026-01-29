@@ -12,12 +12,12 @@ option java_outer_classname = "NifflerUserdataProto";
 service NifflerUserdataService {
   rpc UpdateUser (UserMessage) returns (UserMessage) {}
   rpc CurrentUser (CurrentUserRequest) returns (UserMessage) {}
-  rpc AllUsers (AllUsersRequest) returns (UserPageResponse) {}
-  rpc SendInvitation (SendInvitationRequest) returns (UserMessage) {}
-  rpc AcceptInvitation (AcceptInvitationRequest) returns (UserMessage) {}
-  rpc DeclineInvitation (DeclineInvitationRequest) returns (UserMessage) {}
+  rpc ListUsers (ListUsersRequest) returns (UserPageResponse) {}
+  rpc SendInvitation (FriendshipActionRequest) returns (UserMessage) {}
+  rpc AcceptInvitation (FriendshipActionRequest) returns (UserMessage) {}
+  rpc DeclineInvitation (FriendshipActionRequest) returns (UserMessage) {}
   rpc Friends (FriendsRequest) returns (UserPageResponse) {}
-  rpc RemoveFriend (RemoveFriendRequest) returns (google.protobuf.Empty) {}
+  rpc RemoveFriend (FriendshipActionRequest) returns (google.protobuf.Empty) {}
 }
 
 message UserMessage {
@@ -36,7 +36,7 @@ message CurrentUserRequest {
   string username = 1;
 }
 
-message AllUsersRequest {
+message ListUsersRequest {
   string username = 1;
   PageInfo pageInfo = 2;
   optional string searchQuery = 3;
@@ -56,17 +56,7 @@ message PageInfo {
   int32 size = 2;
 }
 
-message SendInvitationRequest {
-  string requester = 1;
-  string addressee = 2;
-}
-
-message AcceptInvitationRequest {
-  string requester = 1;
-  string addressee = 2;
-}
-
-message DeclineInvitationRequest {
+message FriendshipActionRequest {
   string requester = 1;
   string addressee = 2;
 }
@@ -75,11 +65,6 @@ message FriendsRequest {
   string username = 1;
   PageInfo pageInfo = 2;
   optional string searchQuery= 3;
-}
-
-message RemoveFriendRequest {
-  string requester = 1;
-  string addressee = 2;
 }
 
 enum FriendshipStatus {
