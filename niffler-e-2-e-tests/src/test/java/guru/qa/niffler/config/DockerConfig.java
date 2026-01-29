@@ -62,6 +62,12 @@ enum DockerConfig implements Config {
         return "";
     }
 
+    @NotNull
+    @Override
+    public String userdataGrpcAddress() {
+        return "";
+    }
+
     @Override
     @Nonnull
     public String currencyJdbcUrl() {

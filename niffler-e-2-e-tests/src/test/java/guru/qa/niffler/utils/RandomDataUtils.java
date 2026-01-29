@@ -4,9 +4,14 @@ import com.github.javafaker.Faker;
 import guru.qa.niffler.model.spend.CategoryJson;
 import guru.qa.niffler.model.spend.SpendJson;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Random;
+
 public class RandomDataUtils {
 
     private static final Faker faker = new Faker();
+    private static final Random random = new Random();
 
     public static String randomUsername(){
         return faker.name().username();
@@ -39,6 +44,12 @@ public class RandomDataUtils {
                 faker.name().title(),
                 username
         );
+    }
+
+    public static double nextDouble(int scale){
+        return BigDecimal.valueOf(random.nextDouble())
+                .setScale(scale, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     public static String randomSentence(int wordsCount){

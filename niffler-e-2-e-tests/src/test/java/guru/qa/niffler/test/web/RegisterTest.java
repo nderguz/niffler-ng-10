@@ -1,5 +1,6 @@
 package guru.qa.niffler.test.web;
 
+import com.codeborne.selenide.SelenideDriver;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
@@ -76,6 +77,7 @@ public class RegisterTest {
                 .checkThatPageLoaded();
     }
 
+    //todo исправить проблему с локалью
     @Test
     @DisplayName("Пользователь остается на странице логина после введения некорректных кредов")
     public void userShouldStayOnLoginPageAfterLoginWithBadCredentials() {

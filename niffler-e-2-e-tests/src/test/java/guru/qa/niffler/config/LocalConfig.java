@@ -61,6 +61,12 @@ enum LocalConfig implements Config {
         return "localhost";
     }
 
+    @NotNull
+    @Override
+    public String userdataGrpcAddress() {
+        return "localhost";
+    }
+
     @Override
     @Nonnull
     public String currencyJdbcUrl() {

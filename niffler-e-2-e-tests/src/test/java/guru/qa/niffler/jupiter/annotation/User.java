@@ -16,6 +16,9 @@ public @interface User {
 
     int friends() default 0;
 
+    //todo Вынести в отдельную аннотацию @Users
+    int commonUsers() default 0;
+
     Category[] categories() default {};
 
     Spending[] spendings() default {};

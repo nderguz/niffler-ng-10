@@ -1,6 +1,7 @@
 package guru.qa.niffler.utils;
 
 import com.codeborne.selenide.SelenideConfig;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class SelenideUtils {
 
